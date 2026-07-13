@@ -165,6 +165,20 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     <h2>FSN catalog (for campaign selection)</h2>
     <div class="hint">Upload any report that contains an FSN / Listing ID column — your Flipkart FSN report or a search-traffic / catalog export. This builds a searchable product list so you can pick FSNs per campaign below. You can also paste FSN IDs directly inside the picker.</div>
     <div class="drop" id="dropCatalog" style="padding:16px"><div class="big">Upload FSN / catalog file</div><div class="st" id="stCatalog">Click or drop .xlsx / .csv</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="section-gap">
+      <h2 style="font-size:14px">Auto-segment campaigns by Traffic × Conversion</h2>
+      <div class="hint">Builds 4 campaigns from the catalog using your rules. CVR = units ÷ clicks. Impressions = views.</div>
+      <div class="row">
+        <div class="field" style="max-width:150px"><label for="sgNoTraffic">"No traffic" ≤ views</label><input type="number" id="sgNoTraffic" value="100" min="0"></div>
+        <div class="field" style="max-width:150px"><label for="sgHighTraffic">"High traffic" > views</label><input type="number" id="sgHighTraffic" value="10000" min="1"></div>
+        <div class="field" style="max-width:150px"><label for="sgHighConv">High conversion ≥ %</label><input type="number" id="sgHighConv" value="1.75" step="0.05" min="0"></div>
+        <div class="field" style="max-width:150px"><label for="sgLowConv">Low conversion < %</label><input type="number" id="sgLowConv" value="1" step="0.05" min="0"></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="primary" id="btnSegment">⚡ Build 4 campaigns & assign FSNs</button>
+        <span class="note" id="segNote"></span>
+      </div>
+    </div>
   </div>
 
   <div class="toolbar">
@@ -525,8 +539,8 @@ function renderWeekList(){
       if(err){ st.textContent=err; return; }
       const by={};
       res.data.forEach(r=>{ const k=r.fsn; if(!k) return;
-        by[k]=by[k]||{fsn:k,title:"",views:0,units:0,revenue:0};
-        const o=by[k]; o.views+=r.views; o.units+=r.units; o.revenue+=r.revenue;
+        by[k]=by[k]||{fsn:k,title:"",views:0,clicks:0,units:0,revenue:0};
+        const o=by[k]; o.views+=r.views; o.clicks+=r.clicks; o.units+=r.units; o.revenue+=r.revenue;
         if(!o.title&&r.title) o.title=r.title.slice(0,90); });
       state.catalog=Object.values(by);
       st.textContent=`✓ ${file.name} — ${state.catalog.length.toLocaleString()} unique FSN/Listing IDs loaded`;
@@ -618,6 +632,40 @@ function renderFsnLists(){
     navigator.clipboard.writeText(c.fsns.join("\n")).then(()=>{ b.textContent="Copied ✓"; setTimeout(()=>b.textContent="Copy list",1500); }).catch(()=>{});
   }));
 }
+
+/* ---------- traffic × conversion auto-segmentation ---------- */
+document.getElementById("btnSegment").addEventListener("click",()=>{
+  const note=document.getElementById("segNote");
+  if(!state.catalog.length){ note.textContent="Upload an FSN/catalog file first."; return; }
+  const noT=num(document.getElementById("sgNoTraffic").value);
+  const hiT=num(document.getElementById("sgHighTraffic").value);
+  const hiC=num(document.getElementById("sgHighConv").value);
+  const loC=num(document.getElementById("sgLowConv").value);
+  const cvr=r=> r.clicks>0? r.units/r.clicks*100 : 0;
+
+  const c1=[],c2=[],c3=[],c4=[]; let unclassified=0;
+  state.catalog.forEach(r=>{
+    const v=r.views, cv=cvr(r);
+    if(v<=noT && r.units===0) c1.push(r);
+    else if(v>hiT && cv>=hiC) c2.push(r);
+    else if(v<=hiT && v>noT && cv>=hiC && r.units>0) c3.push(r);
+    else if(v>hiT && cv<loC) c4.push(r);
+    else unclassified++;
+  });
+  c1.sort((a,b)=>b.views-a.views); c2.sort((a,b)=>b.revenue-a.revenue);
+  c3.sort((a,b)=>b.revenue-a.revenue); c4.sort((a,b)=>b.views-a.views);
+  const CAP=500; // keep browser storage sane; full lists are in your Excel export
+  const d=daysInMonth(), b=num(state.plan.budget)||100000, u=v=>Math.max(50,Math.round(b*v/d/50)*50);
+  const target=num(state.plan.target)||5, be=num(state.plan.breakeven)||3;
+  state.plan.campaigns=[
+    {name:`C2 Winners – High traffic × High conv (>${hiT.toLocaleString()} views, ≥${hiC}%)`, type:TYPES[0], obj:OBJ[0], daily:u(.40), days:d, target:target, fsns:c2.slice(0,CAP).map(r=>r.fsn)},
+    {name:`C3 Hidden gems – Low traffic × High conv (≤${hiT.toLocaleString()} views, ≥${hiC}%)`, type:TYPES[0], obj:OBJ[0], daily:u(.30), days:d, target:target, fsns:c3.slice(0,CAP).map(r=>r.fsn)},
+    {name:`C4 Fix first – High traffic × Low conv (<${loC}%)`, type:TYPES[0], obj:OBJ[2], daily:u(.15), days:d, target:be, fsns:c4.slice(0,CAP).map(r=>r.fsn)},
+    {name:`C1 Visibility – No traffic no conversion (≤${noT} views)`, type:TYPES[0], obj:OBJ[4], daily:u(.15), days:d, target:be, fsns:c1.slice(0,CAP).map(r=>r.fsn)}
+  ];
+  note.textContent=`Done — C1: ${c1.length.toLocaleString()} · C2: ${c2.length.toLocaleString()} · C3: ${c3.length.toLocaleString()} · C4: ${c4.length.toLocaleString()} FSNs (${unclassified.toLocaleString()} mid-segment left out).`+(Math.max(c1.length,c3.length)>CAP?` Lists capped at ${CAP} per campaign in the tool — export to Excel for full lists.`:"");
+  renderCamps(); save();
+});
 
 /* ---------- optimizer ---------- */
 function readThresholds(){
