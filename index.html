@@ -183,7 +183,6 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 
   <div class="toolbar">
     <button class="primary" id="btnAddCamp">+ Add campaign</button>
-    <button id="btnSuggest">Load suggested plan (mobile-accessories seller)</button>
     <span class="spacer"></span>
     <button id="btnExportPlan">⬇ Export planner to Excel</button>
   </div>
@@ -390,17 +389,6 @@ function updatePlanStats(){
 }
 
 document.getElementById("btnAddCamp").addEventListener("click",()=>addCampaign());
-document.getElementById("btnSuggest").addEventListener("click",()=>{
-  const d = daysInMonth(), b = num(state.plan.budget)||100000, u=v=>Math.round(b*v/d/50)*50;
-  state.plan.campaigns = [
-    {name:"Hero – Moto Edge 70 series covers", type:TYPES[0], obj:OBJ[0], daily:u(.30), days:d, target:num(state.plan.target)||5},
-    {name:"Core – Best-selling plain case covers", type:TYPES[0], obj:OBJ[1], daily:u(.30), days:d, target:num(state.plan.target)||5},
-    {name:"Screen guards – listing relaunch", type:TYPES[0], obj:OBJ[2], daily:u(.15), days:d, target:num(state.plan.breakeven)||3},
-    {name:"Test – iPhone 17 / new launches", type:TYPES[0], obj:OBJ[3], daily:u(.15), days:d, target:num(state.plan.breakeven)||3},
-    {name:"Brand visibility – Sprig (PCA)", type:TYPES[2], obj:OBJ[4], daily:u(.10), days:d, target:2}
-  ];
-  renderCamps(); save();
-});
 
 ["pMonth","pBudget","pTarget","pBreakeven"].forEach(id=>{
   document.getElementById(id).addEventListener("change",e=>{
