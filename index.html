@@ -245,7 +245,16 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     <div class="card section-gap scroll">
       <h2>FSN actions</h2>
       <div class="hint">Sorted by money at stake. Apply bid changes in Flipkart Ads Manager, then re-check next week.</div>
-      <table><thead><tr><th>Action</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Why / what to do</th></tr></thead>
+      <div class="row" style="margin-bottom:10px">
+        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fCampaign">Filter by campaign</label>
+          <select id="fCampaign"><option value="">All campaigns</option></select></div>
+        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search FSN / product</label>
+          <input type="text" id="fSearch" placeholder="Type to filter…"></div>
+        <div class="field" style="max-width:200px;margin-bottom:0"><label for="fAction">Action</label>
+          <select id="fAction"><option value="">All actions</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
+        <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
+      </div>
+      <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Why / what to do</th></tr></thead>
       <tbody id="fsnBody"></tbody></table>
     </div>
     <div class="card section-gap scroll">
@@ -423,6 +432,7 @@ function renderPacer(){
 
 /* ---------- file parsing ---------- */
 const SYN = {
+  campaign:["campaignname","campaign","campaignid"],
   fsn:["fsn","fsnid","productid","listingid","sku","skuid"],
   title:["productname","producttitle","title","itemname","product"],
   views:["views","impressions","adviews"],
@@ -465,6 +475,7 @@ function sheetToRows(file, cb){
         const units = num(g("units")) || (num(g("directunits"))+num(g("indirectunits")));
         const revenue = num(g("revenue")) || (num(g("directrev"))+num(g("indirectrev")));
         return { fsn:String(g("fsn")||"").trim(), title:String(g("title")||"").trim(),
+          campaign:String(g("campaign")||"").trim(),
           date:g("date"), placement:String(g("placement")||"").trim(),
           views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")),
           units, revenue };
@@ -692,9 +703,10 @@ document.getElementById("btnAnalyze").addEventListener("click",()=>{
   document.getElementById("uploadNote").textContent="";
   const T=state.thresholds, be=num(state.plan.breakeven)||3, target=num(state.plan.target)||5;
 
-  // consolidate FSN rows (same FSN can appear across campaigns)
+  // consolidate rows per campaign + FSN, so bid actions are campaign-specific
   const byFsn={};
-  wk.fsn.forEach(r=>{ const k=r.fsn||r.title||"?"; byFsn[k]=byFsn[k]||{fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0};
+  wk.fsn.forEach(r=>{ const k=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
+    byFsn[k]=byFsn[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0};
     const o=byFsn[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue; if(!o.title&&r.title)o.title=r.title; });
   const fsnRows=Object.values(byFsn).map(r=>Object.assign(r,{c:classifyFsn(r,T,be,target)}));
   const order={PAUSE:0,"CUT BID":1,"FIX CONTENT":2,REDUCE:3,SCALE:4,KEEP:5};
@@ -745,19 +757,47 @@ function renderActions(){
     `${A.fsnRows.length.toLocaleString()} FSNs analysed — <b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> losing money (≈${fmt(Math.max(0,wasted))} at stake), <b>${counts.SCALE||0}</b> ready to scale, <b>${counts["FIX CONTENT"]||0}</b> need listing fixes.`;
   document.getElementById("apPacing").textContent=A.pacing;
 
+  const fb=document.getElementById("fsnBody");
+  // populate campaign dropdown
+  const campSel=document.getElementById("fCampaign");
+  const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
+  const prev=campSel.value;
+  campSel.innerHTML=`<option value="">All campaigns (${camps.length})</option>`+camps.map(c=>`<option value="${esc(c)}" ${c===prev?"selected":""}>${esc(c)}</option>`).join("");
+  renderFsnTable();
+  renderPlacementTable();
+}
+
+function renderFsnTable(){
+  const A=state.lastActions; if(!A) return;
   const fb=document.getElementById("fsnBody"); fb.innerHTML="";
-  A.fsnRows.filter(r=>r.c.a!=="KEEP").slice(0,300).forEach(r=>{
+  const cf=document.getElementById("fCampaign").value;
+  const q=document.getElementById("fSearch").value.trim().toLowerCase();
+  const af=document.getElementById("fAction").value;
+  let rows=A.fsnRows.filter(r=> (af? r.c.a===af : r.c.a!=="KEEP"));
+  if(cf) rows=rows.filter(r=>(r.campaign||"—")===cf);
+  if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
+  document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
+  rows.slice(0,300).forEach(r=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td><td class="mono">${esc(r.fsn)}</td>`+
-      `<td style="max-width:260px">${esc((r.title||"").slice(0,70))}</td>`+
+    tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td>`+
+      `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
+      `<td class="mono">${esc(r.fsn)}</td>`+
+      `<td style="max-width:240px">${esc((r.title||"").slice(0,70))}</td>`+
       `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
       `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
       `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
       `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td><td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
     fb.appendChild(tr);
   });
-  if(!A.fsnRows.some(r=>r.c.a!=="KEEP")) fb.innerHTML=`<tr><td colspan="11" class="note">Everything is within thresholds this week — nice.</td></tr>`;
+  if(!rows.length) fb.innerHTML=`<tr><td colspan="12" class="note">No rows match the current filters.</td></tr>`;
+}
+["fCampaign","fSearch","fAction"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(el.tagName==="INPUT"?"input":"change",renderFsnTable);
+});
 
+function renderPlacementTable(){
+  const A=state.lastActions; if(!A) return;
   const pb=document.getElementById("placeBody"); pb.innerHTML="";
   if(A.placeRows.length){
     const best=A.placeRows[0], worst=A.placeRows[A.placeRows.length-1];
@@ -827,10 +867,21 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
     {Metric:"FSNs to scale",Value:counts.SCALE||0},{Metric:"Listings to fix",Value:counts["FIX CONTENT"]||0},
     {Metric:"Pacing",Value:A.pacing||"Set a monthly budget in the planner for pacing checks."}];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sum),"Summary");
-  const fr=A.fsnRows.map(r=>({Action:r.c.a,FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
+  // per-campaign rollup
+  const byC={};
+  A.fsnRows.forEach(r=>{ const k=r.campaign||"—"; byC[k]=byC[k]||{spend:0,revenue:0,units:0,clicks:0,views:0,pause:0,scale:0};
+    const o=byC[k]; o.spend+=r.spend;o.revenue+=r.revenue;o.units+=r.units;o.clicks+=r.clicks;o.views+=r.views;
+    if(r.c.a==="PAUSE"||r.c.a==="CUT BID")o.pause++; if(r.c.a==="SCALE")o.scale++; });
+  const cs=Object.entries(byC).map(([k,o])=>({Campaign:k,"Spend (₹)":Math.round(o.spend),"Revenue (₹)":Math.round(o.revenue),
+    ROAS:Number((o.revenue/Math.max(1,o.spend)).toFixed(2)),Views:o.views,Clicks:o.clicks,Units:o.units,
+    "CTR %":Number((100*o.clicks/Math.max(1,o.views)).toFixed(2)),"To pause/cut":o.pause,"To scale":o.scale}))
+    .sort((a,b)=>b["Spend (₹)"]-a["Spend (₹)"]);
+  const wsC=XLSX.utils.json_to_sheet(cs); wsC["!cols"]=[{wch:34},{wch:11},{wch:12},{wch:7},{wch:10},{wch:9},{wch:7},{wch:7},{wch:12},{wch:9}];
+  XLSX.utils.book_append_sheet(wb,wsC,"Campaign Summary");
+  const fr=A.fsnRows.map(r=>({Action:r.c.a,Campaign:r.campaign||"—",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
     "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
     ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),"What to do":r.c.why}));
-  const ws=XLSX.utils.json_to_sheet(fr); ws["!cols"]=[{wch:12},{wch:24},{wch:50},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:70}];
+  const ws=XLSX.utils.json_to_sheet(fr); ws["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:50},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:70}];
   XLSX.utils.book_append_sheet(wb,ws,"FSN Actions");
   if(A.placeRows.length){
     const pr=A.placeRows.map(p=>({Placement:p.placement,"Spend (₹)":Math.round(p.spend),Clicks:p.clicks,Units:p.units,
