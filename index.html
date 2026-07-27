@@ -150,8 +150,20 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     <div class="grid g4" id="apMetrics"></div>
     <div class="card section-gap"><h2>Weekly summary & pacing</h2><div class="hint" id="apSummary"></div><div id="apPacing" class="note"></div></div>
     <div class="card section-gap scroll">
+      <h2>ROI health check</h2>
+      <div class="hint">The 7 elements that decide your ads ROI, scored against your thresholds. Fix reds top-to-bottom.</div>
+      <table><thead><tr><th>Element</th><th>This week</th><th>Status</th><th>What to do</th></tr></thead>
+      <tbody id="healthBody"></tbody></table>
+    </div>
+    <div class="card section-gap scroll" id="wowCard" style="display:none">
+      <h2 id="wowTitle">Week-over-week trend</h2>
+      <div class="hint">Catches slow ROI killers — CPC creep and CVR decay — before they compound.</div>
+      <table><thead><tr><th>Metric</th><th>This week</th><th>Previous week</th><th>Change</th></tr></thead>
+      <tbody id="wowBody"></tbody></table>
+    </div>
+    <div class="card section-gap scroll">
       <h2>FSN actions</h2>
-      <div class="hint">Sorted by money at stake. Apply bid changes in Flipkart Ads Manager, then re-check next week.</div>
+      <div class="hint">Sorted by money at stake. "Max CPC" = the highest bid that still hits your target ROAS for that FSN ((revenue ÷ clicks) ÷ target) — use it when setting bids in Ads Manager.</div>
       <div class="row" style="margin-bottom:10px">
         <div class="field" style="max-width:300px;margin-bottom:0"><label>Filter by campaign (multi-select)</label>
           <div class="mselect">
@@ -165,7 +177,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
           <select id="fAction"><option value="">Needs action (default)</option><option value="ALL">All rows (incl. KEEP)</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
       </div>
-      <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Why / what to do</th></tr></thead>
+      <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>CPC / Max ₹</th><th>Why / what to do</th></tr></thead>
       <tbody id="fsnBody"></tbody></table>
     </div>
     <div class="card section-gap scroll">
@@ -267,7 +279,7 @@ function rowsFromSheet(rows){ // rows: array of arrays (incl. possible preamble 
       campaign:String(g("campaign")||"").trim(),
       date:g("date"), placement:String(g("placement")||"").trim(),
       views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")),
-      units, revenue };
+      units, revenue, drev:num(g("directrev")), dunits:num(g("directunits")) };
   });
   return {map,data};
 }
@@ -308,8 +320,9 @@ function classifyFsn(r,T,be,target){
 function consolidateByCampaignFsn(rows){
   const by={};
   rows.forEach(r=>{ const k=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
-    by[k]=by[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0};
-    const o=by[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue; if(!o.title&&r.title)o.title=r.title; });
+    by[k]=by[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0,drev:0,dunits:0};
+    const o=by[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue;
+    o.drev+=(r.drev||0); o.dunits+=(r.dunits||0); if(!o.title&&r.title)o.title=r.title; });
   return Object.values(by);
 }
 
@@ -336,6 +349,79 @@ function pacingMessage(spend, weekBudget, fmtFn){
   return Math.abs(dev)<=10? `Pacing on track: ${fmtFn(spend)} spent vs ~${fmtFn(weekBudget)} planned for the week (${dev>=0?"+":""}${dev.toFixed(0)}%).`
     : dev>0? `Overspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (+${dev.toFixed(0)}%). Lower daily caps on below-target campaigns or you'll exhaust the month early.`
     : `Underspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (${dev.toFixed(0)}%). If ROAS is healthy, raise bids on SCALE items to use the budget.`;
+}
+
+function computeKpis(tot){
+  return {
+    roas: tot.spend? tot.revenue/tot.spend : 0,
+    cpc:  tot.clicks? tot.spend/tot.clicks : 0,
+    ctr:  tot.views? 100*tot.clicks/tot.views : 0,
+    cvr:  tot.clicks? 100*tot.units/tot.clicks : 0,
+    aov:  tot.units? tot.revenue/tot.units : 0
+  };
+}
+
+// max CPC an FSN can afford while still hitting target ROAS: revenue-per-click ÷ target
+function maxCpcFor(r,target){ return (r.clicks>0&&target>0)? (r.revenue/r.clicks)/target : 0; }
+
+// spend beyond what's justified at break-even, on rows flagged as losing money
+function wastedSpend(classifiedRows,be){
+  return classifiedRows.filter(r=>r.c && (r.c.a==="PAUSE"||r.c.a==="CUT BID"))
+    .reduce((s,r)=>s+Math.max(0, r.spend - r.revenue/Math.max(be,1)), 0);
+}
+
+function roiHealth(kpis, tot, classifiedRows, be, target, T){
+  const waste=wastedSpend(classifiedRows,be);
+  const wastePct=tot.spend? 100*waste/tot.spend : 0;
+  const affordable=target>0? (kpis.aov*kpis.cvr/100)/target : 0;
+  const items=[];
+  const push=(element,value,status,advice)=>items.push({element,value,status,advice});
+  push("ROAS vs target", kpis.roas.toFixed(2)+"× (target "+target+", break-even "+be+")",
+    kpis.roas>=target?"good":kpis.roas>=be?"warn":"bad",
+    kpis.roas>=target?"At/above target — protect winners' budgets, don't over-cut.":kpis.roas>=be?"Profitable but below target — work the CUT/REDUCE list and scale winners.":"Below break-even — ads are losing money; execute the PAUSE/CUT list first.");
+  push("Avg CPC vs affordable CPC", "₹"+kpis.cpc.toFixed(1)+" vs ₹"+affordable.toFixed(1),
+    affordable<=0?"warn":kpis.cpc<=affordable?"good":kpis.cpc<=affordable*1.2?"warn":"bad",
+    kpis.cpc<=affordable?"CPC is within what AOV × CVR can afford at target ROAS.":"CPC exceeds the affordable level ((AOV × CVR) ÷ target). Lower bids, or raise CVR/AOV via better listings and bundles.");
+  push("CTR (ad relevance)", kpis.ctr.toFixed(2)+"%",
+    kpis.ctr>=2*T.lowCtr?"good":kpis.ctr>=T.lowCtr?"warn":"bad",
+    kpis.ctr>=2*T.lowCtr?"Healthy relevance — thumbnails/titles are earning the click.":"Low CTR wastes impressions and hurts auction rank — improve thumbnails, titles and displayed price; check keyword relevance.");
+  push("CVR (listing quality)", kpis.cvr.toFixed(2)+"%",
+    kpis.cvr>=1.75?"good":kpis.cvr>=1?"warn":"bad",
+    kpis.cvr>=1.75?"Clicks are converting — listings are doing their job.":"Ads buy clicks; listings earn sales. Check price vs competition, images, reviews, stock and delivery speed.");
+  push("AOV / ASP", "₹"+Math.round(kpis.aov),
+    kpis.aov>=500?"good":kpis.aov>=300?"warn":"bad",
+    "Low AOV shrinks affordable CPC. Raise AOV with combos/bundles and pushing higher-price variants.");
+  push("Wasted spend", "₹"+Math.round(waste).toLocaleString("en-IN")+" ("+wastePct.toFixed(1)+"% of spend)",
+    wastePct<=5?"good":wastePct<=15?"warn":"bad",
+    wastePct<=5?"Little money leaking to losing FSNs.":"Cutting this is the fastest ROI gain — pause/cut the losing FSNs before scaling anything.");
+  const drev=classifiedRows.reduce((s,r)=>s+(r.drev||0),0);
+  if(drev>0 && tot.revenue>0){
+    const share=100*drev/tot.revenue;
+    push("Direct revenue share", share.toFixed(0)+"%",
+      share>=50?"good":share>=30?"warn":"bad",
+      share>=50?"Revenue is mostly from the advertised FSNs themselves — attribution is solid.":"Heavily indirect revenue is fragile attribution — verify the advertised FSNs themselves sell, not just neighbors.");
+  }
+  return {items, waste, wastePct, affordable};
+}
+
+function wowCompare(curr, prev){
+  if(!prev || !prev.spend) return null;
+  const a=computeKpis(curr), b=computeKpis(prev);
+  const rows=[
+    ["Spend", curr.spend, prev.spend, "₹"],
+    ["Revenue", curr.revenue, prev.revenue, "₹"],
+    ["ROAS", a.roas, b.roas, "×"],
+    ["CPC", a.cpc, b.cpc, "₹"],
+    ["CTR", a.ctr, b.ctr, "%"],
+    ["CVR", a.cvr, b.cvr, "%"],
+    ["AOV", a.aov, b.aov, "₹"]
+  ].map(([metric,c,p,unit])=>{
+    const delta=p? 100*(c-p)/p : 0;
+    // for CPC, an increase is bad; for everything else, an increase is good
+    const goodDir = metric==="CPC"? delta<=0 : delta>=0;
+    return {metric, curr:c, prev:p, delta, unit, good:goodDir};
+  });
+  return rows;
 }
 /* ================= PURE-LOGIC-END ================= */
 
@@ -501,7 +587,11 @@ document.getElementById("btnAnalyze").addEventListener("click",()=>{
   const plan=buildActionPlan(wk.fsn, wk.placement, T, be, target);
   const budget=num(S.budget), weeks=Math.ceil(daysInMonth()/7), weekBudget=budget?budget/weeks:0;
   const spend=wk.dailyAgg? wk.dailyAgg.spend : plan.tot.spend;
-  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target});
+  const kpis=computeKpis(plan.tot);
+  const health=roiHealth(kpis, plan.tot, plan.fsnRows, be, target, T);
+  const prevWk=state.weeks[w-1];
+  const wow=prevWk&&prevWk.fsnAgg? wowCompare(plan.tot, prevWk.fsnAgg) : null;
+  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target, kpis, health, wow, prevWeek:w-1});
   save(); renderActions();
   document.querySelector('[data-t="actions"]').click();
 });
@@ -514,15 +604,42 @@ function renderActions(){
   document.getElementById("apTitle").textContent=`Action plan — Week ${A.week}`;
   const roas=A.tot.revenue/Math.max(1,A.tot.spend);
   const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
+  const K=A.kpis||computeKpis(A.tot);
   document.getElementById("apMetrics").innerHTML=[
     ["Ad spend",fmt(A.tot.spend)],["Ad revenue",fmt(A.tot.revenue)],
-    ["ROAS",roas.toFixed(2)+"×"],["Units",A.tot.units.toLocaleString()],
-    ["Pause / cut",(counts.PAUSE||0)+(counts["CUT BID"]||0)],["Scale",counts.SCALE||0]
+    ["ROAS",roas.toFixed(2)+"×"],["Avg CPC","₹"+K.cpc.toFixed(1)],
+    ["CVR",K.cvr.toFixed(2)+"%"],["Wasted spend",A.health?fmt(A.health.waste):"—"]
   ].map(([l,v])=>`<div class="metric"><div class="lbl">${l}</div><div class="num">${v}</div></div>`).join("");
   document.getElementById("apSummary").innerHTML=
     `Overall ROAS <b>${roas.toFixed(2)}×</b> vs break-even ${A.be} and target ${A.target}. `+
     `${A.fsnRows.length.toLocaleString()} campaign-FSN rows analysed — <b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> losing money, <b>${counts.SCALE||0}</b> ready to scale, <b>${counts["FIX CONTENT"]||0}</b> need listing fixes.`;
   document.getElementById("apPacing").textContent=A.pacing;
+  // ROI health table
+  const hb=document.getElementById("healthBody"); hb.innerHTML="";
+  const STATUS={good:["scale","GOOD"],warn:["reduce","WATCH"],bad:["pause","FIX"]};
+  (A.health?A.health.items:[]).forEach(it=>{
+    const [cls,lbl]=STATUS[it.status];
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td style="font-weight:600">${esc(it.element)}</td><td class="mono">${esc(it.value)}</td>`+
+      `<td><span class="tag ${cls}">${lbl}</span></td><td style="font-size:12.5px;min-width:280px">${esc(it.advice)}</td>`;
+    hb.appendChild(tr);
+  });
+  // week-over-week
+  const wc=document.getElementById("wowCard");
+  if(A.wow){
+    wc.style.display="block";
+    document.getElementById("wowTitle").textContent=`Week-over-week trend — W${A.week} vs W${A.prevWeek}`;
+    const wb=document.getElementById("wowBody"); wb.innerHTML="";
+    A.wow.forEach(r=>{
+      const fmtV=v=> r.unit==="₹"? "₹"+Math.round(v).toLocaleString("en-IN") : r.unit==="×"? v.toFixed(2)+"×" : v.toFixed(2)+"%";
+      const cls=Math.abs(r.delta)<2? "keep" : r.good? "scale":"pause";
+      const arrow=r.delta>0?"▲":r.delta<0?"▼":"–";
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td style="font-weight:600">${r.metric}</td><td class="mono">${fmtV(r.curr)}</td><td class="mono">${fmtV(r.prev)}</td>`+
+        `<td><span class="tag ${cls}">${arrow} ${Math.abs(r.delta).toFixed(1)}%</span></td>`;
+      wb.appendChild(tr);
+    });
+  } else { wc.style.display="none"; }
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
   fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
   buildCampPanel(camps);
@@ -589,6 +706,8 @@ function renderFsnTable(){
   if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
   document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
   rows.slice(0,300).forEach(r=>{
+    const cpc=r.clicks? r.spend/r.clicks:0, maxc=maxCpcFor(r,A.target);
+    const cpcCls=maxc>0&&cpc>maxc? "color:var(--red);font-weight:600":"";
     const tr=document.createElement("tr");
     tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td>`+
       `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
@@ -597,7 +716,9 @@ function renderFsnTable(){
       `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
       `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
       `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
-      `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td><td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
+      `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
+      `<td class="mono" style="${cpcCls}">${cpc?cpc.toFixed(1):"—"} / ${maxc?maxc.toFixed(1):"—"}</td>`+
+      `<td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
     fb.appendChild(tr);
   });
   if(!rows.length){
@@ -609,7 +730,7 @@ function renderFsnTable(){
     if(base.length===0 && fCampSel.size) msg=`The selected campaign(s) have no rows in this week's FSN report — the campaign may have had no ad activity this week, or it appears under a different name/ID. Try "All campaigns" and search for it.`;
     else if(keepN>0) msg=`All ${keepN.toLocaleString()} row(s) matching your filters are classified KEEP (within thresholds — e.g. spend below ₹${state.settings.minSpend}, healthy ROAS). Switch the Action filter to "All rows (incl. KEEP)" to see them.`;
     else msg=`No rows match the current filters.`;
-    fb.innerHTML=`<tr><td colspan="12" class="note">${msg}</td></tr>`;
+    fb.innerHTML=`<tr><td colspan="13" class="note">${msg}</td></tr>`;
   }
 }
 ["fSearch","fAction"].forEach(id=>{
@@ -656,6 +777,19 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
     {Metric:"FSNs to scale",Value:counts.SCALE||0},{Metric:"Listings to fix",Value:counts["FIX CONTENT"]||0},
     {Metric:"Pacing",Value:A.pacing||"Set a monthly budget in Rules & thresholds for pacing checks."}];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sum),"Summary");
+  // ROI health sheet
+  if(A.health){
+    const hs=A.health.items.map(it=>({Element:it.element,"This week":it.value,Status:it.status.toUpperCase(),"What to do":it.advice}));
+    const wsH=XLSX.utils.json_to_sheet(hs); wsH["!cols"]=[{wch:28},{wch:30},{wch:8},{wch:90}];
+    XLSX.utils.book_append_sheet(wb,wsH,"ROI Health");
+  }
+  // week-over-week sheet
+  if(A.wow){
+    const ws2=XLSX.utils.json_to_sheet(A.wow.map(r=>({Metric:r.metric,
+      ["Week "+A.week]:Number(r.curr.toFixed(2)),["Week "+A.prevWeek]:Number(r.prev.toFixed(2)),
+      "Change %":Number(r.delta.toFixed(1)),Direction:Math.abs(r.delta)<2?"flat":(r.good?"improving":"worsening")})));
+    XLSX.utils.book_append_sheet(wb,ws2,"Week over Week");
+  }
   const byC={};
   A.fsnRows.forEach(r=>{ const k=r.campaign||"—"; byC[k]=byC[k]||{spend:0,revenue:0,units:0,clicks:0,views:0,pause:0,scale:0};
     const o=byC[k]; o.spend+=r.spend;o.revenue+=r.revenue;o.units+=r.units;o.clicks+=r.clicks;o.views+=r.views;
@@ -668,8 +802,11 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
   XLSX.utils.book_append_sheet(wb,wsC,"Campaign Summary");
   const fr=A.fsnRows.map(r=>({Action:r.c.a,Campaign:r.campaign||"—",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
     "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
-    ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),"What to do":r.c.why}));
-  const ws=XLSX.utils.json_to_sheet(fr); ws["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:50},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:70}];
+    ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),
+    "CPC (₹)":r.clicks?Number((r.spend/r.clicks).toFixed(2)):"",
+    "Max CPC for target (₹)":Number(maxCpcFor(r,A.target).toFixed(2))||"",
+    "What to do":r.c.why}));
+  const ws=XLSX.utils.json_to_sheet(fr); ws["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:50},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:8},{wch:12},{wch:70}];
   XLSX.utils.book_append_sheet(wb,ws,"FSN Actions");
   if(A.placeRows.length){
     const pr=A.placeRows.map(p=>({Placement:p.placement,"Spend (₹)":Math.round(p.spend),Clicks:p.clicks,Units:p.units,
