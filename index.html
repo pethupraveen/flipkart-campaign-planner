@@ -105,6 +105,15 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 .fsnrow .fm{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .modal-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
 .modal textarea{width:100%;height:70px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:12px 'IBM Plex Mono',monospace}
+.mselect{position:relative}
+.mselect>button{width:100%;text-align:left;font-weight:500;padding:8px 10px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mpanel{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:340px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(23,27,38,.14);max-height:260px;overflow:auto;z-index:30;display:none;padding:6px}
+.mpanel.open{display:block}
+.mrow{display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:6px;cursor:pointer;font-size:12.5px}
+.mrow:hover{background:var(--blue-soft)}
+.mrow input{width:auto}
+.mpanel .mtools{display:flex;gap:6px;padding:4px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.mpanel .mtools button{padding:4px 10px;font-size:12px}
 @media (max-width:640px){main,header,footer{padding-left:14px;padding-right:14px}.tabs{padding:0 14px}}
 </style>
 </head>
@@ -246,8 +255,12 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
       <h2>FSN actions</h2>
       <div class="hint">Sorted by money at stake. Apply bid changes in Flipkart Ads Manager, then re-check next week.</div>
       <div class="row" style="margin-bottom:10px">
-        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fCampaign">Filter by campaign</label>
-          <select id="fCampaign"><option value="">All campaigns</option></select></div>
+        <div class="field" style="max-width:300px;margin-bottom:0"><label>Filter by campaign (multi-select)</label>
+          <div class="mselect">
+            <button type="button" id="fCampBtn">All campaigns</button>
+            <div class="mpanel" id="fCampPanel"></div>
+          </div>
+        </div>
         <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search FSN / product</label>
           <input type="text" id="fSearch" placeholder="Type to filter…"></div>
         <div class="field" style="max-width:200px;margin-bottom:0"><label for="fAction">Action</label>
@@ -758,23 +771,51 @@ function renderActions(){
   document.getElementById("apPacing").textContent=A.pacing;
 
   const fb=document.getElementById("fsnBody");
-  // populate campaign dropdown
-  const campSel=document.getElementById("fCampaign");
+  // populate campaign multi-select
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
-  const prev=campSel.value;
-  campSel.innerHTML=`<option value="">All campaigns (${camps.length})</option>`+camps.map(c=>`<option value="${esc(c)}" ${c===prev?"selected":""}>${esc(c)}</option>`).join("");
+  fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c))); // drop selections no longer present
+  buildCampPanel(camps);
   renderFsnTable();
   renderPlacementTable();
 }
 
+let fCampSel=new Set();
+function buildCampPanel(camps){
+  const panel=document.getElementById("fCampPanel");
+  panel.innerHTML=`<div class="mtools"><button type="button" id="mAll">Select all</button><button type="button" id="mNone">Clear</button></div>`;
+  camps.forEach(c=>{
+    const row=document.createElement("label"); row.className="mrow";
+    row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span>${esc(c)}</span>`;
+    row.querySelector("input").addEventListener("change",e=>{
+      e.target.checked? fCampSel.add(c):fCampSel.delete(c);
+      updateCampBtn(camps.length); renderFsnTable();
+    });
+    panel.appendChild(row);
+  });
+  panel.querySelector("#mAll").addEventListener("click",()=>{ camps.forEach(c=>fCampSel.add(c)); buildCampPanel(camps); updateCampBtn(camps.length); renderFsnTable(); panel.classList.add("open"); });
+  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); buildCampPanel(camps); updateCampBtn(camps.length); renderFsnTable(); panel.classList.add("open"); });
+  updateCampBtn(camps.length);
+}
+function updateCampBtn(total){
+  const b=document.getElementById("fCampBtn");
+  b.textContent = (fCampSel.size===0||fCampSel.size===total)? `All campaigns (${total})`
+    : fCampSel.size===1? [...fCampSel][0]
+    : `${fCampSel.size} campaigns selected`;
+}
+document.addEventListener("click",e=>{
+  const panel=document.getElementById("fCampPanel"), btn=document.getElementById("fCampBtn");
+  if(!panel||!btn) return;
+  if(btn.contains(e.target)){ panel.classList.toggle("open"); }
+  else if(!panel.contains(e.target)){ panel.classList.remove("open"); }
+});
+
 function renderFsnTable(){
   const A=state.lastActions; if(!A) return;
   const fb=document.getElementById("fsnBody"); fb.innerHTML="";
-  const cf=document.getElementById("fCampaign").value;
   const q=document.getElementById("fSearch").value.trim().toLowerCase();
   const af=document.getElementById("fAction").value;
   let rows=A.fsnRows.filter(r=> (af? r.c.a===af : r.c.a!=="KEEP"));
-  if(cf) rows=rows.filter(r=>(r.campaign||"—")===cf);
+  if(fCampSel.size) rows=rows.filter(r=>fCampSel.has(r.campaign||"—"));
   if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
   document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
   rows.slice(0,300).forEach(r=>{
@@ -791,7 +832,7 @@ function renderFsnTable(){
   });
   if(!rows.length) fb.innerHTML=`<tr><td colspan="12" class="note">No rows match the current filters.</td></tr>`;
 }
-["fCampaign","fSearch","fAction"].forEach(id=>{
+["fSearch","fAction"].forEach(id=>{
   const el=document.getElementById(id);
   el.addEventListener(el.tagName==="INPUT"?"input":"change",renderFsnTable);
 });
