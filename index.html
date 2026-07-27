@@ -121,6 +121,44 @@ tbody tr:last-child td{border-bottom:none}
 
 footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 
+/* ---------- plain-language / non-technical layer ---------- */
+.help-card{border-color:#CFE0FF;background:linear-gradient(180deg,#F7FAFF,#fff)}
+.help-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.help-badge{flex:none;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px 'Space Grotesk',sans-serif}
+.steps{margin:0 0 12px 0;padding-left:22px;display:flex;flex-direction:column;gap:7px;font-size:13px}
+.steps li{padding-left:2px}
+.drop-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.verdict{border-radius:var(--radius);padding:20px 22px;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:16px}
+.verdict.good{background:linear-gradient(180deg,#F1FAF5,#fff);border-color:#BFE8D2}
+.verdict.warn{background:linear-gradient(180deg,#FFFAEC,#fff);border-color:#F5DFA0}
+.verdict.bad{background:linear-gradient(180deg,#FDF1EF,#fff);border-color:#F0C3BB}
+.verdict-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.verdict-dot{width:12px;height:12px;border-radius:50%;flex:none}
+.verdict.good .verdict-dot{background:var(--green)}
+.verdict.warn .verdict-dot{background:var(--amber)}
+.verdict.bad .verdict-dot{background:var(--red)}
+.verdict-title{font:700 14px 'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:.6px}
+.verdict-sentence{font-size:15px;line-height:1.6;max-width:70ch;margin-bottom:14px}
+.todo-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.todo-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+.todo-list li::before{content:"→";color:var(--blue-deep);font-weight:700;flex:none}
+.simple-toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);cursor:pointer;user-select:none}
+.simple-toggle input{width:auto;accent-color:var(--blue)}
+.jw{white-space:nowrap}
+.jw .mono{color:var(--muted);font-size:11px}
+.glossary{border-collapse:collapse;width:100%;font-size:13px}
+.glossary td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.glossary td:first-child{font-weight:700;white-space:nowrap;padding-right:16px}
+details.gl summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--blue-deep);list-style:none}
+details.gl summary::-webkit-details-marker{display:none}
+details.gl summary::before{content:"▸ ";display:inline-block}
+details.gl[open] summary::before{content:"▾ "}
+.adv-block{display:none;border-top:1px dashed var(--line);margin-top:16px;padding-top:16px}
+.adv-block.open{display:block}
+.adv-toggle{display:none}
+.adv-toggle.open{display:block}
+.adv-toggle.no-data{display:none!important}
+
 /* ---------- campaign KPI cards + pagination ---------- */
 .viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .viewtoggle button{border:none;border-radius:0;padding:7px 14px;background:#fff;color:var(--muted)}
@@ -150,8 +188,8 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
 
 <header>
   <div class="head-top">
-    <h1>Flipkart Ads <span>Optimizer</span></h1>
-    <div class="head-sub">Upload weekly reports → get a bid-level action plan → export to Excel. Everything stays in your browser.</div>
+    <h1>Flipkart Ads <span>Made Simple</span></h1>
+    <div class="head-sub">No ads experience needed. Upload 3 reports, get a plain-English to-do list.</div>
   </div>
   <div class="pacer">
     <div class="pacer-label"><span id="pacerTitle">Month pacing — set a monthly budget in Rules & thresholds to track it</span><span id="pacerRight"></span></div>
@@ -160,67 +198,95 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
 </header>
 
 <nav><div class="tabs">
-  <button class="tab active" data-t="upload">1 · Weekly reports</button>
-  <button class="tab" data-t="actions">2 · Action plan</button>
-  <button class="tab" data-t="settings">3 · Rules & thresholds</button>
+  <button class="tab active" data-t="upload">1 · Upload your reports</button>
+  <button class="tab" data-t="actions">2 · What to do this week</button>
+  <button class="tab" data-t="settings">3 · Settings</button>
 </div></nav>
 
 <main>
 
 <!-- ============ UPLOADS ============ -->
 <section class="panel active" id="panel-upload">
+  <div class="card help-card" style="margin-bottom:14px">
+    <div class="help-top">
+      <div class="help-badge">?</div>
+      <div>
+        <h2 style="margin-bottom:2px">New here? Start with this</h2>
+        <div class="hint" style="margin-bottom:0">You only need to do 2 things: download 3 files from Flipkart, then drop them below. Nothing to install, nothing to configure.</div>
+      </div>
+    </div>
+    <ol class="steps">
+      <li><b>Open Flipkart Seller Hub</b> on your computer → go to <b>Advertising</b> → <b>Reports</b>.</li>
+      <li>Download last week's <b>3 reports</b> shown below (they're free, takes a minute).</li>
+      <li>Come back here, pick the week, and drop each file into its matching box.</li>
+    </ol>
+    <div class="note">🔒 Nothing you upload leaves your computer — this tool works entirely inside your browser.</div>
+  </div>
   <div class="card" style="margin-bottom:14px">
-    <h2>Upload this week's reports</h2>
-    <div class="hint">Download from Flipkart Ads Manager → Reports, then drop the files here (.xlsx or .csv). Column names are auto-detected, and the report type is verified — if you drop a file in the wrong slot, it's automatically moved to the correct one. Files are parsed locally in your browser — nothing is uploaded anywhere.</div>
+    <h2>Step 1 — Pick the week, then add your 3 files</h2>
+    <div class="hint">We check what's inside each file automatically — if you drop a file in the wrong box, we'll move it to the right one for you.</div>
     <div class="row">
-      <div class="field" style="max-width:180px"><label for="weekSel">Week of the month</label>
+      <div class="field" style="max-width:180px"><label for="weekSel">Which week is this?</label>
         <select id="weekSel"><option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="5">Week 5</option></select>
       </div>
     </div>
   </div>
   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
-    <div class="drop" id="dropFsn"><div class="big">1 · Consolidated FSN report</div><div class="st" id="stFsn">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="drop" id="dropDaily"><div class="big">2 · Consolidated daily report</div><div class="st" id="stDaily">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="drop" id="dropPlace"><div class="big">3 · Placement performance report</div><div class="st" id="stPlace">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="drop" id="dropFsn"><div class="big">📦 Product-level report</div><div class="drop-sub mono">"Consolidated FSN report"</div><div class="st" id="stFsn">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="drop" id="dropDaily"><div class="big">📅 Day-by-day report</div><div class="drop-sub mono">"Consolidated daily report"</div><div class="st" id="stDaily">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="drop" id="dropPlace"><div class="big">📍 Ad-placement report</div><div class="drop-sub mono">"Placement performance report"</div><div class="st" id="stPlace">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
   </div>
   <div class="toolbar">
-    <button class="primary" id="btnAnalyze">Generate action plan →</button>
+    <button class="primary" id="btnAnalyze">Step 2 — Show me what to do →</button>
     <span class="note" id="uploadNote"></span>
   </div>
   <div class="card">
-    <h2>Weeks stored this month</h2>
-    <div class="hint">Data is saved in your browser (localStorage), so you can come back next week and compare.</div>
-    <div id="weekList" class="note">No weeks uploaded yet.</div>
-    <div class="toolbar" style="margin-bottom:0"><button id="btnClearMonth">Clear all stored weeks</button></div>
+    <h2>Your progress this month</h2>
+    <div class="hint">Saved automatically in this browser, so you can come back any time and pick up where you left off.</div>
+    <div id="weekList" class="note">Nothing uploaded yet — add your first week's files above.</div>
+    <div class="toolbar" style="margin-bottom:0"><button id="btnClearMonth">Start over (clear everything)</button></div>
   </div>
 </section>
 
 <!-- ============ ACTIONS ============ -->
 <section class="panel" id="panel-actions">
   <div class="toolbar">
-    <h2 style="font-size:18px" id="apTitle">Action plan</h2>
+    <h2 style="font-size:18px" id="apTitle">What to do this week</h2>
     <span class="spacer"></span>
-    <button class="primary" id="btnExportActions">⬇ Export action plan to Excel</button>
+    <label class="simple-toggle"><input type="checkbox" id="tSimple" checked><span>Simple view (hide detailed tables)</span></label>
+    <button class="primary" id="btnExportActions">⬇ Download as Excel</button>
   </div>
-  <div id="apEmpty" class="card"><div class="hint" style="margin:0">Upload at least the FSN report in tab 1, then press “Generate action plan”.</div></div>
+  <div id="apEmpty" class="card"><div class="hint" style="margin:0">👋 Go to Step 1, add your files, and press "Show me what to do" — your plan will appear here.</div></div>
   <div id="apBody" style="display:none">
+    <div class="verdict" id="verdictCard"></div>
     <div class="grid g4" id="apMetrics"></div>
-    <div class="card section-gap"><h2>Weekly summary & pacing</h2><div class="hint" id="apSummary"></div><div id="apPacing" class="note"></div></div>
-    <div class="card section-gap scroll">
-      <h2>ROI health check</h2>
-      <div class="hint">The 7 elements that decide your ads ROI, scored against your thresholds. Fix reds top-to-bottom.</div>
-      <table><thead><tr><th>Element</th><th>This week</th><th>Status</th><th>What to do</th></tr></thead>
+    <div class="card section-gap"><h2>Spending pace this month</h2><div class="hint" id="apSummary"></div><div id="apPacing" class="note"></div></div>
+    <div class="card section-gap scroll" id="healthCard">
+      <h2>Is my advertising working?</h2>
+      <div class="hint">A quick check-up across the 6 things that decide whether ads make or lose you money. Green = good, Red = fix this first.</div>
+      <table><thead><tr><th>What we checked</th><th>This week</th><th>Status</th><th>What to do</th></tr></thead>
       <tbody id="healthBody"></tbody></table>
+      <details class="gl" style="margin-top:14px">
+        <summary>What do these words mean?</summary>
+        <table class="glossary" style="margin-top:10px">
+          <tr><td>ROAS</td><td>Return on ad spend — for every ₹1 you spend on ads, how many ₹ you get back in sales.</td></tr>
+          <tr><td>CPC</td><td>Cost per click — how much you pay Flipkart each time someone clicks your ad.</td></tr>
+          <tr><td>CTR</td><td>Click-through rate — out of everyone who saw your ad, what % clicked it. Low = your thumbnail/title isn't grabbing attention.</td></tr>
+          <tr><td>CVR</td><td>Conversion rate — out of everyone who clicked, what % actually bought. Low = the product page needs work (price, photos, reviews, stock).</td></tr>
+          <tr><td>AOV</td><td>Average order value — the average ₹ amount per sale.</td></tr>
+          <tr><td>FSN</td><td>Flipkart's unique ID number for one specific product listing.</td></tr>
+        </table>
+      </details>
     </div>
-    <div class="card section-gap scroll" id="wowCard" style="display:none">
-      <h2 id="wowTitle">Week-over-week trend</h2>
-      <div class="hint">Catches slow ROI killers — CPC creep and CVR decay — before they compound.</div>
-      <table><thead><tr><th>Metric</th><th>This week</th><th>Previous week</th><th>Change</th></tr></thead>
+    <div class="card section-gap scroll adv-toggle no-data" id="wowCard">
+      <h2 id="wowTitle">Compared to last week</h2>
+      <div class="hint">Catches slow problems — like costs quietly creeping up — before they get expensive.</div>
+      <table><thead><tr><th>Metric</th><th>This week</th><th>Last week</th><th>Change</th></tr></thead>
       <tbody id="wowBody"></tbody></table>
     </div>
-    <div class="card section-gap">
-      <h2>Campaign KPIs</h2>
-      <div class="hint">Every campaign's efficiency, sorted by spend. Click a campaign to see its FSN action plan below.</div>
+    <div class="card section-gap adv-toggle" id="campBreakdownCard">
+      <h2>Campaign-by-campaign breakdown</h2>
+      <div class="hint">Every campaign's performance, sorted by how much you spent on it. Click one to see exactly which products inside it need attention.</div>
       <div class="row" style="margin-bottom:14px;align-items:flex-end">
         <div class="field" style="max-width:280px;margin-bottom:0"><label for="campSearch">Search campaigns</label>
           <input type="text" id="campSearch" placeholder="Type to filter…"></div>
@@ -237,28 +303,28 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
       </div>
       <div class="pager" id="campPager"></div>
     </div>
-    <div class="card section-gap scroll">
-      <h2>FSN actions</h2>
-      <div class="hint">Sorted by money at stake. "Max CPC" = the highest bid that still hits your target ROAS for that FSN ((revenue ÷ clicks) ÷ target) — use it when setting bids in Ads Manager.</div>
+    <div class="card section-gap scroll adv-toggle" id="fsnDetailCard">
+      <h2>Every product, one by one</h2>
+      <div class="hint">The full detailed list behind the to-do list above, sorted by how much money is at stake. "Bid you're paying / Bid you can afford" tells you the highest price-per-click that still keeps this product profitable — use it when you update bids in Flipkart.</div>
       <div class="row" style="margin-bottom:10px">
-        <div class="field" style="max-width:300px;margin-bottom:0"><label>Filter by campaign (multi-select)</label>
+        <div class="field" style="max-width:300px;margin-bottom:0"><label>Filter by campaign (pick one or more)</label>
           <div class="mselect">
             <button type="button" id="fCampBtn">All campaigns</button>
             <div class="mpanel" id="fCampPanel"></div>
           </div>
         </div>
-        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search FSN / product</label>
+        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search by product ID or name</label>
           <input type="text" id="fSearch" placeholder="Type to filter…"></div>
-        <div class="field" style="max-width:220px;margin-bottom:0"><label for="fAction">Action</label>
-          <select id="fAction"><option value="">Needs action (default)</option><option value="ALL">All rows (incl. KEEP)</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
+        <div class="field" style="max-width:220px;margin-bottom:0"><label for="fAction">Show me</label>
+          <select id="fAction"><option value="">Needs attention (default)</option><option value="ALL">Everything, including "no change needed"</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><label class="mrow" style="padding:8px 0"><input type="checkbox" id="fGroup"><span>Group by campaign</span></label></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
       </div>
-      <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>CPC / Max ₹</th><th>Why / what to do</th></tr></thead>
+      <table><thead><tr><th>Do this</th><th>Campaign</th><th>Product ID</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>Click rate</th><th>Sold</th><th>Revenue ₹</th><th>₹ back per ₹1</th><th>Bid paying / afford</th><th>Why</th></tr></thead>
       <tbody id="fsnBody"></tbody></table>
       <div class="pager" id="fsnPager"></div>
     </div>
-    <div class="card section-gap scroll">
+    <div class="card section-gap scroll adv-toggle" id="placementCard">
       <h2>Placement actions</h2>
       <table><thead><tr><th>Action</th><th>Placement</th><th>Spend ₹</th><th>Clicks</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Recommendation</th></tr></thead>
       <tbody id="placeBody"></tbody></table>
@@ -270,34 +336,52 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
 <!-- ============ SETTINGS ============ -->
 <section class="panel" id="panel-settings">
   <div class="card" style="max-width:660px">
-    <h2>Optimizer rules & thresholds</h2>
-    <div class="hint">The action plan is rules-based. Tune the thresholds to your margins and risk appetite.</div>
+    <h2>The basics</h2>
+    <div class="hint">Just 3 questions — we'll work out the rest automatically. Don't worry about getting these perfect; you can change them any week.</div>
     <div class="row">
-      <div class="field"><label for="pMonth">Month</label><input type="month" id="pMonth"></div>
-      <div class="field"><label for="pBudget">Monthly ad budget ₹ (optional, for pacing)</label><input type="number" id="pBudget" min="0" step="500" placeholder="e.g. 120000"></div>
+      <div class="field"><label for="pMonth">Which month are you tracking?</label><input type="month" id="pMonth"></div>
+      <div class="field"><label for="pBudget">Your ad budget for the month (₹) — optional</label><input type="number" id="pBudget" min="0" step="500" placeholder="e.g. 120000"></div>
     </div>
-    <div class="row">
-      <div class="field"><label for="pTarget">Target ROAS</label><input type="number" id="pTarget" min="1" step="0.5" value="5"></div>
-      <div class="field"><label for="pBreakeven">Break-even ROAS</label><input type="number" id="pBreakeven" min="1" step="0.5" value="3"></div>
+    <div class="field">
+      <label for="pMargin">What's your typical profit margin on a sale?</label>
+      <div class="row" style="align-items:center;gap:14px">
+        <input type="range" id="pMarginRange" min="10" max="60" step="1" value="33" style="flex:2">
+        <div class="mono" style="flex:0 0 auto;font-size:16px;font-weight:700;min-width:48px" id="pMarginLabel">33%</div>
+      </div>
+      <div class="note" style="margin-top:6px">Example: if a product sells for ₹500 and costs you ₹335 (product + fees + shipping), your margin is 33%. Below this margin, an ad sale actually loses you money — we use it to tell PAUSE-worthy products apart from healthy ones.</div>
     </div>
-    <div class="row">
-      <div class="field"><label for="tMinSpend">Min weekly spend to act on an FSN (₹)</label><input type="number" id="tMinSpend" value="150" min="0"></div>
-      <div class="field"><label for="tMinClicks">Min clicks before judging conversion</label><input type="number" id="tMinClicks" value="20" min="1"></div>
+    <div class="field">
+      <label for="pTarget">How many ₹ back per ₹1 spent do you want from ads?</label>
+      <input type="number" id="pTarget" min="1" step="0.5" value="5" style="max-width:160px">
+      <div class="note" style="margin-top:6px">Most sellers aim for ₹4–6 back per ₹1 spent. Higher = more cautious, lower = more willing to spend for growth.</div>
     </div>
-    <div class="row">
-      <div class="field"><label for="tMinViews">Min views before judging CTR</label><input type="number" id="tMinViews" value="1000" min="0"></div>
-      <div class="field"><label for="tLowCtr">Low-CTR threshold (%)</label><input type="number" id="tLowCtr" value="1" step="0.1" min="0"></div>
-    </div>
-    <div class="row">
-      <div class="field"><label for="tScaleMult">Scale when ROAS ≥ target ×</label><input type="number" id="tScaleMult" value="1.3" step="0.1" min="1"></div>
-      <div class="field"></div>
-    </div>
-    <div class="note">Break-even ROAS ≈ 1 ÷ profit margin (33% margin → 3.0). Rules fire in priority order:<br>
-      1. <b>PAUSE</b> — meaningful spend & clicks but zero units → price, stock, rating or wrong-keyword problem.<br>
-      2. <b>CUT BID</b> — ROAS below break-even on meaningful spend → losing money.<br>
-      3. <b>SCALE</b> — ROAS ≥ target × multiplier → raise bids/budget to buy more volume.<br>
-      4. <b>REDUCE</b> — profitable but under target → trim bid ~10–15%.<br>
-      5. <b>FIX CONTENT</b> — big views, tiny CTR → thumbnail/title/price is the bottleneck.</div>
+    <div class="note" id="breakevenNote" style="background:var(--blue-soft);border-radius:8px;padding:10px 12px;color:var(--ink)"></div>
+  </div>
+
+  <div class="card section-gap" style="max-width:660px">
+    <details class="gl">
+      <summary>Advanced settings (only change these if you know what they do)</summary>
+      <div class="adv-block open" style="margin-top:14px">
+        <div class="row">
+          <div class="field"><label for="pBreakeven">Break-even ₹-back-per-₹1 (auto-set by margin above)</label><input type="number" id="pBreakeven" min="1" step="0.5" value="3"></div>
+          <div class="field"><label for="tScaleMult">Multiply target by this to trigger "spend more"</label><input type="number" id="tScaleMult" value="1.3" step="0.1" min="1"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="tMinSpend">Ignore a product below this weekly spend (₹)</label><input type="number" id="tMinSpend" value="150" min="0"></div>
+          <div class="field"><label for="tMinClicks">Minimum clicks before judging its conversion</label><input type="number" id="tMinClicks" value="20" min="1"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="tMinViews">Minimum views before judging its click rate</label><input type="number" id="tMinViews" value="1000" min="0"></div>
+          <div class="field"><label for="tLowCtr">Click rate counted as "too low" (%)</label><input type="number" id="tLowCtr" value="1" step="0.1" min="0"></div>
+        </div>
+        <div class="note">How decisions are made, in order:<br>
+          1. <b>Turn off</b> — meaningful spend & clicks but zero sales → price, stock, rating or wrong-keyword problem.<br>
+          2. <b>Spend less</b> — below break-even on meaningful spend → losing money.<br>
+          3. <b>Spend more</b> — well above your target → raise bids/budget to buy more volume.<br>
+          4. <b>Trim a little</b> — profitable but under target → trim bid ~10–15%.<br>
+          5. <b>Fix the listing</b> — lots of views, tiny click rate → thumbnail/title/price is the bottleneck, not the ad.</div>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -482,6 +566,36 @@ function roiHealth(kpis, tot, classifiedRows, be, target, T){
   return {items, waste, wastePct, affordable};
 }
 
+// friendly, jargon-free labels for the action codes — used everywhere a non-technical
+// person sees a decision, so the technical code is always paired with plain words
+var ACTION_WORDS = {
+  "PAUSE":       {icon:"🛑", word:"Turn off",      short:"Stop this ad"},
+  "CUT BID":     {icon:"⬇️", word:"Spend less",    short:"Lower how much you bid"},
+  "REDUCE":      {icon:"↘️", word:"Trim a little",  short:"Small bid decrease"},
+  "SCALE":       {icon:"📈", word:"Spend more",     short:"This one's working — grow it"},
+  "FIX CONTENT": {icon:"🖼️", word:"Fix the listing", short:"Ad is fine, the product page isn't"},
+  "KEEP":        {icon:"✅", word:"Leave as is",    short:"No change needed"}
+};
+
+// builds a plain-English weekly verdict a shop owner can read without any ad jargon
+function plainEnglishSummary(tot, counts, be, target, wastePct){
+  const roas=tot.spend? tot.revenue/tot.spend : 0;
+  const n=k=>counts[k]||0;
+  const stop=n("PAUSE")+n("CUT BID"), grow=n("SCALE"), fix=n("FIX CONTENT");
+  let verdict, tone;
+  if(tot.spend<=0){ verdict="No ad spend recorded this week — nothing to review yet."; tone="warn"; }
+  else if(roas>=target){ verdict=`Good week — for every ₹1 you spent on ads, you got back ₹${roas.toFixed(2)}. That's above your ₹${target} goal.`; tone="good"; }
+  else if(roas>=be){ verdict=`Okay week — for every ₹1 spent you got back ₹${roas.toFixed(2)}. You're not losing money, but you're below your ₹${target} goal.`; tone="warn"; }
+  else { verdict=`This week your ads lost money — you only got back ₹${roas.toFixed(2)} for every ₹1 spent. Fixing this should be today's priority.`; tone="bad"; }
+  const todo=[];
+  if(stop>0) todo.push(`Turn off or lower the bid on ${stop} product${stop>1?"s":""} — ${stop>1?"they're":"it's"} losing money.`);
+  if(fix>0) todo.push(`Fix the product page (photos, price, stock) for ${fix} listing${fix>1?"s":""} getting lots of views but almost no clicks.`);
+  if(grow>0) todo.push(`Spend more on ${grow} product${grow>1?"s":""} that are already working well.`);
+  if(wastePct>10) todo.push(`₹${wastePct.toFixed(0)} out of every ₹100 you spent went to products that don't sell — stopping those is your fastest win.`);
+  if(!todo.length) todo.push("Nothing urgent this week — check back next week.");
+  return {verdict, tone, todo};
+}
+
 // per-campaign rollup: totals, KPIs, wasted spend and action counts
 function campaignSummaries(classifiedRows, be){
   const by={};
@@ -557,6 +671,23 @@ Object.keys(SETTING_IDS).forEach(id=>{
 });
 function daysInMonth(){ const m=state.settings.month; if(!m) return 30;
   const [y,mo]=m.split("-").map(Number); return new Date(y,mo,0).getDate(); }
+
+/* ---------- margin slider → auto break-even ROAS ---------- */
+function updateMarginDerived(){
+  const margin=Number(document.getElementById("pMarginRange").value);
+  document.getElementById("pMarginLabel").textContent=margin+"%";
+  const be=Math.round((100/margin)*10)/10; // 1 / margin, one decimal
+  state.settings.breakeven=be;
+  document.getElementById("pBreakeven").value=be;
+  const target=num(state.settings.target)||5;
+  document.getElementById("breakevenNote").innerHTML=
+    `With a ${margin}% margin, you break even at <b>₹${be} back per ₹1 spent</b>. `+
+    `Below that, an ad "sale" is actually a loss — those are the first ones we'll tell you to turn off. `+
+    `Your goal of ₹${target} back per ₹1 gives you real profit above break-even.`;
+  save();
+}
+document.getElementById("pMarginRange").addEventListener("input",updateMarginDerived);
+document.getElementById("pTarget").addEventListener("input",updateMarginDerived);
 
 /* ---------- pacing strip ---------- */
 function renderPacer(){
@@ -671,6 +802,14 @@ document.getElementById("btnClearMonth").addEventListener("click",()=>{
 });
 
 /* ---------- generate action plan ---------- */
+/* ---------- simple view toggle ---------- */
+function applySimpleView(){
+  const simple=document.getElementById("tSimple").checked;
+  document.querySelectorAll(".adv-toggle").forEach(el=>el.classList.toggle("open", !simple));
+  state.simpleView=simple; save();
+}
+document.getElementById("tSimple").addEventListener("change",applySimpleView);
+
 document.getElementById("btnAnalyze").addEventListener("click",()=>{
   const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w];
   if(!wk || !wk.fsn){ document.getElementById("uploadNote").textContent="Upload at least the FSN report for this week first."; return; }
@@ -697,18 +836,27 @@ function renderActions(){
   fsnPage=1; campPage=1;
   document.getElementById("apEmpty").style.display="none";
   document.getElementById("apBody").style.display="block";
-  document.getElementById("apTitle").textContent=`Action plan — Week ${A.week}`;
+  document.getElementById("apTitle").textContent=`Week ${A.week} — your to-do list`;
   const roas=A.tot.revenue/Math.max(1,A.tot.spend);
   const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
   const K=A.kpis||computeKpis(A.tot);
+  // plain-English verdict card — the first thing a non-technical seller reads
+  const wastePct=A.health? A.health.wastePct : 0;
+  const ps=plainEnglishSummary(A.tot, counts, A.be, A.target, wastePct);
+  const vc=document.getElementById("verdictCard");
+  vc.className="verdict "+ps.tone;
+  vc.innerHTML=
+    `<div class="verdict-head"><span class="verdict-dot"></span><span class="verdict-title">${ps.tone==="good"?"Good week":ps.tone==="warn"?"Room to improve":"Needs attention"}</span></div>`+
+    `<div class="verdict-sentence">${ps.verdict}</div>`+
+    `<ul class="todo-list">${ps.todo.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
   document.getElementById("apMetrics").innerHTML=[
-    ["Ad spend",fmt(A.tot.spend)],["Ad revenue",fmt(A.tot.revenue)],
-    ["ROAS",roas.toFixed(2)+"×"],["Avg CPC","₹"+K.cpc.toFixed(1)],
-    ["CVR",K.cvr.toFixed(2)+"%"],["Wasted spend",A.health?fmt(A.health.waste):"—"]
+    ["You spent",fmt(A.tot.spend)],["You made back",fmt(A.tot.revenue)],
+    ["₹ back per ₹1 spent",roas.toFixed(2)],["Avg. cost per click","₹"+K.cpc.toFixed(1)],
+    ["% of clicks → sales",K.cvr.toFixed(2)+"%"],["Money wasted",A.health?fmt(A.health.waste):"—"]
   ].map(([l,v])=>`<div class="metric"><div class="lbl">${l}</div><div class="num">${v}</div></div>`).join("");
   document.getElementById("apSummary").innerHTML=
-    `Overall ROAS <b>${roas.toFixed(2)}×</b> vs break-even ${A.be} and target ${A.target}. `+
-    `${A.fsnRows.length.toLocaleString()} campaign-FSN rows analysed — <b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> losing money, <b>${counts.SCALE||0}</b> ready to scale, <b>${counts["FIX CONTENT"]||0}</b> need listing fixes.`;
+    `You looked at ${A.fsnRows.length.toLocaleString()} product listings this week. `+
+    `<b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> are losing money, <b>${counts.SCALE||0}</b> are doing well enough to spend more on, and <b>${counts["FIX CONTENT"]||0}</b> need their product page improved.`;
   document.getElementById("apPacing").textContent=A.pacing;
   // ROI health table
   const hb=document.getElementById("healthBody"); hb.innerHTML="";
@@ -723,7 +871,7 @@ function renderActions(){
   // week-over-week
   const wc=document.getElementById("wowCard");
   if(A.wow){
-    wc.style.display="block";
+    wc.classList.remove("no-data");
     document.getElementById("wowTitle").textContent=`Week-over-week trend — W${A.week} vs W${A.prevWeek}`;
     const wb=document.getElementById("wowBody"); wb.innerHTML="";
     A.wow.forEach(r=>{
@@ -735,13 +883,14 @@ function renderActions(){
         `<td><span class="tag ${cls}">${arrow} ${Math.abs(r.delta).toFixed(1)}%</span></td>`;
       wb.appendChild(tr);
     });
-  } else { wc.style.display="none"; }
+  } else { wc.classList.add("no-data"); }
   campPage=1; renderCampKpis();
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
   fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
   buildCampPanel(camps);
   renderFsnTable();
   renderPlacementTable();
+  applySimpleView();
 }
 
 /* campaign multi-select with search */
@@ -781,7 +930,7 @@ function selectCampaign(name){
   const target=document.getElementById("fsnBody").closest(".card");
   if(target) target.scrollIntoView({behavior:"smooth"});
 }
-function campStatus(s,A){ return s.kpis.roas>=A.target?["scale","ON TARGET"]:s.kpis.roas>=A.be?["reduce","PROFITABLE"]:["pause","LOSING"]; }
+function campStatus(s,A){ return s.kpis.roas>=A.target?["scale","DOING WELL"]:s.kpis.roas>=A.be?["reduce","OKAY"]:["pause","LOSING MONEY"]; }
 function renderCampKpis(){
   const A=state.lastActions; if(!A) return;
   const data=campKpiData();
@@ -796,23 +945,23 @@ function renderCampKpis(){
     cardsEl.innerHTML="";
     slice.forEach(s=>{
       const [cls,lbl]=campStatus(s,A);
-      const card=document.createElement("div"); card.className="ck"; card.title="Click to see this campaign's FSN actions";
+      const card=document.createElement("div"); card.className="ck"; card.title="Click to see this campaign's product-by-product plan";
       card.innerHTML=
         `<div class="ck-top"><div class="ck-name">${esc(s.campaign)}</div><span class="tag ${cls}">${lbl}</span></div>`+
-        `<div class="ck-roas"><span class="num">${s.kpis.roas.toFixed(2)}×</span><span class="lbl">ROAS · target ${A.target}</span></div>`+
+        `<div class="ck-roas"><span class="num">₹${s.kpis.roas.toFixed(2)}</span><span class="lbl">back per ₹1 · goal ₹${A.target}</span></div>`+
         `<div class="ck-kpis">`+
           `<div><span>Spend</span><b>₹${Math.round(s.spend).toLocaleString("en-IN")}</b></div>`+
           `<div><span>Revenue</span><b>₹${Math.round(s.revenue).toLocaleString("en-IN")}</b></div>`+
           `<div><span>Wasted</span><b style="${s.waste>0?'color:var(--red)':''}">₹${Math.round(s.waste).toLocaleString("en-IN")}</b></div>`+
-          `<div><span>CPC</span><b>₹${s.kpis.cpc.toFixed(1)}</b></div>`+
-          `<div><span>CTR</span><b>${s.kpis.ctr.toFixed(2)}%</b></div>`+
-          `<div><span>CVR</span><b>${s.kpis.cvr.toFixed(2)}%</b></div>`+
+          `<div><span>Cost/click</span><b>₹${s.kpis.cpc.toFixed(1)}</b></div>`+
+          `<div><span>Click rate</span><b>${s.kpis.ctr.toFixed(2)}%</b></div>`+
+          `<div><span>→ sale rate</span><b>${s.kpis.cvr.toFixed(2)}%</b></div>`+
         `</div>`+
         `<div class="ck-foot">`+
-          `${((s.counts.PAUSE||0)+(s.counts["CUT BID"]||0))?`<span class="tag pause">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)} pause/cut</span>`:""}`+
-          `${(s.counts.SCALE||0)?`<span class="tag scale">${s.counts.SCALE} scale</span>`:""}`+
-          `${(s.counts["FIX CONTENT"]||0)?`<span class="tag fix">${s.counts["FIX CONTENT"]} fix</span>`:""}`+
-          `<span style="margin-left:auto">${s.units} units · AOV ₹${Math.round(s.kpis.aov)}</span>`+
+          `${((s.counts.PAUSE||0)+(s.counts["CUT BID"]||0))?`<span class="tag pause">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)} to fix</span>`:""}`+
+          `${(s.counts.SCALE||0)?`<span class="tag scale">${s.counts.SCALE} to grow</span>`:""}`+
+          `${(s.counts["FIX CONTENT"]||0)?`<span class="tag fix">${s.counts["FIX CONTENT"]} listing fix</span>`:""}`+
+          `<span style="margin-left:auto">${s.units} sold · avg ₹${Math.round(s.kpis.aov)}</span>`+
         `</div>`;
       card.addEventListener("click",()=>selectCampaign(s.campaign));
       cardsEl.appendChild(card);
@@ -823,7 +972,7 @@ function renderCampKpis(){
     slice.forEach(s=>{
       const [cls,lbl]=campStatus(s,A);
       const tr=document.createElement("tr");
-      tr.style.cursor="pointer"; tr.title="Click to see this campaign's FSN actions";
+      tr.style.cursor="pointer"; tr.title="Click to see this campaign's product-by-product plan";
       tr.innerHTML=`<td style="max-width:220px;font-weight:600;font-size:12.5px">${esc(s.campaign)}</td>`+
         `<td class="mono">${Math.round(s.spend).toLocaleString()}</td><td class="mono">${Math.round(s.revenue).toLocaleString()}</td>`+
         `<td class="mono">${s.kpis.roas.toFixed(2)}</td><td class="mono">${s.kpis.cpc.toFixed(1)}</td>`+
@@ -938,16 +1087,17 @@ function renderFsnTable(){
 function fsnRowEl(r,A){
   const cpc=r.clicks? r.spend/r.clicks:0, maxc=maxCpcFor(r,A.target);
   const cpcCls=maxc>0&&cpc>maxc? "color:var(--red);font-weight:600":"";
+  const aw=ACTION_WORDS[r.c.a]||{icon:"",word:r.c.a};
   const tr=document.createElement("tr");
-  tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td>`+
+  tr.innerHTML=`<td><span class="tag ${r.c.cls}" title="${esc(r.c.a)}">${aw.icon} ${esc(aw.word)}</span></td>`+
     `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
     `<td class="mono">${esc(r.fsn)}</td>`+
     `<td style="max-width:240px">${esc((r.title||"").slice(0,70))}</td>`+
     `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
     `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
     `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
-    `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
-    `<td class="mono" style="${cpcCls}">${cpc?cpc.toFixed(1):"—"} / ${maxc?maxc.toFixed(1):"—"}</td>`+
+    `<td class="mono">₹${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
+    `<td class="mono" style="${cpcCls}">₹${cpc?cpc.toFixed(1):"—"} / ₹${maxc?maxc.toFixed(1):"—"}</td>`+
     `<td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
   return tr;
 }
@@ -1064,6 +1214,9 @@ load();
   document.getElementById("tMinViews").value=S.minViews;
   document.getElementById("tLowCtr").value=S.lowCtr;
   document.getElementById("tScaleMult").value=S.scaleMult;
+  const marginGuess=Math.max(10,Math.min(60,Math.round(100/(num(S.breakeven)||3))));
+  document.getElementById("pMarginRange").value=marginGuess;
+  updateMarginDerived();
   renderWeekList(); renderPacer();
   document.getElementById("weekSel").dispatchEvent(new Event("change"));
   if(state.lastActions) renderActions();
