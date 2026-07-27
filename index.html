@@ -120,6 +120,28 @@ tbody tr:last-child td{border-bottom:none}
 .mtools button{padding:4px 10px;font-size:12px}
 
 footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+
+/* ---------- campaign KPI cards + pagination ---------- */
+.viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.viewtoggle button{border:none;border-radius:0;padding:7px 14px;background:#fff;color:var(--muted)}
+.viewtoggle button.on{background:var(--navy);color:#fff}
+.viewtoggle button:hover:not(.on){color:var(--blue)}
+.ckgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.ck{border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column;gap:10px}
+.ck:hover{border-color:var(--blue);box-shadow:var(--shadow)}
+.ck-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.ck-name{font-weight:600;font-size:13px;line-height:1.35;word-break:break-word}
+.ck-roas{display:flex;align-items:baseline;gap:8px}
+.ck-roas .num{font-size:27px;font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.ck-roas .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+.ck-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px 10px;border-top:1px solid var(--line);padding-top:10px}
+.ck-kpis div b{display:block;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.ck-kpis div span{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.ck-foot{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--muted)}
+.pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+.pager .note{font-variant-numeric:tabular-nums}
+.pager button{padding:6px 12px}
+.pager button:disabled{opacity:.4;cursor:default;border-color:var(--line);color:var(--muted)}
 @media (max-width:640px){main,header,footer{padding-left:14px;padding-right:14px}.tabs{padding:0 14px}.tab{padding:11px 12px 12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -196,11 +218,24 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
       <table><thead><tr><th>Metric</th><th>This week</th><th>Previous week</th><th>Change</th></tr></thead>
       <tbody id="wowBody"></tbody></table>
     </div>
-    <div class="card section-gap scroll">
+    <div class="card section-gap">
       <h2>Campaign KPIs</h2>
-      <div class="hint">Every campaign's efficiency at a glance, sorted by spend. Click a row to see its FSN action plan below.</div>
-      <table><thead><tr><th>Campaign</th><th>Spend ₹</th><th>Revenue ₹</th><th>ROAS</th><th>CPC ₹</th><th>CTR</th><th>CVR</th><th>AOV ₹</th><th>Wasted ₹</th><th>Pause/Cut</th><th>Scale</th><th>Status</th></tr></thead>
-      <tbody id="campKpiBody"></tbody></table>
+      <div class="hint">Every campaign's efficiency, sorted by spend. Click a campaign to see its FSN action plan below.</div>
+      <div class="row" style="margin-bottom:14px;align-items:flex-end">
+        <div class="field" style="max-width:280px;margin-bottom:0"><label for="campSearch">Search campaigns</label>
+          <input type="text" id="campSearch" placeholder="Type to filter…"></div>
+        <div class="field" style="margin-bottom:0;flex:0">
+          <label>View</label>
+          <div class="viewtoggle"><button type="button" id="vCards" class="on">Cards</button><button type="button" id="vTable">Table</button></div>
+        </div>
+        <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="campCount"></span></div>
+      </div>
+      <div class="ckgrid" id="campCards"></div>
+      <div class="scroll" id="campTableWrap" style="display:none">
+        <table><thead><tr><th>Campaign</th><th>Spend ₹</th><th>Revenue ₹</th><th>ROAS</th><th>CPC ₹</th><th>CTR</th><th>CVR</th><th>AOV ₹</th><th>Wasted ₹</th><th>Pause/Cut</th><th>Scale</th><th>Status</th></tr></thead>
+        <tbody id="campKpiBody"></tbody></table>
+      </div>
+      <div class="pager" id="campPager"></div>
     </div>
     <div class="card section-gap scroll">
       <h2>FSN actions</h2>
@@ -221,6 +256,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
       </div>
       <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>CPC / Max ₹</th><th>Why / what to do</th></tr></thead>
       <tbody id="fsnBody"></tbody></table>
+      <div class="pager" id="fsnPager"></div>
     </div>
     <div class="card section-gap scroll">
       <h2>Placement actions</h2>
@@ -658,6 +694,7 @@ document.getElementById("btnAnalyze").addEventListener("click",()=>{
 /* ---------- render action plan ---------- */
 function renderActions(){
   const A=state.lastActions; if(!A) return;
+  fsnPage=1; campPage=1;
   document.getElementById("apEmpty").style.display="none";
   document.getElementById("apBody").style.display="block";
   document.getElementById("apTitle").textContent=`Action plan — Week ${A.week}`;
@@ -699,29 +736,7 @@ function renderActions(){
       wb.appendChild(tr);
     });
   } else { wc.style.display="none"; }
-  // campaign KPI table
-  const cb=document.getElementById("campKpiBody"); cb.innerHTML="";
-  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
-  sums.forEach(s=>{
-    const st=s.kpis.roas>=A.target?["scale","ON TARGET"]:s.kpis.roas>=A.be?["reduce","PROFITABLE"]:["pause","LOSING"];
-    const tr=document.createElement("tr");
-    tr.style.cursor="pointer";
-    tr.title="Click to filter FSN actions to this campaign";
-    tr.innerHTML=`<td style="max-width:220px;font-weight:600;font-size:12.5px">${esc(s.campaign)}</td>`+
-      `<td class="mono">${Math.round(s.spend).toLocaleString()}</td><td class="mono">${Math.round(s.revenue).toLocaleString()}</td>`+
-      `<td class="mono">${s.kpis.roas.toFixed(2)}</td><td class="mono">${s.kpis.cpc.toFixed(1)}</td>`+
-      `<td class="mono">${s.kpis.ctr.toFixed(2)}%</td><td class="mono">${s.kpis.cvr.toFixed(2)}%</td>`+
-      `<td class="mono">${Math.round(s.kpis.aov)}</td><td class="mono">${Math.round(s.waste).toLocaleString()}</td>`+
-      `<td class="mono">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)}</td><td class="mono">${s.counts.SCALE||0}</td>`+
-      `<td><span class="tag ${st[0]}">${st[1]}</span></td>`;
-    tr.addEventListener("click",()=>{
-      fCampSel=new Set([s.campaign]);
-      buildCampPanel(fCampAll.length?fCampAll:[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort());
-      renderFsnTable();
-      tr.closest(".card").nextElementSibling.scrollIntoView({behavior:"smooth"});
-    });
-    cb.appendChild(tr);
-  });
+  campPage=1; renderCampKpis();
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
   fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
   buildCampPanel(camps);
@@ -730,7 +745,103 @@ function renderActions(){
 }
 
 /* campaign multi-select with search */
-let fCampSel=new Set(), fCampAll=[], fCampQuery="";
+let fCampSel=new Set(), fCampAll=[], fCampQuery="", fsnPage=1;
+
+/* ---------- pagination helper ---------- */
+function renderPager(elId, page, totalItems, perPage, label, onGo){
+  const el=document.getElementById(elId); if(!el) return 1;
+  const pages=Math.max(1, Math.ceil(totalItems/perPage));
+  const p=Math.min(Math.max(1,page), pages);
+  el.innerHTML="";
+  if(totalItems<=perPage){ el.innerHTML = totalItems? `<span class="note">${totalItems.toLocaleString()} ${label}</span>`:""; return p; }
+  const mk=(txt,dis,go)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=txt; b.disabled=dis;
+    if(!dis) b.addEventListener("click",()=>onGo(go)); return b; };
+  el.appendChild(mk("‹ Prev", p<=1, p-1));
+  const info=document.createElement("span"); info.className="note";
+  info.textContent=`Page ${p} of ${pages} · ${totalItems.toLocaleString()} ${label}`;
+  el.appendChild(info);
+  el.appendChild(mk("Next ›", p>=pages, p+1));
+  return p;
+}
+
+/* ---------- campaign KPIs: cards / table with pagination ---------- */
+let campPage=1, campView="cards";
+const CAMP_PER={cards:9, table:10};
+function campKpiData(){
+  const A=state.lastActions; if(!A) return [];
+  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
+  const q=document.getElementById("campSearch").value.trim().toLowerCase();
+  return q? sums.filter(s=>s.campaign.toLowerCase().includes(q)) : sums;
+}
+function selectCampaign(name){
+  const A=state.lastActions; if(!A) return;
+  fCampSel=new Set([name]); fsnPage=1;
+  buildCampPanel(fCampAll.length?fCampAll:[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort());
+  renderFsnTable();
+  const target=document.getElementById("fsnBody").closest(".card");
+  if(target) target.scrollIntoView({behavior:"smooth"});
+}
+function campStatus(s,A){ return s.kpis.roas>=A.target?["scale","ON TARGET"]:s.kpis.roas>=A.be?["reduce","PROFITABLE"]:["pause","LOSING"]; }
+function renderCampKpis(){
+  const A=state.lastActions; if(!A) return;
+  const data=campKpiData();
+  const per=CAMP_PER[campView];
+  campPage=renderPager("campPager", campPage, data.length, per, "campaigns", pg=>{ campPage=pg; renderCampKpis(); });
+  const slice=data.slice((campPage-1)*per, campPage*per);
+  document.getElementById("campCount").textContent=data.length? "" : "No campaigns match.";
+  const cardsEl=document.getElementById("campCards"), tblWrap=document.getElementById("campTableWrap");
+  cardsEl.style.display=campView==="cards"?"grid":"none";
+  tblWrap.style.display=campView==="table"?"block":"none";
+  if(campView==="cards"){
+    cardsEl.innerHTML="";
+    slice.forEach(s=>{
+      const [cls,lbl]=campStatus(s,A);
+      const card=document.createElement("div"); card.className="ck"; card.title="Click to see this campaign's FSN actions";
+      card.innerHTML=
+        `<div class="ck-top"><div class="ck-name">${esc(s.campaign)}</div><span class="tag ${cls}">${lbl}</span></div>`+
+        `<div class="ck-roas"><span class="num">${s.kpis.roas.toFixed(2)}×</span><span class="lbl">ROAS · target ${A.target}</span></div>`+
+        `<div class="ck-kpis">`+
+          `<div><span>Spend</span><b>₹${Math.round(s.spend).toLocaleString("en-IN")}</b></div>`+
+          `<div><span>Revenue</span><b>₹${Math.round(s.revenue).toLocaleString("en-IN")}</b></div>`+
+          `<div><span>Wasted</span><b style="${s.waste>0?'color:var(--red)':''}">₹${Math.round(s.waste).toLocaleString("en-IN")}</b></div>`+
+          `<div><span>CPC</span><b>₹${s.kpis.cpc.toFixed(1)}</b></div>`+
+          `<div><span>CTR</span><b>${s.kpis.ctr.toFixed(2)}%</b></div>`+
+          `<div><span>CVR</span><b>${s.kpis.cvr.toFixed(2)}%</b></div>`+
+        `</div>`+
+        `<div class="ck-foot">`+
+          `${((s.counts.PAUSE||0)+(s.counts["CUT BID"]||0))?`<span class="tag pause">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)} pause/cut</span>`:""}`+
+          `${(s.counts.SCALE||0)?`<span class="tag scale">${s.counts.SCALE} scale</span>`:""}`+
+          `${(s.counts["FIX CONTENT"]||0)?`<span class="tag fix">${s.counts["FIX CONTENT"]} fix</span>`:""}`+
+          `<span style="margin-left:auto">${s.units} units · AOV ₹${Math.round(s.kpis.aov)}</span>`+
+        `</div>`;
+      card.addEventListener("click",()=>selectCampaign(s.campaign));
+      cardsEl.appendChild(card);
+    });
+    if(!slice.length) cardsEl.innerHTML=`<div class="note" style="padding:8px">No campaigns match the search.</div>`;
+  } else {
+    const cb=document.getElementById("campKpiBody"); cb.innerHTML="";
+    slice.forEach(s=>{
+      const [cls,lbl]=campStatus(s,A);
+      const tr=document.createElement("tr");
+      tr.style.cursor="pointer"; tr.title="Click to see this campaign's FSN actions";
+      tr.innerHTML=`<td style="max-width:220px;font-weight:600;font-size:12.5px">${esc(s.campaign)}</td>`+
+        `<td class="mono">${Math.round(s.spend).toLocaleString()}</td><td class="mono">${Math.round(s.revenue).toLocaleString()}</td>`+
+        `<td class="mono">${s.kpis.roas.toFixed(2)}</td><td class="mono">${s.kpis.cpc.toFixed(1)}</td>`+
+        `<td class="mono">${s.kpis.ctr.toFixed(2)}%</td><td class="mono">${s.kpis.cvr.toFixed(2)}%</td>`+
+        `<td class="mono">${Math.round(s.kpis.aov)}</td><td class="mono">${Math.round(s.waste).toLocaleString()}</td>`+
+        `<td class="mono">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)}</td><td class="mono">${s.counts.SCALE||0}</td>`+
+        `<td><span class="tag ${cls}">${lbl}</span></td>`;
+      tr.addEventListener("click",()=>selectCampaign(s.campaign));
+      cb.appendChild(tr);
+    });
+    if(!slice.length) cb.innerHTML=`<tr><td colspan="12" class="note">No campaigns match the search.</td></tr>`;
+  }
+}
+document.getElementById("campSearch").addEventListener("input",()=>{ campPage=1; renderCampKpis(); });
+document.getElementById("vCards").addEventListener("click",()=>{ campView="cards"; campPage=1;
+  document.getElementById("vCards").classList.add("on"); document.getElementById("vTable").classList.remove("on"); renderCampKpis(); });
+document.getElementById("vTable").addEventListener("click",()=>{ campView="table"; campPage=1;
+  document.getElementById("vTable").classList.add("on"); document.getElementById("vCards").classList.remove("on"); renderCampKpis(); });
 function buildCampPanel(camps){
   fCampAll=camps;
   const panel=document.getElementById("fCampPanel");
@@ -750,7 +861,7 @@ function buildCampPanel(camps){
       row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span style="overflow:hidden;text-overflow:ellipsis">${esc(c)}</span>`;
       row.querySelector("input").addEventListener("change",e=>{
         e.target.checked? fCampSel.add(c):fCampSel.delete(c);
-        updateCampBtn(); updateMCount(); renderFsnTable();
+        updateCampBtn(); updateMCount(); fsnPage=1; renderFsnTable();
       });
       rowsBox.appendChild(row);
     });
@@ -761,8 +872,8 @@ function buildCampPanel(camps){
   const search=panel.querySelector("#mSearch");
   search.addEventListener("input",()=>{ fCampQuery=search.value; renderRows(); });
   search.addEventListener("click",e=>e.stopPropagation());
-  panel.querySelector("#mAll").addEventListener("click",()=>{ shownList().forEach(c=>fCampSel.add(c)); renderRows(); updateCampBtn(); renderFsnTable(); panel.classList.add("open"); });
-  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); renderRows(); updateCampBtn(); renderFsnTable(); panel.classList.add("open"); });
+  panel.querySelector("#mAll").addEventListener("click",()=>{ shownList().forEach(c=>fCampSel.add(c)); renderRows(); updateCampBtn(); fsnPage=1; renderFsnTable(); panel.classList.add("open"); });
+  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); renderRows(); updateCampBtn(); fsnPage=1; renderFsnTable(); panel.classList.add("open"); });
   renderRows(); updateCampBtn();
 }
 function updateCampBtn(){
@@ -786,9 +897,11 @@ function renderFsnTable(){
   let rows=A.fsnRows.filter(r=> af==="ALL"? true : (af? r.c.a===af : r.c.a!=="KEEP"));
   if(fCampSel.size) rows=rows.filter(r=>fCampSel.has(r.campaign||"—"));
   if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
-  document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
   const grouped=document.getElementById("fGroup").checked;
-  const shown=rows.slice(0,300);
+  const PER=grouped?500:40; // grouped view shows more per page since header rows break it up visually
+  fsnPage=renderPager("fsnPager", fsnPage, rows.length, PER, "FSN rows", pg=>{ fsnPage=pg; renderFsnTable(); });
+  document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)";
+  const shown=rows.slice((fsnPage-1)*PER, fsnPage*PER);
   if(grouped){
     // order by campaign (by spend desc), keep action priority inside each campaign
     const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
@@ -840,7 +953,7 @@ function fsnRowEl(r,A){
 }
 ["fSearch","fAction","fGroup"].forEach(id=>{
   const el=document.getElementById(id);
-  el.addEventListener(el.type==="text"?"input":"change",renderFsnTable);
+  el.addEventListener(el.type==="text"?"input":"change",()=>{ fsnPage=1; renderFsnTable(); });
 });
 
 function renderPlacementTable(){
