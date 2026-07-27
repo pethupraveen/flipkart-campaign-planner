@@ -217,7 +217,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 <section class="panel" id="panel-upload">
   <div class="card" style="margin-bottom:14px">
     <h2>Upload this week's reports</h2>
-    <div class="hint">Download from Flipkart Ads Manager → Reports, then drop the files here (.xlsx or .csv). Column names are auto-detected, so minor header differences are fine. Files are parsed locally in your browser — nothing is uploaded anywhere.</div>
+    <div class="hint">Download from Flipkart Ads Manager → Reports, then drop the files here (.xlsx or .csv). Column names are auto-detected, and the report type is verified — if you drop a file in the wrong slot, it's automatically moved to the correct one. Files are parsed locally in your browser — nothing is uploaded anywhere.</div>
     <div class="row">
       <div class="field" style="max-width:180px"><label for="weekSel">Week of the month</label>
         <select id="weekSel"><option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="5">Week 5</option></select>
@@ -501,19 +501,60 @@ function sheetToRows(file, cb){
 function agg(rows){ return rows.reduce((a,r)=>({spend:a.spend+r.spend,views:a.views+r.views,clicks:a.clicks+r.clicks,units:a.units+r.units,revenue:a.revenue+r.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0}); }
 
 /* ---------- upload UI ---------- */
-function wireDrop(id, key, aggKey, stId){
-  const el=document.getElementById(id), input=el.querySelector("input"), st=document.getElementById(stId);
+/* --- report type auto-detection --- */
+const SLOTS = {
+  fsn:      {drop:"dropFsn",   st:"stFsn",   aggKey:"fsnAgg",   label:"Consolidated FSN report", n:1},
+  daily:    {drop:"dropDaily", st:"stDaily", aggKey:"dailyAgg", label:"Consolidated daily report", n:2},
+  placement:{drop:"dropPlace", st:"stPlace", aggKey:"placeAgg", label:"Placement performance report", n:3}
+};
+function detectReportType(res){
+  const rows=res.data; if(!rows.length) return null;
+  const sample=rows.slice(0,200);
+  const frac=k=>sample.filter(r=>String(r[k]??"").trim()!=="").length/sample.length;
+  const hasFsn = res.map.fsn!==undefined && frac("fsn")>0.6;
+  const uniqPlace = new Set(sample.map(r=>r.placement).filter(Boolean));
+  const hasPlace = res.map.placement!==undefined && frac("placement")>0.6 && uniqPlace.size>0 && uniqPlace.size<=30;
+  const dateOk = v=>{ if(v==null||v==="") return false; if(typeof v==="number") return v>25000&&v<60000; return !isNaN(Date.parse(String(v))); };
+  const hasDate = res.map.date!==undefined && sample.filter(r=>dateOk(r.date)).length/sample.length>0.6;
+  if(hasFsn) return "fsn";                    // FSN column present → FSN-level report
+  if(hasPlace) return "placement";            // few named placements, no FSN
+  if(hasDate) return "daily";                 // date rows, no FSN/placement
+  return null;
+}
+function storeReport(key, res, fileName){
+  const S=SLOTS[key], el=document.getElementById(S.drop), st=document.getElementById(S.st);
+  const w=Number(document.getElementById("weekSel").value);
+  state.weeks[w]=state.weeks[w]||{};
+  state.weeks[w][key]=res.data;
+  state.weeks[w][S.aggKey]=agg(res.data);
+  state.weeks[w].fileNames=state.weeks[w].fileNames||{}; state.weeks[w].fileNames[key]=fileName;
+  st.textContent=`✓ ${fileName} — ${res.data.length.toLocaleString()} rows`;
+  el.classList.add("loaded"); save(); renderWeekList(); renderPacer();
+}
+function wireDrop(key){
+  const S=SLOTS[key], el=document.getElementById(S.drop), input=el.querySelector("input"), st=document.getElementById(S.st);
   const handle=file=>{
     st.textContent="Reading "+file.name+"…";
     sheetToRows(file,(res,err)=>{
       if(err){ st.textContent=err; el.classList.remove("loaded"); return; }
-      const w=Number(document.getElementById("weekSel").value);
-      state.weeks[w]=state.weeks[w]||{};
-      state.weeks[w][key]=res.data;
-      state.weeks[w][aggKey]=agg(res.data);
-      state.weeks[w].fileNames=state.weeks[w].fileNames||{}; state.weeks[w].fileNames[key]=file.name;
-      st.textContent=`✓ ${file.name} — ${res.data.length.toLocaleString()} rows`;
-      el.classList.add("loaded"); save(); renderWeekList(); renderPacer();
+      const detected=detectReportType(res);
+      const note=document.getElementById("uploadNote");
+      if(detected && detected!==key){
+        // wrong slot → auto-route to the right one
+        storeReport(detected,res,file.name);
+        const D=SLOTS[detected];
+        st.innerHTML=`<span style="color:var(--red)">✗ That looks like the ${D.label}</span> — loaded into slot ${D.n} for you.`;
+        el.classList.remove("loaded");
+        note.textContent=`Auto-detected "${file.name}" as ${D.label} and placed it in slot ${D.n}. Drop the ${S.label} here.`;
+        setTimeout(()=>{ if(note.textContent.startsWith("Auto-detected")) note.textContent=""; },8000);
+        return;
+      }
+      if(!detected){
+        storeReport(key,res,file.name);
+        st.innerHTML=`✓ ${file.name} — ${res.data.length.toLocaleString()} rows <span style="color:#8a6200">(couldn't verify report type — check it's the ${S.label})</span>`;
+        return;
+      }
+      storeReport(key,res,file.name);
     });
   };
   el.addEventListener("click",()=>input.click());
@@ -522,9 +563,9 @@ function wireDrop(id, key, aggKey, stId){
   el.addEventListener("dragleave",()=>el.classList.remove("over"));
   el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
 }
-wireDrop("dropFsn","fsn","fsnAgg","stFsn");
-wireDrop("dropDaily","daily","dailyAgg","stDaily");
-wireDrop("dropPlace","placement","placeAgg","stPlace");
+wireDrop("fsn");
+wireDrop("daily");
+wireDrop("placement");
 document.getElementById("weekSel").addEventListener("change",()=>{
   ["dropFsn","dropDaily","dropPlace"].forEach(id=>document.getElementById(id).classList.remove("loaded"));
   const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w]||{};
