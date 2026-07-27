@@ -265,7 +265,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
         <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search FSN / product</label>
           <input type="text" id="fSearch" placeholder="Type to filter…"></div>
         <div class="field" style="max-width:200px;margin-bottom:0"><label for="fAction">Action</label>
-          <select id="fAction"><option value="">All actions</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
+          <select id="fAction"><option value="">Needs action (default)</option><option value="ALL">All rows (incl. KEEP)</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
       </div>
       <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Why / what to do</th></tr></thead>
@@ -887,7 +887,7 @@ function renderFsnTable(){
   const fb=document.getElementById("fsnBody"); fb.innerHTML="";
   const q=document.getElementById("fSearch").value.trim().toLowerCase();
   const af=document.getElementById("fAction").value;
-  let rows=A.fsnRows.filter(r=> (af? r.c.a===af : r.c.a!=="KEEP"));
+  let rows=A.fsnRows.filter(r=> af==="ALL"? true : (af? r.c.a===af : r.c.a!=="KEEP"));
   if(fCampSel.size) rows=rows.filter(r=>fCampSel.has(r.campaign||"—"));
   if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
   document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
@@ -903,7 +903,18 @@ function renderFsnTable(){
       `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td><td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
     fb.appendChild(tr);
   });
-  if(!rows.length) fb.innerHTML=`<tr><td colspan="12" class="note">No rows match the current filters.</td></tr>`;
+  if(!rows.length){
+    // explain WHY it's empty instead of a generic message
+    let base=A.fsnRows;
+    if(fCampSel.size) base=base.filter(r=>fCampSel.has(r.campaign||"—"));
+    if(q) base=base.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
+    const keepN=base.filter(r=>r.c.a==="KEEP").length;
+    let msg;
+    if(base.length===0 && fCampSel.size) msg=`The selected campaign(s) have no rows in this week's FSN report — the campaign may have had no ad activity this week, or it appears under a different name/ID. Try "All campaigns" and search for it.`;
+    else if(keepN>0) msg=`All ${keepN.toLocaleString()} row(s) matching your filters are classified KEEP (within thresholds — e.g. spend below ₹${state.thresholds.minSpend}, healthy ROAS). Switch the Action filter to "All rows (incl. KEEP)" to see them.`;
+    else msg=`No rows match the current filters.`;
+    fb.innerHTML=`<tr><td colspan="12" class="note">${msg}</td></tr>`;
+  }
 }
 ["fSearch","fAction"].forEach(id=>{
   const el=document.getElementById(id);
