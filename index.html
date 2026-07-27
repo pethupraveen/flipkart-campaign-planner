@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flipkart Campaign Planner & Optimizer</title>
+<title>Flipkart Ads Optimizer — Weekly Action Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --paper:#F6F7FB; --card:#FFFFFF; --ink:#171B26; --muted:#5B6270; --line:#E3E6EF;
-  --navy:#20315F; --blue:#2874F0; --blue-soft:#EAF2FE; --amber:#F8B400; --amber-soft:#FFF6DE;
+  --navy:#20315F; --blue:#2874F0; --blue-soft:#EAF2FE; --amber:#F8B400;
   --green:#0E7C4A; --green-soft:#E7F5EE; --red:#C13A2E; --red-soft:#FBEAE8;
   --radius:10px;
 }
@@ -20,16 +20,15 @@ h1,h2,h3,.num{font-family:'Space Grotesk',sans-serif}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px}
 header{background:var(--navy);color:#fff;padding:18px 28px 0}
 .head-top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1200px;margin:0 auto}
-header h1{font-size:20px;font-weight:700;letter-spacing:.2px}
+header h1{font-size:20px;font-weight:700}
 header h1 span{color:var(--amber)}
 .head-sub{font-size:12.5px;color:#B9C3DE}
 .pacer{max-width:1200px;margin:14px auto 0;padding-bottom:16px}
 .pacer-label{display:flex;justify-content:space-between;font-size:11.5px;color:#B9C3DE;margin-bottom:6px}
 .pacer-track{display:flex;gap:4px}
 .pacer-week{flex:1;height:26px;background:rgba(255,255,255,.12);border-radius:6px;position:relative;overflow:hidden}
-.pacer-fill{position:absolute;inset:0;width:0%;background:var(--blue);transition:width .4s}
+.pacer-fill{position:absolute;inset:0;width:0%;background:var(--blue)}
 .pacer-fill.over{background:var(--red)}
-.pacer-plan{position:absolute;top:0;bottom:0;width:2px;background:var(--amber)}
 .pacer-week span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11px;color:#fff;font-family:'IBM Plex Mono',monospace;z-index:2}
 nav{background:var(--navy)}
 .tabs{max-width:1200px;margin:0 auto;display:flex;gap:2px;padding:0 28px}
@@ -37,11 +36,9 @@ nav{background:var(--navy)}
 .tab.active{background:var(--paper);color:var(--ink)}
 .tab:hover:not(.active){color:#fff}
 main{max-width:1200px;margin:0 auto;padding:24px 28px 80px}
-.panel{display:none}
-.panel.active{display:block}
+.panel{display:none}.panel.active{display:block}
 .grid{display:grid;gap:14px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
 .card h2{font-size:16px;margin-bottom:4px}
 .card .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px}
@@ -55,18 +52,15 @@ button{font:600 13px 'Inter',sans-serif;border-radius:8px;border:1px solid var(-
 button:hover{border-color:var(--blue);color:var(--blue)}
 button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
 button.primary:hover{background:#1c5fd0;color:#fff}
-button.ghost-danger{color:var(--red);border-color:transparent;padding:4px 8px}
 .metric{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
 .metric .lbl{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 .metric .num{font-size:24px;font-weight:700;margin-top:2px}
-.metric .sub{font-size:12px;color:var(--muted)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
-td input,td select{padding:6px 8px;font-size:13px}
 .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
 .tag.scale{background:var(--green-soft);color:var(--green)}
-.tag.reduce{background:var(--amber-soft);color:#8a6200}
+.tag.reduce{background:#FFF6DE;color:#8a6200}
 .tag.pause{background:var(--red-soft);color:var(--red)}
 .tag.fix{background:var(--blue-soft);color:var(--blue)}
 .tag.keep{background:#EEF0F5;color:var(--muted)}
@@ -76,35 +70,11 @@ td input,td select{padding:6px 8px;font-size:13px}
 .drop .st{font-size:12px;color:var(--muted);margin-top:4px}
 .drop.loaded{border-style:solid;border-color:var(--green);background:var(--green-soft)}
 .drop.loaded .st{color:var(--green);font-weight:600}
-.budgetbar{height:10px;background:#EEF0F5;border-radius:6px;overflow:hidden;margin:8px 0 4px}
-.budgetbar div{height:100%;background:var(--blue);border-radius:6px}
-.budgetbar div.over{background:var(--red)}
-.warn{color:var(--red);font-size:12.5px;font-weight:600}
-.ok{color:var(--green);font-size:12.5px;font-weight:600}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
 .spacer{flex:1}
 .note{font-size:12.5px;color:var(--muted)}
 .section-gap{margin-top:20px}
 .scroll{overflow-x:auto}
-footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:var(--muted)}
-.fsnbtn{white-space:nowrap}
-.fsnlist{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#F2F4FA;border:1px solid var(--line);border-radius:8px;padding:10px 12px;max-height:120px;overflow:auto;word-break:break-all;line-height:1.7}
-.modal-back{position:fixed;inset:0;background:rgba(23,27,38,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
-.modal-back.open{display:flex}
-.modal{background:#fff;border-radius:14px;width:min(760px,100%);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
-.modal-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.modal-head h2{font-size:16px;flex:1}
-.modal-tools{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.modal-tools input[type=text]{flex:1;min-width:180px}
-.modal-list{overflow:auto;flex:1;padding:6px 8px}
-.fsnrow{display:flex;gap:10px;align-items:center;padding:7px 12px;border-radius:8px;cursor:pointer}
-.fsnrow:hover{background:var(--blue-soft)}
-.fsnrow input{width:auto}
-.fsnrow .fid{font-family:'IBM Plex Mono',monospace;font-size:12px;min-width:200px}
-.fsnrow .ft{flex:1;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fsnrow .fm{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);white-space:nowrap}
-.modal-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
-.modal textarea{width:100%;height:70px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:12px 'IBM Plex Mono',monospace}
 .mselect{position:relative}
 .mselect>button{width:100%;text-align:left;font-weight:500;padding:8px 10px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mpanel{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:420px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(23,27,38,.14);z-index:30;display:none;padding:6px}
@@ -113,8 +83,9 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 .mrow{display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:6px;cursor:pointer;font-size:12.5px}
 .mrow:hover{background:var(--blue-soft)}
 .mrow input{width:auto}
-.mpanel .mtools{display:flex;gap:6px;padding:4px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
-.mpanel .mtools button{padding:4px 10px;font-size:12px}
+.mtools{display:flex;gap:6px;padding:4px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.mtools button{padding:4px 10px;font-size:12px}
+footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:var(--muted)}
 @media (max-width:640px){main,header,footer{padding-left:14px;padding-right:14px}.tabs{padding:0 14px}}
 </style>
 </head>
@@ -122,100 +93,25 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 
 <header>
   <div class="head-top">
-    <h1>Flipkart Campaign <span>Planner</span> & Optimizer</h1>
-    <div class="head-sub">Plan the month → upload weekly reports → get an action plan in Excel. Everything stays in your browser.</div>
+    <h1>Flipkart Ads <span>Optimizer</span></h1>
+    <div class="head-sub">Upload weekly reports → get a bid-level action plan → export to Excel. Everything stays in your browser.</div>
   </div>
   <div class="pacer">
-    <div class="pacer-label"><span id="pacerTitle">Month pacing — set a budget in the Planner</span><span id="pacerRight"></span></div>
+    <div class="pacer-label"><span id="pacerTitle">Month pacing — set a monthly budget in Rules & thresholds to track it</span><span id="pacerRight"></span></div>
     <div class="pacer-track" id="pacerTrack"></div>
   </div>
 </header>
 
 <nav><div class="tabs">
-  <button class="tab active" data-t="plan">1 · Campaign planner</button>
-  <button class="tab" data-t="upload">2 · Weekly reports</button>
-  <button class="tab" data-t="actions">3 · Action plan</button>
-  <button class="tab" data-t="settings">4 · Rules & thresholds</button>
+  <button class="tab active" data-t="upload">1 · Weekly reports</button>
+  <button class="tab" data-t="actions">2 · Action plan</button>
+  <button class="tab" data-t="settings">3 · Rules & thresholds</button>
 </div></nav>
 
 <main>
 
-<!-- ============ PLANNER ============ -->
-<section class="panel active" id="panel-plan">
-  <div class="grid g2">
-    <div class="card">
-      <h2>Month setup</h2>
-      <div class="hint">Set the overall envelope first. The pacing strip above tracks actual spend against this budget once you upload daily reports.</div>
-      <div class="row">
-        <div class="field"><label for="pMonth">Month</label><input type="month" id="pMonth"></div>
-        <div class="field"><label for="pBudget">Total ad budget (₹)</label><input type="number" id="pBudget" min="0" step="500" placeholder="e.g. 120000"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label for="pTarget">Target ROAS (revenue ÷ spend)</label><input type="number" id="pTarget" min="1" step="0.5" value="5"></div>
-        <div class="field"><label for="pBreakeven">Break-even ROAS</label><input type="number" id="pBreakeven" min="1" step="0.5" value="3"></div>
-      </div>
-      <div class="note">Break-even ROAS ≈ 1 ÷ profit margin. At a 33% margin you need ROAS ≥ 3 just to not lose money.</div>
-    </div>
-    <div class="card">
-      <h2>Budget check</h2>
-      <div class="hint">Sum of campaign budgets vs the monthly envelope.</div>
-      <div class="num" style="font-size:26px" id="planTotal">₹0</div>
-      <div class="budgetbar"><div id="planBar" style="width:0%"></div></div>
-      <div id="planVerdict" class="note">Add campaigns below.</div>
-      <div class="section-gap grid g4" style="gap:10px">
-        <div class="metric"><div class="lbl">Campaigns</div><div class="num" id="mCount">0</div></div>
-        <div class="metric"><div class="lbl">Daily spend</div><div class="num" id="mDaily">₹0</div></div>
-        <div class="metric"><div class="lbl">Expected revenue</div><div class="num" id="mRev">₹0</div><div class="sub">at target ROAS</div></div>
-        <div class="metric"><div class="lbl">Expected units</div><div class="num" id="mUnits">0</div><div class="sub" id="mAspNote">at ASP ₹550</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card section-gap" id="catalogCard">
-    <h2>FSN catalog (for campaign selection)</h2>
-    <div class="hint">Upload any report that contains an FSN / Listing ID column — your Flipkart FSN report or a search-traffic / catalog export. This builds a searchable product list so you can pick FSNs per campaign below. You can also paste FSN IDs directly inside the picker.</div>
-    <div class="drop" id="dropCatalog" style="padding:16px"><div class="big">Upload FSN / catalog file</div><div class="st" id="stCatalog">Click or drop .xlsx / .csv</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="section-gap">
-      <h2 style="font-size:14px">Auto-segment campaigns by Traffic × Conversion</h2>
-      <div class="hint">Builds 4 campaigns from the catalog using your rules. CVR = units ÷ clicks. Impressions = views.</div>
-      <div class="row">
-        <div class="field" style="max-width:150px"><label for="sgNoTraffic">"No traffic" ≤ views</label><input type="number" id="sgNoTraffic" value="100" min="0"></div>
-        <div class="field" style="max-width:150px"><label for="sgHighTraffic">"High traffic" > views</label><input type="number" id="sgHighTraffic" value="10000" min="1"></div>
-        <div class="field" style="max-width:150px"><label for="sgHighConv">High conversion ≥ %</label><input type="number" id="sgHighConv" value="1.75" step="0.05" min="0"></div>
-        <div class="field" style="max-width:150px"><label for="sgLowConv">Low conversion < %</label><input type="number" id="sgLowConv" value="1" step="0.05" min="0"></div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="primary" id="btnSegment">⚡ Build 4 campaigns & assign FSNs</button>
-        <span class="note" id="segNote"></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="toolbar">
-    <button class="primary" id="btnAddCamp">+ Add campaign</button>
-    <span class="spacer"></span>
-    <button id="btnExportPlan">⬇ Export planner to Excel</button>
-  </div>
-
-  <div class="card scroll">
-    <table id="campTable">
-      <thead><tr>
-        <th>Campaign name</th><th>Type</th><th>Objective</th><th>Daily budget ₹</th><th>Days</th><th>Target ROAS</th><th>FSNs</th><th>Month total</th><th></th>
-      </tr></thead>
-      <tbody id="campBody"></tbody>
-    </table>
-    <div class="note" style="margin-top:10px">Tip: keep hero campaigns (proven high-ROAS FSNs) separate from test campaigns (new launches) so a bad test can't drain your winners' budget.</div>
-  </div>
-
-  <div class="card section-gap">
-    <h2>FSN IDs — campaign wise</h2>
-    <div class="hint">Everything you've selected, per campaign. Copy a list to paste into Flipkart Ads Manager while creating the campaign, or use “Export planner to Excel” for the full sheet.</div>
-    <div id="fsnLists" class="note">No FSNs selected yet — use the “Select FSNs” button on a campaign row.</div>
-  </div>
-</section>
-
 <!-- ============ UPLOADS ============ -->
-<section class="panel" id="panel-upload">
+<section class="panel active" id="panel-upload">
   <div class="card" style="margin-bottom:14px">
     <h2>Upload this week's reports</h2>
     <div class="hint">Download from Flipkart Ads Manager → Reports, then drop the files here (.xlsx or .csv). Column names are auto-detected, and the report type is verified — if you drop a file in the wrong slot, it's automatically moved to the correct one. Files are parsed locally in your browser — nothing is uploaded anywhere.</div>
@@ -225,7 +121,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
       </div>
     </div>
   </div>
-  <div class="grid g2" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
     <div class="drop" id="dropFsn"><div class="big">1 · Consolidated FSN report</div><div class="st" id="stFsn">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
     <div class="drop" id="dropDaily"><div class="big">2 · Consolidated daily report</div><div class="st" id="stDaily">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
     <div class="drop" id="dropPlace"><div class="big">3 · Placement performance report</div><div class="st" id="stPlace">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
@@ -238,6 +134,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     <h2>Weeks stored this month</h2>
     <div class="hint">Data is saved in your browser (localStorage), so you can come back next week and compare.</div>
     <div id="weekList" class="note">No weeks uploaded yet.</div>
+    <div class="toolbar" style="margin-bottom:0"><button id="btnClearMonth">Clear all stored weeks</button></div>
   </div>
 </section>
 
@@ -248,7 +145,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     <span class="spacer"></span>
     <button class="primary" id="btnExportActions">⬇ Export action plan to Excel</button>
   </div>
-  <div id="apEmpty" class="card"><div class="hint" style="margin:0">Upload at least the FSN report in tab 2, then press “Generate action plan”.</div></div>
+  <div id="apEmpty" class="card"><div class="hint" style="margin:0">Upload at least the FSN report in tab 1, then press “Generate action plan”.</div></div>
   <div id="apBody" style="display:none">
     <div class="grid g4" id="apMetrics"></div>
     <div class="card section-gap"><h2>Weekly summary & pacing</h2><div class="hint" id="apSummary"></div><div id="apPacing" class="note"></div></div>
@@ -264,7 +161,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
         </div>
         <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search FSN / product</label>
           <input type="text" id="fSearch" placeholder="Type to filter…"></div>
-        <div class="field" style="max-width:200px;margin-bottom:0"><label for="fAction">Action</label>
+        <div class="field" style="max-width:220px;margin-bottom:0"><label for="fAction">Action</label>
           <select id="fAction"><option value="">Needs action (default)</option><option value="ALL">All rows (incl. KEEP)</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
       </div>
@@ -282,9 +179,17 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 
 <!-- ============ SETTINGS ============ -->
 <section class="panel" id="panel-settings">
-  <div class="card" style="max-width:640px">
+  <div class="card" style="max-width:660px">
     <h2>Optimizer rules & thresholds</h2>
-    <div class="hint">The action plan is rules-based. Tune the thresholds to your margins and risk appetite. Defaults suit a mobile-accessories catalog (ASP ≈ ₹550).</div>
+    <div class="hint">The action plan is rules-based. Tune the thresholds to your margins and risk appetite.</div>
+    <div class="row">
+      <div class="field"><label for="pMonth">Month</label><input type="month" id="pMonth"></div>
+      <div class="field"><label for="pBudget">Monthly ad budget ₹ (optional, for pacing)</label><input type="number" id="pBudget" min="0" step="500" placeholder="e.g. 120000"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="pTarget">Target ROAS</label><input type="number" id="pTarget" min="1" step="0.5" value="5"></div>
+      <div class="field"><label for="pBreakeven">Break-even ROAS</label><input type="number" id="pBreakeven" min="1" step="0.5" value="3"></div>
+    </div>
     <div class="row">
       <div class="field"><label for="tMinSpend">Min weekly spend to act on an FSN (₹)</label><input type="number" id="tMinSpend" value="150" min="0"></div>
       <div class="field"><label for="tMinClicks">Min clicks before judging conversion</label><input type="number" id="tMinClicks" value="20" min="1"></div>
@@ -295,156 +200,23 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
     </div>
     <div class="row">
       <div class="field"><label for="tScaleMult">Scale when ROAS ≥ target ×</label><input type="number" id="tScaleMult" value="1.3" step="0.1" min="1"></div>
-      <div class="field"><label for="tAsp">Average selling price ₹ (for planning)</label><input type="number" id="tAsp" value="550" min="1"></div>
+      <div class="field"></div>
     </div>
-    <div class="note">How the rules fire, in priority order:<br>
-      1. <b>Pause / Fix listing</b> — meaningful spend & clicks but zero units → price, stock, rating or wrong-keyword problem.<br>
-      2. <b>Pause / cut bid hard</b> — ROAS below break-even on meaningful spend → losing money on every sale.<br>
-      3. <b>Reduce bid −10–15%</b> — ROAS between break-even and target → profitable but below goal.<br>
-      4. <b>Scale +15–25%</b> — ROAS well above target → raise bids/budget to buy more volume.<br>
-      5. <b>Improve content</b> — big views, tiny CTR → thumbnail, title or price is the bottleneck (not the ad).</div>
+    <div class="note">Break-even ROAS ≈ 1 ÷ profit margin (33% margin → 3.0). Rules fire in priority order:<br>
+      1. <b>PAUSE</b> — meaningful spend & clicks but zero units → price, stock, rating or wrong-keyword problem.<br>
+      2. <b>CUT BID</b> — ROAS below break-even on meaningful spend → losing money.<br>
+      3. <b>SCALE</b> — ROAS ≥ target × multiplier → raise bids/budget to buy more volume.<br>
+      4. <b>REDUCE</b> — profitable but under target → trim bid ~10–15%.<br>
+      5. <b>FIX CONTENT</b> — big views, tiny CTR → thumbnail/title/price is the bottleneck.</div>
   </div>
 </section>
 
 </main>
-<footer>Flipkart Campaign Planner & Optimizer · runs 100% client-side · your reports never leave this device · built for weekly PLA/PCA optimization.</footer>
-
-<div class="modal-back" id="fsnModal">
-  <div class="modal">
-    <div class="modal-head"><h2 id="fmTitle">Select FSNs</h2><button id="fmClose">✕ Close</button></div>
-    <div class="modal-tools">
-      <input type="text" id="fmSearch" placeholder="Search FSN or product name…">
-      <select id="fmSort" style="width:auto"><option value="revenue">Sort: revenue</option><option value="views">Sort: views</option><option value="units">Sort: units</option><option value="fsn">Sort: FSN</option></select>
-      <button id="fmSelAll">Select all shown</button>
-      <button id="fmClear">Clear all</button>
-    </div>
-    <div class="modal-list" id="fmList"></div>
-    <div class="modal-foot" style="flex-direction:column;align-items:stretch;gap:8px">
-      <label style="margin:0">Or paste FSN IDs (comma / space / new-line separated)</label>
-      <textarea id="fmPaste" placeholder="ACCHXXXXXXXX, ACCHYYYYYYYY…"></textarea>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="fmAddPaste">+ Add pasted IDs</button>
-        <span class="spacer note" id="fmCount"></span>
-        <button class="primary" id="fmDone">Done</button>
-      </div>
-    </div>
-  </div>
-</div>
+<footer>Flipkart Ads Optimizer · runs 100% client-side · your reports never leave this device.</footer>
 
 <script>
 "use strict";
-/* ---------- state & persistence ---------- */
-const LS = "fk_planner_v1";
-let state = { plan:{month:"", budget:0, target:5, breakeven:3, campaigns:[]},
-  thresholds:{minSpend:150,minClicks:20,minViews:1000,lowCtr:1,scaleMult:1.3,asp:550},
-  weeks:{}, lastActions:null, catalog:[] };
-function save(){
-  try{ localStorage.setItem(LS, JSON.stringify(state)); }
-  catch(e){ try{ const slim=Object.assign({},state,{catalog:state.catalog.slice(0,4000)}); localStorage.setItem(LS, JSON.stringify(slim)); }catch(e2){} }
-}
-function load(){ try{ const s=localStorage.getItem(LS); if(s) state=Object.assign(state,JSON.parse(s)); }catch(e){} }
-const fmt = n => "₹"+Math.round(n).toLocaleString("en-IN");
-const num = n => Number(n)||0;
-
-/* ---------- tabs ---------- */
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
-  t.classList.add("active");
-  document.getElementById("panel-"+t.dataset.t).classList.add("active");
-}));
-
-/* ---------- planner ---------- */
-const campBody = document.getElementById("campBody");
-const TYPES = ["PLA (Product Listing Ads)","PCA – Search","PCA – Browse/Display","Brand/Video"];
-const OBJ = ["Scale winners","Steady core","Fix / relaunch","Test new launches","Visibility"];
-
-function daysInMonth(){ const m=state.plan.month; if(!m) return 30;
-  const [y,mo]=m.split("-").map(Number); return new Date(y,mo,0).getDate(); }
-
-function addCampaign(c){ state.plan.campaigns.push(c || {name:"",type:TYPES[0],obj:OBJ[1],daily:500,days:daysInMonth(),target:state.plan.target||5}); renderCamps(); save(); }
-
-function renderCamps(){
-  campBody.innerHTML="";
-  state.plan.campaigns.forEach((c,i)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML =
-      `<td><input value="${esc(c.name)}" data-k="name" placeholder="Campaign name"></td>`+
-      `<td><select data-k="type">${TYPES.map(t=>`<option ${t===c.type?"selected":""}>${t}</option>`).join("")}</select></td>`+
-      `<td><select data-k="obj">${OBJ.map(t=>`<option ${t===c.obj?"selected":""}>${t}</option>`).join("")}</select></td>`+
-      `<td style="max-width:110px"><input type="number" min="0" step="50" value="${num(c.daily)}" data-k="daily"></td>`+
-      `<td style="max-width:80px"><input type="number" min="1" max="31" value="${num(c.days)}" data-k="days"></td>`+
-      `<td style="max-width:90px"><input type="number" min="1" step="0.5" value="${num(c.target)}" data-k="target"></td>`+
-      `<td><button class="fsnbtn" data-fsn="${i}">${(c.fsns&&c.fsns.length)? c.fsns.length+" selected":"Select FSNs"}</button></td>`+
-      `<td class="mono">${fmt(num(c.daily)*num(c.days))}</td>`+
-      `<td><button class="ghost-danger" data-del="${i}">✕</button></td>`;
-    tr.querySelectorAll("input,select").forEach(el=>el.addEventListener("change",()=>{
-      const k=el.dataset.k; c[k]=(el.type==="number")?Number(el.value):el.value; renderCamps(); save();
-    }));
-    tr.querySelector("[data-del]").addEventListener("click",()=>{ state.plan.campaigns.splice(i,1); renderCamps(); save(); });
-    tr.querySelector("[data-fsn]").addEventListener("click",()=>openFsnModal(i));
-    campBody.appendChild(tr);
-  });
-  updatePlanStats();
-  renderFsnLists();
-}
-function esc(s){ return String(s??"").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-
-function updatePlanStats(){
-  const total = state.plan.campaigns.reduce((s,c)=>s+num(c.daily)*num(c.days),0);
-  const daily = state.plan.campaigns.reduce((s,c)=>s+num(c.daily),0);
-  const budget = num(state.plan.budget);
-  document.getElementById("planTotal").textContent = fmt(total);
-  document.getElementById("mCount").textContent = state.plan.campaigns.length;
-  document.getElementById("mDaily").textContent = fmt(daily);
-  const target = num(state.plan.target)||5, asp = num(state.thresholds.asp)||550;
-  document.getElementById("mRev").textContent = fmt(total*target);
-  document.getElementById("mUnits").textContent = Math.round(total*target/asp).toLocaleString("en-IN");
-  document.getElementById("mAspNote").textContent = "at ASP ₹"+asp;
-  const bar=document.getElementById("planBar"), v=document.getElementById("planVerdict");
-  if(budget>0){
-    const pct=Math.min(100, total/budget*100);
-    bar.style.width=pct+"%"; bar.className = total>budget ? "over":"";
-    if(total>budget) v.innerHTML=`<span class="warn">Over budget by ${fmt(total-budget)}. Trim daily budgets or days.</span>`;
-    else v.innerHTML=`<span class="ok">${fmt(budget-total)} unallocated</span> of ${fmt(budget)} monthly budget.`;
-  } else { bar.style.width="0%"; v.textContent="Set a monthly budget to check allocation."; }
-  renderPacer();
-}
-
-document.getElementById("btnAddCamp").addEventListener("click",()=>addCampaign());
-
-["pMonth","pBudget","pTarget","pBreakeven"].forEach(id=>{
-  document.getElementById(id).addEventListener("change",e=>{
-    const map={pMonth:"month",pBudget:"budget",pTarget:"target",pBreakeven:"breakeven"};
-    state.plan[map[id]] = (id==="pMonth")? e.target.value : Number(e.target.value);
-    renderCamps(); save();
-  });
-});
-
-/* ---------- pacing strip ---------- */
-function renderPacer(){
-  const track=document.getElementById("pacerTrack"); track.innerHTML="";
-  const budget=num(state.plan.budget), d=daysInMonth(), weeks=Math.ceil(d/7);
-  const weekBudget = budget? budget/weeks : 0;
-  let spentTotal=0;
-  for(let w=1;w<=weeks;w++){
-    const wk=state.weeks[w];
-    let spent=0;
-    if(wk&&wk.dailyAgg) spent=wk.dailyAgg.spend;
-    else if(wk&&wk.fsnAgg) spent=wk.fsnAgg.spend;
-    spentTotal+=spent;
-    const div=document.createElement("div"); div.className="pacer-week";
-    const pct = weekBudget? Math.min(100,spent/weekBudget*100) : 0;
-    div.innerHTML=`<div class="pacer-fill ${spent>weekBudget&&weekBudget?'over':''}" style="width:${pct}%"></div><div class="pacer-plan" style="left:100%"></div><span>W${w}${spent?` ${fmt(spent)}`:""}</span>`;
-    track.appendChild(div);
-  }
-  document.getElementById("pacerTitle").textContent = budget
-    ? `Month pacing — each block = 1 week (~${fmt(weekBudget)}/week planned)` 
-    : "Month pacing — set a budget in the Planner";
-  document.getElementById("pacerRight").textContent = budget? `${fmt(spentTotal)} spent of ${fmt(budget)}` : "";
-}
-
-/* ---------- file parsing ---------- */
+/* ================= PURE-LOGIC-START (DOM-free, unit-testable) ================= */
 const SYN = {
   campaign:["campaignname","campaign","campaignid"],
   fsn:["fsn","fsnid","productid","listingid","sku","skuid"],
@@ -462,55 +234,44 @@ const SYN = {
   placement:["placement","placementtype","pagetype","slot","position"]
 };
 const norm = s => String(s??"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const num = n => Number(n)||0;
+
 function mapHeaders(headers){
   const m={};
   headers.forEach((h,i)=>{
     const n=norm(h); if(!n) return;
     for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n===s||n.includes(s))){ m[key]=i; break; } }
   });
-  // prefer human-readable Campaign Name over Campaign Id if both exist
   const nameIdx=headers.findIndex(h=>norm(h).includes("campaignname"));
   if(nameIdx>=0) m.campaign=nameIdx;
   return m;
 }
-function sheetToRows(file, cb){
-  const r=new FileReader();
-  r.onload=e=>{
-    try{
-      const wb=XLSX.read(e.target.result,{type:"array"});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
-      let hi=-1;
-      for(let i=0;i<Math.min(rows.length,15);i++){
-        const ns=rows[i].map(norm);
-        if(ns.some(x=>SYN.fsn.includes(x)||SYN.date.includes(x)||SYN.placement.includes(x)||SYN.spend.some(s=>x.includes(s)))) { hi=i; break; }
-      }
-      if(hi<0){ cb(null,"Could not find a header row — is this the right report?"); return; }
-      const map=mapHeaders(rows[hi]);
-      const data=rows.slice(hi+1).filter(r=>r.some(c=>c!=="")).map(r=>{
-        const g=k=>map[k]!==undefined? r[map[k]] : "";
-        const units = num(g("units")) || (num(g("directunits"))+num(g("indirectunits")));
-        const revenue = num(g("revenue")) || (num(g("directrev"))+num(g("indirectrev")));
-        return { fsn:String(g("fsn")||"").trim(), title:String(g("title")||"").trim(),
-          campaign:String(g("campaign")||"").trim(),
-          date:g("date"), placement:String(g("placement")||"").trim(),
-          views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")),
-          units, revenue };
-      });
-      cb({map,data},null);
-    }catch(err){ cb(null,"Could not read file: "+err.message); }
-  };
-  r.readAsArrayBuffer(file);
-}
-function agg(rows){ return rows.reduce((a,r)=>({spend:a.spend+r.spend,views:a.views+r.views,clicks:a.clicks+r.clicks,units:a.units+r.units,revenue:a.revenue+r.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0}); }
 
-/* ---------- upload UI ---------- */
-/* --- report type auto-detection --- */
-const SLOTS = {
-  fsn:      {drop:"dropFsn",   st:"stFsn",   aggKey:"fsnAgg",   label:"Consolidated FSN report", n:1},
-  daily:    {drop:"dropDaily", st:"stDaily", aggKey:"dailyAgg", label:"Consolidated daily report", n:2},
-  placement:{drop:"dropPlace", st:"stPlace", aggKey:"placeAgg", label:"Placement performance report", n:3}
-};
+function findHeaderRow(rows){
+  for(let i=0;i<Math.min(rows.length,15);i++){
+    const ns=rows[i].map(norm);
+    if(ns.some(x=>SYN.fsn.includes(x)||SYN.date.includes(x)||SYN.placement.includes(x)||SYN.spend.some(s=>x.includes(s)))) return i;
+  }
+  return -1;
+}
+
+function rowsFromSheet(rows){ // rows: array of arrays (incl. possible preamble rows)
+  const hi=findHeaderRow(rows);
+  if(hi<0) return {error:"Could not find a header row — is this the right report?"};
+  const map=mapHeaders(rows[hi]);
+  const data=rows.slice(hi+1).filter(r=>r.some(c=>c!=="")).map(r=>{
+    const g=k=>map[k]!==undefined? r[map[k]] : "";
+    const units = num(g("units")) || (num(g("directunits"))+num(g("indirectunits")));
+    const revenue = num(g("revenue")) || (num(g("directrev"))+num(g("indirectrev")));
+    return { fsn:String(g("fsn")||"").trim(), title:String(g("title")||"").trim(),
+      campaign:String(g("campaign")||"").trim(),
+      date:g("date"), placement:String(g("placement")||"").trim(),
+      views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")),
+      units, revenue };
+  });
+  return {map,data};
+}
+
 function detectReportType(res){
   const rows=res.data; if(!rows.length) return null;
   const sample=rows.slice(0,200);
@@ -520,12 +281,149 @@ function detectReportType(res){
   const hasPlace = res.map.placement!==undefined && frac("placement")>0.6 && uniqPlace.size>0 && uniqPlace.size<=30;
   const dateOk = v=>{ if(v==null||v==="") return false; if(typeof v==="number") return v>25000&&v<60000; return !isNaN(Date.parse(String(v))); };
   const hasDate = res.map.date!==undefined && sample.filter(r=>dateOk(r.date)).length/sample.length>0.6;
-  if(hasFsn) return "fsn";                    // FSN column present → FSN-level report
-  if(hasPlace) return "placement";            // few named placements, no FSN
-  if(hasDate) return "daily";                 // date rows, no FSN/placement
+  if(hasFsn) return "fsn";
+  if(hasPlace) return "placement";
+  if(hasDate) return "daily";
   return null;
 }
-function storeReport(key, res, fileName){
+
+function agg(rows){ return rows.reduce((a,r)=>({spend:a.spend+r.spend,views:a.views+r.views,clicks:a.clicks+r.clicks,units:a.units+r.units,revenue:a.revenue+r.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0}); }
+
+function classifyFsn(r,T,be,target){
+  const roas = r.spend>0? r.revenue/r.spend : (r.revenue>0? Infinity:0);
+  const ctr = r.views>0? r.clicks/r.views*100 : 0;
+  if(r.spend>=T.minSpend && r.clicks>=T.minClicks && r.units===0)
+    return {a:"PAUSE",cls:"pause",why:`₹${Math.round(r.spend)} spent, ${r.clicks} clicks, zero units. Pause the ad, then check price vs competition, stock, rating and images before relaunching.`,roas,ctr};
+  if(r.spend>=T.minSpend && roas<be)
+    return {a:"CUT BID",cls:"pause",why:`ROAS ${roas.toFixed(1)} is below break-even ${be}. Cut bid 25–30% now; pause if it doesn't recover within a week.`,roas,ctr};
+  if(r.spend>=T.minSpend && roas>=target*T.scaleMult)
+    return {a:"SCALE",cls:"scale",why:`ROAS ${roas.toFixed(1)} beats target ${target}. Raise bid 15–25% and lift the campaign budget cap so it isn't throttled.`,roas,ctr};
+  if(r.spend>=T.minSpend && roas<target)
+    return {a:"REDUCE",cls:"reduce",why:`Profitable (ROAS ${roas.toFixed(1)}) but under target ${target}. Trim bid ~10–15% to improve efficiency.`,roas,ctr};
+  if(r.views>=T.minViews && ctr<T.lowCtr)
+    return {a:"FIX CONTENT",cls:"fix",why:`${r.views.toLocaleString()} views but CTR ${ctr.toFixed(2)}%. The listing, not the ad, is the bottleneck — improve thumbnail, title and price display.`,roas,ctr};
+  return {a:"KEEP",cls:"keep",why:"Within thresholds — no change this week.",roas,ctr};
+}
+
+function consolidateByCampaignFsn(rows){
+  const by={};
+  rows.forEach(r=>{ const k=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
+    by[k]=by[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0};
+    const o=by[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue; if(!o.title&&r.title)o.title=r.title; });
+  return Object.values(by);
+}
+
+function consolidatePlacements(rows){
+  const by={};
+  rows.forEach(r=>{ const k=r.placement||"Unknown"; by[k]=by[k]||{placement:k,spend:0,clicks:0,units:0,revenue:0};
+    const o=by[k]; o.spend+=r.spend;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue; });
+  const out=Object.values(by).map(p=>Object.assign(p,{roas:p.spend>0?p.revenue/p.spend:0}));
+  out.sort((a,b)=>b.roas-a.roas);
+  return out;
+}
+
+function buildActionPlan(fsnRows, placementRows, T, be, target){
+  const consolidated=consolidateByCampaignFsn(fsnRows).map(r=>Object.assign(r,{c:classifyFsn(r,T,be,target)}));
+  const order={PAUSE:0,"CUT BID":1,"FIX CONTENT":2,REDUCE:3,SCALE:4,KEEP:5};
+  consolidated.sort((a,b)=> order[a.c.a]-order[b.c.a] || b.spend-a.spend);
+  const placeRows=placementRows? consolidatePlacements(placementRows) : [];
+  return {fsnRows:consolidated, placeRows, tot:agg(fsnRows)};
+}
+
+function pacingMessage(spend, weekBudget, fmtFn){
+  if(!weekBudget) return "";
+  const dev=(spend-weekBudget)/weekBudget*100;
+  return Math.abs(dev)<=10? `Pacing on track: ${fmtFn(spend)} spent vs ~${fmtFn(weekBudget)} planned for the week (${dev>=0?"+":""}${dev.toFixed(0)}%).`
+    : dev>0? `Overspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (+${dev.toFixed(0)}%). Lower daily caps on below-target campaigns or you'll exhaust the month early.`
+    : `Underspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (${dev.toFixed(0)}%). If ROAS is healthy, raise bids on SCALE items to use the budget.`;
+}
+/* ================= PURE-LOGIC-END ================= */
+
+/* ---------- state & persistence ---------- */
+const LS="fk_optimizer_v1", LS_OLD="fk_planner_v1";
+let state={ settings:{month:"",budget:0,target:5,breakeven:3,minSpend:150,minClicks:20,minViews:1000,lowCtr:1,scaleMult:1.3}, weeks:{}, lastActions:null };
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{
+    const s=localStorage.getItem(LS);
+    if(s){ state=Object.assign(state,JSON.parse(s)); return; }
+    const old=localStorage.getItem(LS_OLD); // migrate settings from planner version
+    if(old){ const o=JSON.parse(old);
+      if(o.plan){ state.settings.month=o.plan.month||""; state.settings.budget=num(o.plan.budget); state.settings.target=num(o.plan.target)||5; state.settings.breakeven=num(o.plan.breakeven)||3; }
+      if(o.thresholds){ ["minSpend","minClicks","minViews","lowCtr","scaleMult"].forEach(k=>{ if(o.thresholds[k]!=null) state.settings[k]=num(o.thresholds[k]); }); }
+      if(o.weeks) state.weeks=o.weeks;
+    }
+  }catch(e){}
+}
+const fmt=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+const esc=s=>String(s??"").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  document.getElementById("panel-"+t.dataset.t).classList.add("active");
+}));
+
+/* ---------- settings ---------- */
+const SETTING_IDS={pMonth:"month",pBudget:"budget",pTarget:"target",pBreakeven:"breakeven",tMinSpend:"minSpend",tMinClicks:"minClicks",tMinViews:"minViews",tLowCtr:"lowCtr",tScaleMult:"scaleMult"};
+Object.keys(SETTING_IDS).forEach(id=>{
+  document.getElementById(id).addEventListener("change",e=>{
+    const k=SETTING_IDS[id];
+    state.settings[k]=(id==="pMonth")? e.target.value : Number(e.target.value);
+    save(); renderPacer();
+  });
+});
+function daysInMonth(){ const m=state.settings.month; if(!m) return 30;
+  const [y,mo]=m.split("-").map(Number); return new Date(y,mo,0).getDate(); }
+
+/* ---------- pacing strip ---------- */
+function renderPacer(){
+  const track=document.getElementById("pacerTrack"); track.innerHTML="";
+  const budget=num(state.settings.budget), weeks=Math.ceil(daysInMonth()/7);
+  const weekBudget=budget? budget/weeks : 0;
+  let spentTotal=0;
+  for(let w=1;w<=weeks;w++){
+    const wk=state.weeks[w];
+    let spent=0;
+    if(wk&&wk.dailyAgg) spent=wk.dailyAgg.spend;
+    else if(wk&&wk.fsnAgg) spent=wk.fsnAgg.spend;
+    spentTotal+=spent;
+    const div=document.createElement("div"); div.className="pacer-week";
+    const pct=weekBudget? Math.min(100,spent/weekBudget*100) : 0;
+    div.innerHTML=`<div class="pacer-fill ${spent>weekBudget&&weekBudget?'over':''}" style="width:${pct}%"></div><span>W${w}${spent?` ${fmt(spent)}`:""}</span>`;
+    track.appendChild(div);
+  }
+  document.getElementById("pacerTitle").textContent = budget
+    ? `Month pacing — each block = 1 week (~${fmt(weekBudget)}/week planned)`
+    : "Month pacing — set a monthly budget in Rules & thresholds to track it";
+  document.getElementById("pacerRight").textContent = budget? `${fmt(spentTotal)} spent of ${fmt(budget)}` : "";
+}
+
+/* ---------- file reading (DOM/XLSX wrapper around rowsFromSheet) ---------- */
+function sheetToRows(file, cb){
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+      const res=rowsFromSheet(rows);
+      if(res.error){ cb(null,res.error); return; }
+      cb(res,null);
+    }catch(err){ cb(null,"Could not read file: "+err.message); }
+  };
+  r.readAsArrayBuffer(file);
+}
+
+/* ---------- upload slots with auto-detection ---------- */
+const SLOTS = {
+  fsn:      {drop:"dropFsn",   st:"stFsn",   aggKey:"fsnAgg",   label:"Consolidated FSN report", n:1},
+  daily:    {drop:"dropDaily", st:"stDaily", aggKey:"dailyAgg", label:"Consolidated daily report", n:2},
+  placement:{drop:"dropPlace", st:"stPlace", aggKey:"placeAgg", label:"Placement performance report", n:3}
+};
+function storeReport(key,res,fileName){
   const S=SLOTS[key], el=document.getElementById(S.drop), st=document.getElementById(S.st);
   const w=Number(document.getElementById("weekSel").value);
   state.weeks[w]=state.weeks[w]||{};
@@ -544,7 +442,6 @@ function wireDrop(key){
       const detected=detectReportType(res);
       const note=document.getElementById("uploadNote");
       if(detected && detected!==key){
-        // wrong slot → auto-route to the right one
         storeReport(detected,res,file.name);
         const D=SLOTS[detected];
         st.innerHTML=`<span style="color:var(--red)">✗ That looks like the ${D.label}</span> — loaded into slot ${D.n} for you.`;
@@ -567,15 +464,15 @@ function wireDrop(key){
   el.addEventListener("dragleave",()=>el.classList.remove("over"));
   el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
 }
-wireDrop("fsn");
-wireDrop("daily");
-wireDrop("placement");
+wireDrop("fsn"); wireDrop("daily"); wireDrop("placement");
+
 document.getElementById("weekSel").addEventListener("change",()=>{
   ["dropFsn","dropDaily","dropPlace"].forEach(id=>document.getElementById(id).classList.remove("loaded"));
   const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w]||{};
-  document.getElementById("stFsn").textContent = wk.fileNames?.fsn? "✓ "+wk.fileNames.fsn : "Click or drop file";
-  document.getElementById("stDaily").textContent = wk.fileNames?.daily? "✓ "+wk.fileNames.daily : "Click or drop file";
-  document.getElementById("stPlace").textContent = wk.fileNames?.placement? "✓ "+wk.fileNames.placement : "Click or drop file";
+  const set=(id,k)=>{ const f=wk.fileNames?.[k]; const el=document.getElementById(id);
+    el.textContent=f? "✓ "+f : "Click or drop file";
+    if(f) document.getElementById(SLOTS[k].drop).classList.add("loaded"); };
+  set("stFsn","fsn"); set("stDaily","daily"); set("stPlace","placement");
 });
 function renderWeekList(){
   const el=document.getElementById("weekList");
@@ -584,219 +481,32 @@ function renderWeekList(){
     const s=wk.dailyAgg||wk.fsnAgg;
     return `<b>Week ${w}</b>: ${["fsn","daily","placement"].filter(k=>f[k]).length}/3 reports${s?` · spend ${fmt(s.spend)} · revenue ${fmt(s.revenue)} · ROAS ${(s.revenue/Math.max(1,s.spend)).toFixed(1)}`:""}`;
   });
-  el.innerHTML = parts.length? parts.join("<br>") : "No weeks uploaded yet.";
+  el.innerHTML=parts.length? parts.join("<br>") : "No weeks uploaded yet.";
 }
-
-/* ---------- FSN catalog & picker ---------- */
-(function wireCatalog(){
-  const el=document.getElementById("dropCatalog"), input=el.querySelector("input"), st=document.getElementById("stCatalog");
-  const handle=file=>{
-    st.textContent="Reading "+file.name+"…";
-    sheetToRows(file,(res,err)=>{
-      if(err){ st.textContent=err; return; }
-      const by={};
-      res.data.forEach(r=>{ const k=r.fsn; if(!k) return;
-        by[k]=by[k]||{fsn:k,title:"",views:0,clicks:0,units:0,revenue:0};
-        const o=by[k]; o.views+=r.views; o.clicks+=r.clicks; o.units+=r.units; o.revenue+=r.revenue;
-        if(!o.title&&r.title) o.title=r.title.slice(0,90); });
-      state.catalog=Object.values(by);
-      st.textContent=`✓ ${file.name} — ${state.catalog.length.toLocaleString()} unique FSN/Listing IDs loaded`;
-      el.classList.add("loaded"); save();
-    });
-  };
-  el.addEventListener("click",()=>input.click());
-  input.addEventListener("change",()=>{ if(input.files[0]) handle(input.files[0]); input.value=""; });
-  el.addEventListener("dragover",e=>{e.preventDefault();el.classList.add("over");});
-  el.addEventListener("dragleave",()=>el.classList.remove("over"));
-  el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
-})();
-
-let fmIdx=null, fmSel=new Set();
-const fsnModal=document.getElementById("fsnModal");
-function openFsnModal(i){
-  fmIdx=i; const c=state.plan.campaigns[i];
-  fmSel=new Set(c.fsns||[]);
-  document.getElementById("fmTitle").textContent="Select FSNs — "+(c.name||"Campaign "+(i+1));
-  document.getElementById("fmSearch").value=""; document.getElementById("fmPaste").value="";
-  renderFmList(); fsnModal.classList.add("open");
-}
-function catalogSorted(){
-  const s=document.getElementById("fmSort").value;
-  const arr=[...state.catalog];
-  if(s==="fsn") arr.sort((a,b)=>a.fsn.localeCompare(b.fsn));
-  else arr.sort((a,b)=>(b[s]||0)-(a[s]||0));
-  return arr;
-}
-function fmFiltered(){
-  const q=document.getElementById("fmSearch").value.trim().toLowerCase();
-  let arr=catalogSorted();
-  if(q) arr=arr.filter(r=>r.fsn.toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
-  return arr;
-}
-function renderFmList(){
-  const list=document.getElementById("fmList"); list.innerHTML="";
-  const arr=fmFiltered();
-  if(!state.catalog.length){
-    list.innerHTML=`<div class="note" style="padding:14px">No catalog loaded — upload an FSN/catalog file in the planner, or just paste FSN IDs below.</div>`;
-  }
-  // show selected-but-not-in-catalog (pasted) IDs first
-  const inCat=new Set(state.catalog.map(r=>r.fsn));
-  [...fmSel].filter(f=>!inCat.has(f)).forEach(f=>list.appendChild(fmRow({fsn:f,title:"(pasted manually)",views:0,revenue:0,units:0},true)));
-  arr.slice(0,400).forEach(r=>list.appendChild(fmRow(r,fmSel.has(r.fsn))));
-  if(arr.length>400){ const d=document.createElement("div"); d.className="note"; d.style.padding="10px 12px";
-    d.textContent=`Showing top 400 of ${arr.length.toLocaleString()} — refine the search to see more.`; list.appendChild(d); }
-  updateFmCount();
-}
-function fmRow(r,checked){
-  const row=document.createElement("label"); row.className="fsnrow";
-  row.innerHTML=`<input type="checkbox" ${checked?"checked":""}><span class="fid">${esc(r.fsn)}</span><span class="ft">${esc(r.title||"")}</span><span class="fm">${r.revenue?("₹"+Math.round(r.revenue).toLocaleString("en-IN")):""}${r.views?(" · "+r.views.toLocaleString()+" views"):""}</span>`;
-  row.querySelector("input").addEventListener("change",e=>{ e.target.checked? fmSel.add(r.fsn):fmSel.delete(r.fsn); updateFmCount(); });
-  return row;
-}
-function updateFmCount(){ document.getElementById("fmCount").textContent=fmSel.size+" FSN(s) selected"; }
-document.getElementById("fmSearch").addEventListener("input",renderFmList);
-document.getElementById("fmSort").addEventListener("change",renderFmList);
-document.getElementById("fmSelAll").addEventListener("click",()=>{ fmFiltered().slice(0,400).forEach(r=>fmSel.add(r.fsn)); renderFmList(); });
-document.getElementById("fmClear").addEventListener("click",()=>{ fmSel.clear(); renderFmList(); });
-document.getElementById("fmAddPaste").addEventListener("click",()=>{
-  const ids=document.getElementById("fmPaste").value.split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean);
-  ids.forEach(id=>fmSel.add(id)); document.getElementById("fmPaste").value=""; renderFmList();
-});
-function closeFm(saveIt){
-  if(saveIt && fmIdx!==null){ state.plan.campaigns[fmIdx].fsns=[...fmSel]; save(); renderCamps(); }
-  fsnModal.classList.remove("open"); fmIdx=null;
-}
-document.getElementById("fmDone").addEventListener("click",()=>closeFm(true));
-document.getElementById("fmClose").addEventListener("click",()=>closeFm(true));
-fsnModal.addEventListener("click",e=>{ if(e.target===fsnModal) closeFm(true); });
-
-function renderFsnLists(){
-  const el=document.getElementById("fsnLists"); if(!el) return;
-  const byFsn={}; state.catalog.forEach(r=>byFsn[r.fsn]=r);
-  const parts=state.plan.campaigns.filter(c=>c.fsns&&c.fsns.length).map((c,ci)=>{
-    const ids=c.fsns.join(", ");
-    return `<div style="margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <b style="font-size:13.5px;color:var(--ink)">${esc(c.name||"Campaign")}</b>
-        <span class="tag keep">${c.fsns.length} FSNs</span>
-        <button style="padding:3px 10px;font-size:12px" data-copy="${ci}">Copy list</button>
-      </div>
-      <div class="fsnlist" id="fsnlist-${ci}">${esc(ids)}</div></div>`;
-  });
-  el.innerHTML = parts.length? parts.join("") : "No FSNs selected yet — use the “Select FSNs” button on a campaign row.";
-  el.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>{
-    const c=state.plan.campaigns[Number(b.dataset.copy)];
-    navigator.clipboard.writeText(c.fsns.join("\n")).then(()=>{ b.textContent="Copied ✓"; setTimeout(()=>b.textContent="Copy list",1500); }).catch(()=>{});
-  }));
-}
-
-/* ---------- traffic × conversion auto-segmentation ---------- */
-document.getElementById("btnSegment").addEventListener("click",()=>{
-  const note=document.getElementById("segNote");
-  if(!state.catalog.length){ note.textContent="Upload an FSN/catalog file first."; return; }
-  const noT=num(document.getElementById("sgNoTraffic").value);
-  const hiT=num(document.getElementById("sgHighTraffic").value);
-  const hiC=num(document.getElementById("sgHighConv").value);
-  const loC=num(document.getElementById("sgLowConv").value);
-  const cvr=r=> r.clicks>0? r.units/r.clicks*100 : 0;
-
-  const c1=[],c2=[],c3=[],c4=[]; let unclassified=0;
-  state.catalog.forEach(r=>{
-    const v=r.views, cv=cvr(r);
-    if(v<=noT && r.units===0) c1.push(r);
-    else if(v>hiT && cv>=hiC) c2.push(r);
-    else if(v<=hiT && v>noT && cv>=hiC && r.units>0) c3.push(r);
-    else if(v>hiT && cv<loC) c4.push(r);
-    else unclassified++;
-  });
-  c1.sort((a,b)=>b.views-a.views); c2.sort((a,b)=>b.revenue-a.revenue);
-  c3.sort((a,b)=>b.revenue-a.revenue); c4.sort((a,b)=>b.views-a.views);
-  const CAP=500; // keep browser storage sane; full lists are in your Excel export
-  const d=daysInMonth(), b=num(state.plan.budget)||100000, u=v=>Math.max(50,Math.round(b*v/d/50)*50);
-  const target=num(state.plan.target)||5, be=num(state.plan.breakeven)||3;
-  state.plan.campaigns=[
-    {name:`C2 Winners – High traffic × High conv (>${hiT.toLocaleString()} views, ≥${hiC}%)`, type:TYPES[0], obj:OBJ[0], daily:u(.40), days:d, target:target, fsns:c2.slice(0,CAP).map(r=>r.fsn)},
-    {name:`C3 Hidden gems – Low traffic × High conv (≤${hiT.toLocaleString()} views, ≥${hiC}%)`, type:TYPES[0], obj:OBJ[0], daily:u(.30), days:d, target:target, fsns:c3.slice(0,CAP).map(r=>r.fsn)},
-    {name:`C4 Fix first – High traffic × Low conv (<${loC}%)`, type:TYPES[0], obj:OBJ[2], daily:u(.15), days:d, target:be, fsns:c4.slice(0,CAP).map(r=>r.fsn)},
-    {name:`C1 Visibility – No traffic no conversion (≤${noT} views)`, type:TYPES[0], obj:OBJ[4], daily:u(.15), days:d, target:be, fsns:c1.slice(0,CAP).map(r=>r.fsn)}
-  ];
-  note.textContent=`Done — C1: ${c1.length.toLocaleString()} · C2: ${c2.length.toLocaleString()} · C3: ${c3.length.toLocaleString()} · C4: ${c4.length.toLocaleString()} FSNs (${unclassified.toLocaleString()} mid-segment left out).`+(Math.max(c1.length,c3.length)>CAP?` Lists capped at ${CAP} per campaign in the tool — export to Excel for full lists.`:"");
-  renderCamps(); save();
+document.getElementById("btnClearMonth").addEventListener("click",()=>{
+  if(!confirm("Delete all stored weekly data? Settings are kept.")) return;
+  state.weeks={}; state.lastActions=null; save(); renderWeekList(); renderPacer();
+  document.getElementById("apBody").style.display="none"; document.getElementById("apEmpty").style.display="block";
+  document.getElementById("weekSel").dispatchEvent(new Event("change"));
 });
 
-/* ---------- optimizer ---------- */
-function readThresholds(){
-  const T=state.thresholds;
-  T.minSpend=num(document.getElementById("tMinSpend").value);
-  T.minClicks=num(document.getElementById("tMinClicks").value);
-  T.minViews=num(document.getElementById("tMinViews").value);
-  T.lowCtr=num(document.getElementById("tLowCtr").value);
-  T.scaleMult=num(document.getElementById("tScaleMult").value)||1.3;
-  T.asp=num(document.getElementById("tAsp").value)||550;
-  save();
-}
-["tMinSpend","tMinClicks","tMinViews","tLowCtr","tScaleMult","tAsp"].forEach(id=>
-  document.getElementById(id).addEventListener("change",readThresholds));
-
-function classifyFsn(r,T,be,target){
-  const roas = r.spend>0? r.revenue/r.spend : (r.revenue>0? Infinity:0);
-  const ctr = r.views>0? r.clicks/r.views*100 : 0;
-  if(r.spend>=T.minSpend && r.clicks>=T.minClicks && r.units===0)
-    return {a:"PAUSE",cls:"pause",why:`₹${Math.round(r.spend)} spent, ${r.clicks} clicks, zero units. Pause the ad, then check price vs competition, stock, rating and images before relaunching.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas<be)
-    return {a:"CUT BID",cls:"pause",why:`ROAS ${roas.toFixed(1)} is below break-even ${be}. Cut bid 25–30% now; pause if it doesn't recover within a week.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas>=target*T.scaleMult)
-    return {a:"SCALE",cls:"scale",why:`ROAS ${roas.toFixed(1)} beats target ${target}. Raise bid 15–25% and lift the campaign budget cap so it isn't throttled.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas<target)
-    return {a:"REDUCE",cls:"reduce",why:`Profitable (ROAS ${roas.toFixed(1)}) but under target ${target}. Trim bid ~10–15% to improve efficiency.`,roas,ctr};
-  if(r.views>=T.minViews && ctr<T.lowCtr)
-    return {a:"FIX CONTENT",cls:"fix",why:`${r.views.toLocaleString()} views but CTR ${ctr.toFixed(2)}%. The listing, not the ad, is the bottleneck — improve thumbnail, title and price display.`,roas,ctr};
-  return {a:"KEEP",cls:"keep",why:"Within thresholds — no change this week.",roas,ctr};
-}
-
+/* ---------- generate action plan ---------- */
 document.getElementById("btnAnalyze").addEventListener("click",()=>{
-  readThresholds();
   const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w];
   if(!wk || !wk.fsn){ document.getElementById("uploadNote").textContent="Upload at least the FSN report for this week first."; return; }
   document.getElementById("uploadNote").textContent="";
-  const T=state.thresholds, be=num(state.plan.breakeven)||3, target=num(state.plan.target)||5;
-
-  // consolidate rows per campaign + FSN, so bid actions are campaign-specific
-  const byFsn={};
-  wk.fsn.forEach(r=>{ const k=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
-    byFsn[k]=byFsn[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0};
-    const o=byFsn[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue; if(!o.title&&r.title)o.title=r.title; });
-  const fsnRows=Object.values(byFsn).map(r=>Object.assign(r,{c:classifyFsn(r,T,be,target)}));
-  const order={PAUSE:0,"CUT BID":1,"FIX CONTENT":2,REDUCE:3,SCALE:4,KEEP:5};
-  fsnRows.sort((a,b)=> order[a.c.a]-order[b.c.a] || b.spend-a.spend);
-
-  // placement
-  let placeRows=[];
-  if(wk.placement){
-    const byP={};
-    wk.placement.forEach(r=>{ const k=r.placement||"Unknown"; byP[k]=byP[k]||{placement:k,spend:0,clicks:0,units:0,revenue:0};
-      const o=byP[k]; o.spend+=r.spend;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue; });
-    placeRows=Object.values(byP).map(p=>Object.assign(p,{roas:p.spend>0?p.revenue/p.spend:0}));
-    placeRows.sort((a,b)=>b.roas-a.roas);
-  }
-
-  // pacing
-  const tot=agg(wk.fsn);
-  const budget=num(state.plan.budget), weeks=Math.ceil(daysInMonth()/7), weekBudget=budget?budget/weeks:0;
-  const spend = wk.dailyAgg? wk.dailyAgg.spend : tot.spend;
-  let pacing="";
-  if(weekBudget){
-    const dev=(spend-weekBudget)/weekBudget*100;
-    pacing = Math.abs(dev)<=10? `Pacing on track: ${fmt(spend)} spent vs ~${fmt(weekBudget)} planned for the week (${dev>=0?"+":""}${dev.toFixed(0)}%).`
-      : dev>0? `Overspending: ${fmt(spend)} vs ~${fmt(weekBudget)} planned (+${dev.toFixed(0)}%). Lower daily caps on below-target campaigns or you'll exhaust the month early.`
-      : `Underspending: ${fmt(spend)} vs ~${fmt(weekBudget)} planned (${dev.toFixed(0)}%). If ROAS is healthy, raise bids on SCALE items to use the budget.`;
-  }
-
-  state.lastActions={week:w, generated:new Date().toISOString(), fsnRows, placeRows, tot, spend, pacing, be, target};
-  save(); renderActions(); 
+  const S=state.settings;
+  const T={minSpend:num(S.minSpend),minClicks:num(S.minClicks),minViews:num(S.minViews),lowCtr:num(S.lowCtr),scaleMult:num(S.scaleMult)||1.3};
+  const be=num(S.breakeven)||3, target=num(S.target)||5;
+  const plan=buildActionPlan(wk.fsn, wk.placement, T, be, target);
+  const budget=num(S.budget), weeks=Math.ceil(daysInMonth()/7), weekBudget=budget?budget/weeks:0;
+  const spend=wk.dailyAgg? wk.dailyAgg.spend : plan.tot.spend;
+  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target});
+  save(); renderActions();
   document.querySelector('[data-t="actions"]').click();
 });
 
+/* ---------- render action plan ---------- */
 function renderActions(){
   const A=state.lastActions; if(!A) return;
   document.getElementById("apEmpty").style.display="none";
@@ -804,26 +514,23 @@ function renderActions(){
   document.getElementById("apTitle").textContent=`Action plan — Week ${A.week}`;
   const roas=A.tot.revenue/Math.max(1,A.tot.spend);
   const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
-  document.getElementById("apMetrics").innerHTML = [
+  document.getElementById("apMetrics").innerHTML=[
     ["Ad spend",fmt(A.tot.spend)],["Ad revenue",fmt(A.tot.revenue)],
-    ["ROAS",(roas).toFixed(2)+"×"],["Units",A.tot.units.toLocaleString()],
+    ["ROAS",roas.toFixed(2)+"×"],["Units",A.tot.units.toLocaleString()],
     ["Pause / cut",(counts.PAUSE||0)+(counts["CUT BID"]||0)],["Scale",counts.SCALE||0]
   ].map(([l,v])=>`<div class="metric"><div class="lbl">${l}</div><div class="num">${v}</div></div>`).join("");
-  const wasted = A.fsnRows.filter(r=>r.c.a==="PAUSE"||r.c.a==="CUT BID").reduce((s,r)=>s+r.spend-Math.min(r.revenue/A.be,r.spend),0);
-  document.getElementById("apSummary").innerHTML =
+  document.getElementById("apSummary").innerHTML=
     `Overall ROAS <b>${roas.toFixed(2)}×</b> vs break-even ${A.be} and target ${A.target}. `+
-    `${A.fsnRows.length.toLocaleString()} FSNs analysed — <b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> losing money (≈${fmt(Math.max(0,wasted))} at stake), <b>${counts.SCALE||0}</b> ready to scale, <b>${counts["FIX CONTENT"]||0}</b> need listing fixes.`;
+    `${A.fsnRows.length.toLocaleString()} campaign-FSN rows analysed — <b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> losing money, <b>${counts.SCALE||0}</b> ready to scale, <b>${counts["FIX CONTENT"]||0}</b> need listing fixes.`;
   document.getElementById("apPacing").textContent=A.pacing;
-
-  const fb=document.getElementById("fsnBody");
-  // populate campaign multi-select
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
-  fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c))); // drop selections no longer present
+  fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
   buildCampPanel(camps);
   renderFsnTable();
   renderPlacementTable();
 }
 
+/* campaign multi-select with search */
 let fCampSel=new Set(), fCampAll=[], fCampQuery="";
 function buildCampPanel(camps){
   fCampAll=camps;
@@ -833,53 +540,43 @@ function buildCampPanel(camps){
     `<div class="mtools"><button type="button" id="mAll">Select all shown</button><button type="button" id="mNone">Clear</button><span class="note" id="mCount" style="align-self:center;margin-left:auto"></span></div>`+
     `<div id="mRows"></div>`;
   const rowsBox=panel.querySelector("#mRows");
+  const shownList=()=>{ const q=fCampQuery.trim().toLowerCase(); return q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll; };
+  const updateMCount=()=>{ panel.querySelector("#mCount").textContent=`${fCampSel.size} selected · ${shownList().length} shown`; };
   const renderRows=()=>{
-    const q=fCampQuery.trim().toLowerCase();
-    const shown=q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll;
+    const shown=shownList();
     rowsBox.innerHTML="";
-    // selected first so active filters stay visible while searching
     const ordered=[...shown].sort((a,b)=>(fCampSel.has(b)?1:0)-(fCampSel.has(a)?1:0));
     ordered.slice(0,250).forEach(c=>{
       const row=document.createElement("label"); row.className="mrow";
       row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span style="overflow:hidden;text-overflow:ellipsis">${esc(c)}</span>`;
       row.querySelector("input").addEventListener("change",e=>{
         e.target.checked? fCampSel.add(c):fCampSel.delete(c);
-        updateCampBtn(fCampAll.length); updateMCount(shown.length); renderFsnTable();
+        updateCampBtn(); updateMCount(); renderFsnTable();
       });
       rowsBox.appendChild(row);
     });
-    if(shown.length>250){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px";
-      d.textContent=`Showing 250 of ${shown.length} — refine the search.`; rowsBox.appendChild(d); }
-    if(!shown.length){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px";
-      d.textContent="No campaigns match."; rowsBox.appendChild(d); }
-    updateMCount(shown.length);
+    if(shown.length>250){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px"; d.textContent=`Showing 250 of ${shown.length} — refine the search.`; rowsBox.appendChild(d); }
+    if(!shown.length){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px"; d.textContent="No campaigns match."; rowsBox.appendChild(d); }
+    updateMCount();
   };
-  const updateMCount=shownLen=>{ panel.querySelector("#mCount").textContent=`${fCampSel.size} selected · ${shownLen} shown`; };
   const search=panel.querySelector("#mSearch");
   search.addEventListener("input",()=>{ fCampQuery=search.value; renderRows(); });
   search.addEventListener("click",e=>e.stopPropagation());
-  panel.querySelector("#mAll").addEventListener("click",()=>{
-    const q=fCampQuery.trim().toLowerCase();
-    (q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll).forEach(c=>fCampSel.add(c));
-    renderRows(); updateCampBtn(fCampAll.length); renderFsnTable(); panel.classList.add("open");
-  });
-  panel.querySelector("#mNone").addEventListener("click",()=>{
-    fCampSel.clear(); renderRows(); updateCampBtn(fCampAll.length); renderFsnTable(); panel.classList.add("open");
-  });
-  renderRows();
-  updateCampBtn(fCampAll.length);
+  panel.querySelector("#mAll").addEventListener("click",()=>{ shownList().forEach(c=>fCampSel.add(c)); renderRows(); updateCampBtn(); renderFsnTable(); panel.classList.add("open"); });
+  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); renderRows(); updateCampBtn(); renderFsnTable(); panel.classList.add("open"); });
+  renderRows(); updateCampBtn();
 }
-function updateCampBtn(total){
-  const b=document.getElementById("fCampBtn");
-  b.textContent = (fCampSel.size===0||fCampSel.size===total)? `All campaigns (${total})`
+function updateCampBtn(){
+  const b=document.getElementById("fCampBtn"), total=fCampAll.length;
+  b.textContent=(fCampSel.size===0||fCampSel.size===total)? `All campaigns (${total})`
     : fCampSel.size===1? [...fCampSel][0]
     : `${fCampSel.size} campaigns selected`;
 }
 document.addEventListener("click",e=>{
   const panel=document.getElementById("fCampPanel"), btn=document.getElementById("fCampBtn");
   if(!panel||!btn) return;
-  if(btn.contains(e.target)){ panel.classList.toggle("open"); }
-  else if(!panel.contains(e.target)){ panel.classList.remove("open"); }
+  if(btn.contains(e.target)) panel.classList.toggle("open");
+  else if(!panel.contains(e.target)) panel.classList.remove("open");
 });
 
 function renderFsnTable(){
@@ -904,14 +601,13 @@ function renderFsnTable(){
     fb.appendChild(tr);
   });
   if(!rows.length){
-    // explain WHY it's empty instead of a generic message
     let base=A.fsnRows;
     if(fCampSel.size) base=base.filter(r=>fCampSel.has(r.campaign||"—"));
     if(q) base=base.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
     const keepN=base.filter(r=>r.c.a==="KEEP").length;
     let msg;
     if(base.length===0 && fCampSel.size) msg=`The selected campaign(s) have no rows in this week's FSN report — the campaign may have had no ad activity this week, or it appears under a different name/ID. Try "All campaigns" and search for it.`;
-    else if(keepN>0) msg=`All ${keepN.toLocaleString()} row(s) matching your filters are classified KEEP (within thresholds — e.g. spend below ₹${state.thresholds.minSpend}, healthy ROAS). Switch the Action filter to "All rows (incl. KEEP)" to see them.`;
+    else if(keepN>0) msg=`All ${keepN.toLocaleString()} row(s) matching your filters are classified KEEP (within thresholds — e.g. spend below ₹${state.settings.minSpend}, healthy ROAS). Switch the Action filter to "All rows (incl. KEEP)" to see them.`;
     else msg=`No rows match the current filters.`;
     fb.innerHTML=`<tr><td colspan="12" class="note">${msg}</td></tr>`;
   }
@@ -927,10 +623,10 @@ function renderPlacementTable(){
   if(A.placeRows.length){
     const best=A.placeRows[0], worst=A.placeRows[A.placeRows.length-1];
     A.placeRows.forEach(p=>{
-      const rec = p===best? "Best ROAS — raise placement bid multiplier / budget share here."
+      const rec=p===best? "Best ROAS — raise placement bid multiplier / budget share here."
         : p.roas<A.be? "Below break-even — reduce this placement's bid multiplier 20–30%."
         : "Hold — monitor next week.";
-      const cls = p===best? "scale" : p.roas<A.be? "pause" : "keep";
+      const cls=p===best? "scale" : p.roas<A.be? "pause" : "keep";
       const tr=document.createElement("tr");
       tr.innerHTML=`<td><span class="tag ${cls}">${p===best?"SCALE":p.roas<A.be?"REDUCE":"KEEP"}</span></td><td>${esc(p.placement)}</td>`+
         `<td class="mono">${Math.round(p.spend).toLocaleString()}</td><td class="mono">${p.clicks.toLocaleString()}</td>`+
@@ -938,48 +634,16 @@ function renderPlacementTable(){
         `<td class="mono">${p.roas.toFixed(1)}</td><td style="font-size:12.5px">${rec}</td>`;
       pb.appendChild(tr);
     });
-    document.getElementById("placeNote").textContent = best!==worst ? `Shift budget: "${worst.placement}" (ROAS ${worst.roas.toFixed(1)}) → "${best.placement}" (ROAS ${best.roas.toFixed(1)}).` : "";
+    document.getElementById("placeNote").textContent = best!==worst? `Shift budget: "${worst.placement}" (ROAS ${worst.roas.toFixed(1)}) → "${best.placement}" (ROAS ${best.roas.toFixed(1)}).` : "";
   } else {
     pb.innerHTML=`<tr><td colspan="8" class="note">Upload the placement performance report to get placement-level recommendations.</td></tr>`;
+    document.getElementById("placeNote").textContent="";
   }
 }
 
-/* ---------- Excel exports ---------- */
-document.getElementById("btnExportPlan").addEventListener("click",()=>{
-  const wb=XLSX.utils.book_new();
-  const rows=state.plan.campaigns.map(c=>({ "Campaign name":c.name,"Type":c.type,"Objective":c.obj,
-    "Daily budget (₹)":num(c.daily),"Days":num(c.days),"Target ROAS":num(c.target),
-    "FSN count":(c.fsns||[]).length,
-    "Month total (₹)":num(c.daily)*num(c.days),
-    "Expected revenue (₹)":num(c.daily)*num(c.days)*num(c.target) }));
-  const total=rows.reduce((s,r)=>s+r["Month total (₹)"],0);
-  rows.push({}); rows.push({"Campaign name":"TOTAL","Month total (₹)":total,"Expected revenue (₹)":rows.reduce((s,r)=>s+(r["Expected revenue (₹)"]||0),0)});
-  rows.push({"Campaign name":"Monthly budget","Month total (₹)":num(state.plan.budget)});
-  rows.push({"Campaign name":"Unallocated","Month total (₹)":num(state.plan.budget)-total});
-  const ws=XLSX.utils.json_to_sheet(rows); ws["!cols"]=[{wch:38},{wch:24},{wch:18},{wch:14},{wch:6},{wch:12},{wch:14},{wch:18}];
-  XLSX.utils.book_append_sheet(wb,ws,"Campaign Plan");
-  const s2=XLSX.utils.json_to_sheet([
-    {Setting:"Month",Value:state.plan.month},{Setting:"Monthly budget (₹)",Value:num(state.plan.budget)},
-    {Setting:"Target ROAS",Value:num(state.plan.target)},{Setting:"Break-even ROAS",Value:num(state.plan.breakeven)},
-    {Setting:"ASP (₹)",Value:num(state.thresholds.asp)}]);
-  XLSX.utils.book_append_sheet(wb,s2,"Settings");
-  const byFsn={}; state.catalog.forEach(r=>byFsn[r.fsn]=r);
-  const fsnRows=[];
-  state.plan.campaigns.forEach(c=>(c.fsns||[]).forEach(f=>{
-    const cat=byFsn[f]||{};
-    fsnRows.push({"Campaign name":c.name,"FSN / Listing ID":f,"Product name":cat.title||"",
-      "Views (from catalog)":cat.views||"","Revenue (from catalog)":cat.revenue?Math.round(cat.revenue):""});
-  }));
-  if(fsnRows.length){
-    const s3=XLSX.utils.json_to_sheet(fsnRows);
-    s3["!cols"]=[{wch:38},{wch:28},{wch:60},{wch:16},{wch:18}];
-    XLSX.utils.book_append_sheet(wb,s3,"FSN Lists");
-  }
-  XLSX.writeFile(wb,`Campaign_Plan_${state.plan.month||"month"}.xlsx`);
-});
-
+/* ---------- Excel export ---------- */
 document.getElementById("btnExportActions").addEventListener("click",()=>{
-  const A=state.lastActions; if(!A){ alert("Generate an action plan first (tab 2)."); return; }
+  const A=state.lastActions; if(!A){ alert("Generate an action plan first (tab 1)."); return; }
   const wb=XLSX.utils.book_new();
   const roas=A.tot.revenue/Math.max(1,A.tot.spend);
   const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
@@ -990,9 +654,8 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
     {Metric:"Views",Value:A.tot.views},{Metric:"Clicks",Value:A.tot.clicks},
     {Metric:"FSNs to pause / cut",Value:(counts.PAUSE||0)+(counts["CUT BID"]||0)},
     {Metric:"FSNs to scale",Value:counts.SCALE||0},{Metric:"Listings to fix",Value:counts["FIX CONTENT"]||0},
-    {Metric:"Pacing",Value:A.pacing||"Set a monthly budget in the planner for pacing checks."}];
+    {Metric:"Pacing",Value:A.pacing||"Set a monthly budget in Rules & thresholds for pacing checks."}];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sum),"Summary");
-  // per-campaign rollup
   const byC={};
   A.fsnRows.forEach(r=>{ const k=r.campaign||"—"; byC[k]=byC[k]||{spend:0,revenue:0,units:0,clicks:0,views:0,pause:0,scale:0};
     const o=byC[k]; o.spend+=r.spend;o.revenue+=r.revenue;o.units+=r.units;o.clicks+=r.clicks;o.views+=r.views;
@@ -1013,23 +676,25 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
       "Revenue (₹)":Math.round(p.revenue),ROAS:Number(p.roas.toFixed(2))}));
     XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(pr),"Placement Actions");
   }
-  XLSX.writeFile(wb,`Action_Plan_Week${A.week}_${state.plan.month||""}.xlsx`);
+  XLSX.writeFile(wb,`Action_Plan_Week${A.week}_${state.settings.month||""}.xlsx`);
 });
 
 /* ---------- init ---------- */
 load();
 (function init(){
-  const p=state.plan;
-  if(!p.month){ const d=new Date(); p.month=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
-  document.getElementById("pMonth").value=p.month;
-  document.getElementById("pBudget").value=p.budget||"";
-  document.getElementById("pTarget").value=p.target;
-  document.getElementById("pBreakeven").value=p.breakeven;
-  const T=state.thresholds;
-  document.getElementById("tMinSpend").value=T.minSpend; document.getElementById("tMinClicks").value=T.minClicks;
-  document.getElementById("tMinViews").value=T.minViews; document.getElementById("tLowCtr").value=T.lowCtr;
-  document.getElementById("tScaleMult").value=T.scaleMult; document.getElementById("tAsp").value=T.asp;
-  renderCamps(); renderWeekList(); renderPacer();
+  const S=state.settings;
+  if(!S.month){ const d=new Date(); S.month=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
+  document.getElementById("pMonth").value=S.month;
+  document.getElementById("pBudget").value=S.budget||"";
+  document.getElementById("pTarget").value=S.target;
+  document.getElementById("pBreakeven").value=S.breakeven;
+  document.getElementById("tMinSpend").value=S.minSpend;
+  document.getElementById("tMinClicks").value=S.minClicks;
+  document.getElementById("tMinViews").value=S.minViews;
+  document.getElementById("tLowCtr").value=S.lowCtr;
+  document.getElementById("tScaleMult").value=S.scaleMult;
+  renderWeekList(); renderPacer();
+  document.getElementById("weekSel").dispatchEvent(new Event("change"));
   if(state.lastActions) renderActions();
 })();
 </script>
