@@ -162,6 +162,12 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
       <tbody id="wowBody"></tbody></table>
     </div>
     <div class="card section-gap scroll">
+      <h2>Campaign KPIs</h2>
+      <div class="hint">Every campaign's efficiency at a glance, sorted by spend. Click a row to see its FSN action plan below.</div>
+      <table><thead><tr><th>Campaign</th><th>Spend ₹</th><th>Revenue ₹</th><th>ROAS</th><th>CPC ₹</th><th>CTR</th><th>CVR</th><th>AOV ₹</th><th>Wasted ₹</th><th>Pause/Cut</th><th>Scale</th><th>Status</th></tr></thead>
+      <tbody id="campKpiBody"></tbody></table>
+    </div>
+    <div class="card section-gap scroll">
       <h2>FSN actions</h2>
       <div class="hint">Sorted by money at stake. "Max CPC" = the highest bid that still hits your target ROAS for that FSN ((revenue ÷ clicks) ÷ target) — use it when setting bids in Ads Manager.</div>
       <div class="row" style="margin-bottom:10px">
@@ -175,6 +181,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
           <input type="text" id="fSearch" placeholder="Type to filter…"></div>
         <div class="field" style="max-width:220px;margin-bottom:0"><label for="fAction">Action</label>
           <select id="fAction"><option value="">Needs action (default)</option><option value="ALL">All rows (incl. KEEP)</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
+        <div class="field" style="margin-bottom:0;align-self:flex-end"><label class="mrow" style="padding:8px 0"><input type="checkbox" id="fGroup"><span>Group by campaign</span></label></div>
         <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
       </div>
       <table><thead><tr><th>Action</th><th>Campaign</th><th>FSN</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>CPC / Max ₹</th><th>Why / what to do</th></tr></thead>
@@ -404,6 +411,22 @@ function roiHealth(kpis, tot, classifiedRows, be, target, T){
   return {items, waste, wastePct, affordable};
 }
 
+// per-campaign rollup: totals, KPIs, wasted spend and action counts
+function campaignSummaries(classifiedRows, be){
+  const by={};
+  classifiedRows.forEach(r=>{
+    const k=r.campaign||"—";
+    by[k]=by[k]||{campaign:k,spend:0,revenue:0,views:0,clicks:0,units:0,waste:0,counts:{}};
+    const o=by[k];
+    o.spend+=r.spend; o.revenue+=r.revenue; o.views+=r.views; o.clicks+=r.clicks; o.units+=r.units;
+    o.counts[r.c.a]=(o.counts[r.c.a]||0)+1;
+    if(r.c.a==="PAUSE"||r.c.a==="CUT BID") o.waste+=Math.max(0, r.spend - r.revenue/Math.max(be,1));
+  });
+  return Object.values(by)
+    .map(o=>Object.assign(o,{kpis:computeKpis(o)}))
+    .sort((a,b)=>b.spend-a.spend);
+}
+
 function wowCompare(curr, prev){
   if(!prev || !prev.spend) return null;
   const a=computeKpis(curr), b=computeKpis(prev);
@@ -591,7 +614,8 @@ document.getElementById("btnAnalyze").addEventListener("click",()=>{
   const health=roiHealth(kpis, plan.tot, plan.fsnRows, be, target, T);
   const prevWk=state.weeks[w-1];
   const wow=prevWk&&prevWk.fsnAgg? wowCompare(plan.tot, prevWk.fsnAgg) : null;
-  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target, kpis, health, wow, prevWeek:w-1});
+  const campSums=campaignSummaries(plan.fsnRows, be);
+  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target, kpis, health, wow, campSums, prevWeek:w-1});
   save(); renderActions();
   document.querySelector('[data-t="actions"]').click();
 });
@@ -640,6 +664,29 @@ function renderActions(){
       wb.appendChild(tr);
     });
   } else { wc.style.display="none"; }
+  // campaign KPI table
+  const cb=document.getElementById("campKpiBody"); cb.innerHTML="";
+  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
+  sums.forEach(s=>{
+    const st=s.kpis.roas>=A.target?["scale","ON TARGET"]:s.kpis.roas>=A.be?["reduce","PROFITABLE"]:["pause","LOSING"];
+    const tr=document.createElement("tr");
+    tr.style.cursor="pointer";
+    tr.title="Click to filter FSN actions to this campaign";
+    tr.innerHTML=`<td style="max-width:220px;font-weight:600;font-size:12.5px">${esc(s.campaign)}</td>`+
+      `<td class="mono">${Math.round(s.spend).toLocaleString()}</td><td class="mono">${Math.round(s.revenue).toLocaleString()}</td>`+
+      `<td class="mono">${s.kpis.roas.toFixed(2)}</td><td class="mono">${s.kpis.cpc.toFixed(1)}</td>`+
+      `<td class="mono">${s.kpis.ctr.toFixed(2)}%</td><td class="mono">${s.kpis.cvr.toFixed(2)}%</td>`+
+      `<td class="mono">${Math.round(s.kpis.aov)}</td><td class="mono">${Math.round(s.waste).toLocaleString()}</td>`+
+      `<td class="mono">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)}</td><td class="mono">${s.counts.SCALE||0}</td>`+
+      `<td><span class="tag ${st[0]}">${st[1]}</span></td>`;
+    tr.addEventListener("click",()=>{
+      fCampSel=new Set([s.campaign]);
+      buildCampPanel(fCampAll.length?fCampAll:[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort());
+      renderFsnTable();
+      tr.closest(".card").nextElementSibling.scrollIntoView({behavior:"smooth"});
+    });
+    cb.appendChild(tr);
+  });
   const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
   fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
   buildCampPanel(camps);
@@ -705,22 +752,29 @@ function renderFsnTable(){
   if(fCampSel.size) rows=rows.filter(r=>fCampSel.has(r.campaign||"—"));
   if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
   document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)"+(rows.length>300?" — showing first 300":"");
-  rows.slice(0,300).forEach(r=>{
-    const cpc=r.clicks? r.spend/r.clicks:0, maxc=maxCpcFor(r,A.target);
-    const cpcCls=maxc>0&&cpc>maxc? "color:var(--red);font-weight:600":"";
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td>`+
-      `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
-      `<td class="mono">${esc(r.fsn)}</td>`+
-      `<td style="max-width:240px">${esc((r.title||"").slice(0,70))}</td>`+
-      `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
-      `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
-      `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
-      `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
-      `<td class="mono" style="${cpcCls}">${cpc?cpc.toFixed(1):"—"} / ${maxc?maxc.toFixed(1):"—"}</td>`+
-      `<td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
-    fb.appendChild(tr);
-  });
+  const grouped=document.getElementById("fGroup").checked;
+  const shown=rows.slice(0,300);
+  if(grouped){
+    // order by campaign (by spend desc), keep action priority inside each campaign
+    const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
+    const rank={}; sums.forEach((s,i)=>rank[s.campaign]=i);
+    shown.sort((a,b)=>(rank[a.campaign||"—"]??999)-(rank[b.campaign||"—"]??999));
+    let last=null;
+    shown.forEach(r=>{
+      const cName=r.campaign||"—";
+      if(cName!==last){
+        last=cName;
+        const s=sums.find(x=>x.campaign===cName);
+        const hr=document.createElement("tr");
+        hr.innerHTML=`<td colspan="13" style="background:var(--blue-soft);font-weight:700;font-size:12.5px;padding:9px 10px">`+
+          `${esc(cName)} <span class="note" style="font-weight:500">— spend ₹${Math.round(s?s.spend:0).toLocaleString()} · ROAS ${s?s.kpis.roas.toFixed(2):"0"} · CPC ₹${s?s.kpis.cpc.toFixed(1):"0"} · CTR ${s?s.kpis.ctr.toFixed(2):"0"}% · CVR ${s?s.kpis.cvr.toFixed(2):"0"}% · wasted ₹${Math.round(s?s.waste:0).toLocaleString()}</span></td>`;
+        fb.appendChild(hr);
+      }
+      fb.appendChild(fsnRowEl(r,A));
+    });
+  } else {
+    shown.forEach(r=>fb.appendChild(fsnRowEl(r,A)));
+  }
   if(!rows.length){
     let base=A.fsnRows;
     if(fCampSel.size) base=base.filter(r=>fCampSel.has(r.campaign||"—"));
@@ -733,9 +787,25 @@ function renderFsnTable(){
     fb.innerHTML=`<tr><td colspan="13" class="note">${msg}</td></tr>`;
   }
 }
-["fSearch","fAction"].forEach(id=>{
+function fsnRowEl(r,A){
+  const cpc=r.clicks? r.spend/r.clicks:0, maxc=maxCpcFor(r,A.target);
+  const cpcCls=maxc>0&&cpc>maxc? "color:var(--red);font-weight:600":"";
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td><span class="tag ${r.c.cls}">${r.c.a}</span></td>`+
+    `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
+    `<td class="mono">${esc(r.fsn)}</td>`+
+    `<td style="max-width:240px">${esc((r.title||"").slice(0,70))}</td>`+
+    `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
+    `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
+    `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
+    `<td class="mono">${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
+    `<td class="mono" style="${cpcCls}">${cpc?cpc.toFixed(1):"—"} / ${maxc?maxc.toFixed(1):"—"}</td>`+
+    `<td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
+  return tr;
+}
+["fSearch","fAction","fGroup"].forEach(id=>{
   const el=document.getElementById(id);
-  el.addEventListener(el.tagName==="INPUT"?"input":"change",renderFsnTable);
+  el.addEventListener(el.type==="text"?"input":"change",renderFsnTable);
 });
 
 function renderPlacementTable(){
@@ -790,16 +860,32 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
       "Change %":Number(r.delta.toFixed(1)),Direction:Math.abs(r.delta)<2?"flat":(r.good?"improving":"worsening")})));
     XLSX.utils.book_append_sheet(wb,ws2,"Week over Week");
   }
-  const byC={};
-  A.fsnRows.forEach(r=>{ const k=r.campaign||"—"; byC[k]=byC[k]||{spend:0,revenue:0,units:0,clicks:0,views:0,pause:0,scale:0};
-    const o=byC[k]; o.spend+=r.spend;o.revenue+=r.revenue;o.units+=r.units;o.clicks+=r.clicks;o.views+=r.views;
-    if(r.c.a==="PAUSE"||r.c.a==="CUT BID")o.pause++; if(r.c.a==="SCALE")o.scale++; });
-  const cs=Object.entries(byC).map(([k,o])=>({Campaign:k,"Spend (₹)":Math.round(o.spend),"Revenue (₹)":Math.round(o.revenue),
-    ROAS:Number((o.revenue/Math.max(1,o.spend)).toFixed(2)),Views:o.views,Clicks:o.clicks,Units:o.units,
-    "CTR %":Number((100*o.clicks/Math.max(1,o.views)).toFixed(2)),"To pause/cut":o.pause,"To scale":o.scale}))
-    .sort((a,b)=>b["Spend (₹)"]-a["Spend (₹)"]);
-  const wsC=XLSX.utils.json_to_sheet(cs); wsC["!cols"]=[{wch:34},{wch:11},{wch:12},{wch:7},{wch:10},{wch:9},{wch:7},{wch:7},{wch:12},{wch:9}];
+  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
+  const cs=sums.map(s=>({Campaign:s.campaign,"Spend (₹)":Math.round(s.spend),"Revenue (₹)":Math.round(s.revenue),
+    ROAS:Number(s.kpis.roas.toFixed(2)),"CPC (₹)":Number(s.kpis.cpc.toFixed(2)),
+    "CTR %":Number(s.kpis.ctr.toFixed(2)),"CVR %":Number(s.kpis.cvr.toFixed(2)),"AOV (₹)":Math.round(s.kpis.aov),
+    "Wasted spend (₹)":Math.round(s.waste),Views:s.views,Clicks:s.clicks,Units:s.units,
+    "To pause/cut":(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0),"To scale":s.counts.SCALE||0,
+    Status:s.kpis.roas>=A.target?"ON TARGET":s.kpis.roas>=A.be?"PROFITABLE":"LOSING"}));
+  const wsC=XLSX.utils.json_to_sheet(cs); wsC["!cols"]=[{wch:34},{wch:11},{wch:12},{wch:7},{wch:8},{wch:7},{wch:7},{wch:8},{wch:14},{wch:10},{wch:9},{wch:7},{wch:12},{wch:9},{wch:11}];
   XLSX.utils.book_append_sheet(wb,wsC,"Campaign Summary");
+  // grouped campaign-wise action plan: campaign header row, then its FSN actions
+  const gRows=[];
+  sums.forEach(s=>{
+    gRows.push({Action:"CAMPAIGN",Campaign:s.campaign,FSN:"",Product:`ROAS ${s.kpis.roas.toFixed(2)} | CPC ₹${s.kpis.cpc.toFixed(1)} | CTR ${s.kpis.ctr.toFixed(2)}% | CVR ${s.kpis.cvr.toFixed(2)}% | wasted ₹${Math.round(s.waste)}`,
+      "Spend (₹)":Math.round(s.spend),Views:s.views,Clicks:s.clicks,"CTR %":Number(s.kpis.ctr.toFixed(2)),Units:s.units,"Revenue (₹)":Math.round(s.revenue),ROAS:Number(s.kpis.roas.toFixed(2)),"CPC (₹)":Number(s.kpis.cpc.toFixed(2)),"Max CPC for target (₹)":"","What to do":s.kpis.roas>=A.target?"On target — protect budget.":s.kpis.roas>=A.be?"Profitable but under target — act on its CUT/REDUCE list.":"Losing money — act on PAUSE/CUT list below first."});
+    A.fsnRows.filter(r=>(r.campaign||"—")===s.campaign && r.c.a!=="KEEP").forEach(r=>{
+      gRows.push({Action:r.c.a,Campaign:"",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
+        "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
+        ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),
+        "CPC (₹)":r.clicks?Number((r.spend/r.clicks).toFixed(2)):"",
+        "Max CPC for target (₹)":Number(maxCpcFor(r,A.target).toFixed(2))||"",
+        "What to do":r.c.why});
+    });
+    gRows.push({});
+  });
+  const wsG=XLSX.utils.json_to_sheet(gRows); wsG["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:60},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:8},{wch:12},{wch:70}];
+  XLSX.utils.book_append_sheet(wb,wsG,"Campaign Action Plan");
   const fr=A.fsnRows.map(r=>({Action:r.c.a,Campaign:r.campaign||"—",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
     "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
     ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),
