@@ -107,8 +107,9 @@ footer{max-width:1200px;margin:0 auto;padding:0 28px 32px;font-size:12px;color:v
 .modal textarea{width:100%;height:70px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:12px 'IBM Plex Mono',monospace}
 .mselect{position:relative}
 .mselect>button{width:100%;text-align:left;font-weight:500;padding:8px 10px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mpanel{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:340px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(23,27,38,.14);max-height:260px;overflow:auto;z-index:30;display:none;padding:6px}
+.mpanel{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:420px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(23,27,38,.14);z-index:30;display:none;padding:6px}
 .mpanel.open{display:block}
+.mpanel #mRows{max-height:220px;overflow:auto}
 .mrow{display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:6px;cursor:pointer;font-size:12.5px}
 .mrow:hover{background:var(--blue-soft)}
 .mrow input{width:auto}
@@ -467,6 +468,9 @@ function mapHeaders(headers){
     const n=norm(h); if(!n) return;
     for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n===s||n.includes(s))){ m[key]=i; break; } }
   });
+  // prefer human-readable Campaign Name over Campaign Id if both exist
+  const nameIdx=headers.findIndex(h=>norm(h).includes("campaignname"));
+  if(nameIdx>=0) m.campaign=nameIdx;
   return m;
 }
 function sheetToRows(file, cb){
@@ -820,22 +824,50 @@ function renderActions(){
   renderPlacementTable();
 }
 
-let fCampSel=new Set();
+let fCampSel=new Set(), fCampAll=[], fCampQuery="";
 function buildCampPanel(camps){
+  fCampAll=camps;
   const panel=document.getElementById("fCampPanel");
-  panel.innerHTML=`<div class="mtools"><button type="button" id="mAll">Select all</button><button type="button" id="mNone">Clear</button></div>`;
-  camps.forEach(c=>{
-    const row=document.createElement("label"); row.className="mrow";
-    row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span>${esc(c)}</span>`;
-    row.querySelector("input").addEventListener("change",e=>{
-      e.target.checked? fCampSel.add(c):fCampSel.delete(c);
-      updateCampBtn(camps.length); renderFsnTable();
+  panel.innerHTML=
+    `<div style="padding:4px 6px 8px"><input type="text" id="mSearch" placeholder="Search campaigns…" value="${esc(fCampQuery)}" autocomplete="off"></div>`+
+    `<div class="mtools"><button type="button" id="mAll">Select all shown</button><button type="button" id="mNone">Clear</button><span class="note" id="mCount" style="align-self:center;margin-left:auto"></span></div>`+
+    `<div id="mRows"></div>`;
+  const rowsBox=panel.querySelector("#mRows");
+  const renderRows=()=>{
+    const q=fCampQuery.trim().toLowerCase();
+    const shown=q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll;
+    rowsBox.innerHTML="";
+    // selected first so active filters stay visible while searching
+    const ordered=[...shown].sort((a,b)=>(fCampSel.has(b)?1:0)-(fCampSel.has(a)?1:0));
+    ordered.slice(0,250).forEach(c=>{
+      const row=document.createElement("label"); row.className="mrow";
+      row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span style="overflow:hidden;text-overflow:ellipsis">${esc(c)}</span>`;
+      row.querySelector("input").addEventListener("change",e=>{
+        e.target.checked? fCampSel.add(c):fCampSel.delete(c);
+        updateCampBtn(fCampAll.length); updateMCount(shown.length); renderFsnTable();
+      });
+      rowsBox.appendChild(row);
     });
-    panel.appendChild(row);
+    if(shown.length>250){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px";
+      d.textContent=`Showing 250 of ${shown.length} — refine the search.`; rowsBox.appendChild(d); }
+    if(!shown.length){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px";
+      d.textContent="No campaigns match."; rowsBox.appendChild(d); }
+    updateMCount(shown.length);
+  };
+  const updateMCount=shownLen=>{ panel.querySelector("#mCount").textContent=`${fCampSel.size} selected · ${shownLen} shown`; };
+  const search=panel.querySelector("#mSearch");
+  search.addEventListener("input",()=>{ fCampQuery=search.value; renderRows(); });
+  search.addEventListener("click",e=>e.stopPropagation());
+  panel.querySelector("#mAll").addEventListener("click",()=>{
+    const q=fCampQuery.trim().toLowerCase();
+    (q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll).forEach(c=>fCampSel.add(c));
+    renderRows(); updateCampBtn(fCampAll.length); renderFsnTable(); panel.classList.add("open");
   });
-  panel.querySelector("#mAll").addEventListener("click",()=>{ camps.forEach(c=>fCampSel.add(c)); buildCampPanel(camps); updateCampBtn(camps.length); renderFsnTable(); panel.classList.add("open"); });
-  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); buildCampPanel(camps); updateCampBtn(camps.length); renderFsnTable(); panel.classList.add("open"); });
-  updateCampBtn(camps.length);
+  panel.querySelector("#mNone").addEventListener("click",()=>{
+    fCampSel.clear(); renderRows(); updateCampBtn(fCampAll.length); renderFsnTable(); panel.classList.add("open");
+  });
+  renderRows();
+  updateCampBtn(fCampAll.length);
 }
 function updateCampBtn(total){
   const b=document.getElementById("fCampBtn");
