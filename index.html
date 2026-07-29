@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flipkart Ads Optimizer — Weekly Action Plan</title>
+<title>Flipkart Ads Monitor — Daily Action Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -13,121 +13,63 @@
   --navy:#16244A; --navy-2:#1D2F5F; --blue:#2874F0; --blue-deep:#1B5CD6; --blue-soft:#EBF2FE;
   --yellow:#FFC200; --amber:#9A6B00; --amber-soft:#FDF3D8;
   --green:#0B7A45; --green-soft:#E4F4EC; --red:#C23B2B; --red-soft:#FBEAE7;
-  --radius:12px;
-  --shadow:0 1px 2px rgba(16,20,31,.05), 0 4px 16px rgba(16,20,31,.04);
+  --radius:12px; --shadow:0 1px 2px rgba(16,20,31,.05), 0 4px 16px rgba(16,20,31,.04);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scrollbar-color:#C7CEDB var(--paper)}
-::selection{background:var(--yellow);color:var(--ink)}
 body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
 h1,h2,h3,.num{font-family:'Space Grotesk',sans-serif}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums}
-
-/* ---------- console header: brand + month meter + tabs, one instrument ---------- */
-header{background:linear-gradient(180deg,var(--navy-2),var(--navy));color:#fff;padding:20px 28px 0}
-.head-top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1180px;margin:0 auto}
-header h1{font-size:19px;font-weight:700;letter-spacing:.2px}
+header{background:linear-gradient(180deg,var(--navy-2),var(--navy));color:#fff;padding:18px 28px}
+.head-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1180px;margin:0 auto}
+header h1{font-size:19px;font-weight:700}
 header h1 span{color:var(--yellow)}
 .head-sub{font-size:12px;color:#9FB0D8}
-.pacer{max-width:1180px;margin:16px auto 0;padding-bottom:14px}
-.pacer-label{display:flex;justify-content:space-between;font-size:11px;color:#9FB0D8;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
-.pacer-track{display:flex;gap:5px}
-.pacer-week{flex:1;height:28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:5px;position:relative;overflow:hidden}
-.pacer-week::after{content:"";position:absolute;top:3px;bottom:3px;right:0;width:3px;background:var(--yellow);border-radius:2px}
-.pacer-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--blue-deep),var(--blue));transition:width .5s ease}
-.pacer-fill.over{background:linear-gradient(90deg,#A2301F,var(--red))}
-.pacer-week span{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:10.5px;color:#fff;font-family:'IBM Plex Mono',monospace;z-index:2;letter-spacing:.3px}
 nav{background:var(--navy)}
 .tabs{max-width:1180px;margin:0 auto;display:flex;gap:4px;padding:0 28px}
-.tab{position:relative;background:transparent;border:none;color:#9FB0D8;font:600 13px 'Inter',sans-serif;padding:12px 18px 13px;cursor:pointer;border-radius:9px 9px 0 0;transition:color .15s}
+.tab{position:relative;background:transparent;border:none;color:#9FB0D8;font:600 13px 'Inter',sans-serif;padding:12px 18px 13px;cursor:pointer;border-radius:9px 9px 0 0}
 .tab::before{content:"";position:absolute;left:14px;right:14px;top:0;height:3px;border-radius:0 0 3px 3px;background:transparent}
 .tab.active{background:var(--paper);color:var(--ink)}
 .tab.active::before{background:var(--yellow)}
 .tab:hover:not(.active){color:#fff}
-
-main{max-width:1180px;margin:0 auto;padding:26px 28px 90px}
+main{max-width:1180px;margin:0 auto;padding:24px 28px 90px}
 .panel{display:none}.panel.active{display:block}
 .grid{display:grid;gap:14px}
 .g4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-
-/* ---------- cards ---------- */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
-.card h2{font-size:15px;font-weight:700;letter-spacing:.1px;margin-bottom:3px}
-.card .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px;max-width:72ch}
-
-/* ---------- forms ---------- */
+.card h2{font-size:15px;font-weight:700;margin-bottom:3px}
+.card .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px;max-width:76ch}
 label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
-input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:400 13.5px 'Inter',sans-serif;background:#fff;color:var(--ink);transition:border-color .15s}
-input:hover,select:hover{border-color:#C7CEDB}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:400 13.5px 'Inter',sans-serif;background:#fff;color:var(--ink)}
 input:focus,select:focus{outline:2px solid var(--blue);outline-offset:-1px;border-color:var(--blue)}
 .field{margin-bottom:12px}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 .row .field{flex:1;min-width:130px}
-button{font:600 13px 'Inter',sans-serif;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 15px;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+button{font:600 13px 'Inter',sans-serif;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 15px;cursor:pointer}
 button:hover{border-color:var(--blue);color:var(--blue)}
-button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-button.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 1px 0 rgba(16,20,31,.12)}
+button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
 button.primary:hover{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff}
-
-/* ---------- metric tiles ---------- */
 .metric{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:10px;padding:13px 16px 14px;box-shadow:var(--shadow)}
 .metric .lbl{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
-.metric .num{font-size:25px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
-.metric .sub{font-size:11.5px;color:var(--muted)}
-
-/* ---------- tables ---------- */
+.metric .num{font-size:24px;font-weight:700;margin-top:3px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:9px 10px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:600}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:9px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
-tbody tr{transition:background .1s}
 tbody tr:hover{background:#F7F9FD}
-tbody tr:last-child td{border-bottom:none}
-
-/* ---------- verdict chits (signature): square stamped tags with a color spine ---------- */
 .tag{display:inline-block;padding:3px 9px 3px 8px;border-radius:3px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;border-left:3px solid currentColor}
 .tag.scale{background:var(--green-soft);color:var(--green)}
 .tag.reduce{background:var(--amber-soft);color:var(--amber)}
 .tag.pause{background:var(--red-soft);color:var(--red)}
-.tag.fix{background:var(--blue-soft);color:var(--blue-deep)}
 .tag.keep{background:#EEF1F6;color:var(--muted)}
-
-/* ---------- intake trays ---------- */
-.drop{border:1.5px dashed #C7CEDB;border-radius:var(--radius);padding:24px 18px;text-align:center;cursor:pointer;background:var(--card);transition:border-color .15s,background .15s}
+.drop{border:1.5px dashed #C7CEDB;border-radius:var(--radius);padding:22px 18px;text-align:center;cursor:pointer;background:var(--card)}
 .drop:hover,.drop.over{border-color:var(--blue);background:var(--blue-soft)}
 .drop .big{font-weight:600;font-size:13.5px}
 .drop .st{font-size:11.5px;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace;word-break:break-word}
 .drop.loaded{border-style:solid;border-color:var(--green);background:var(--green-soft)}
-.drop.loaded .st{color:var(--green);font-weight:500}
-
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
 .spacer{flex:1}
 .note{font-size:12.5px;color:var(--muted)}
 .section-gap{margin-top:18px}
 .scroll{overflow-x:auto}
-.scroll::-webkit-scrollbar{height:8px}
-.scroll::-webkit-scrollbar-thumb{background:#C7CEDB;border-radius:4px}
-
-/* ---------- campaign multi-select ---------- */
-.mselect{position:relative}
-.mselect>button{width:100%;text-align:left;font-weight:500;padding:8px 10px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mpanel{position:absolute;top:calc(100% + 5px);left:0;min-width:100%;width:max-content;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 32px rgba(16,20,31,.16);z-index:30;display:none;padding:6px}
-.mpanel.open{display:block}
-.mpanel #mRows{max-height:230px;overflow:auto}
-.mrow{display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:6px;cursor:pointer;font-size:12.5px}
-.mrow:hover{background:var(--blue-soft)}
-.mrow input{width:auto;accent-color:var(--blue)}
-.mtools{display:flex;gap:6px;padding:4px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
-.mtools button{padding:4px 10px;font-size:12px}
-
-footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
-
-/* ---------- plain-language / non-technical layer ---------- */
-.help-card{border-color:#CFE0FF;background:linear-gradient(180deg,#F7FAFF,#fff)}
-.help-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
-.help-badge{flex:none;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px 'Space Grotesk',sans-serif}
-.steps{margin:0 0 12px 0;padding-left:22px;display:flex;flex-direction:column;gap:7px;font-size:13px}
-.steps li{padding-left:2px}
-.drop-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .verdict{border-radius:var(--radius);padding:20px 22px;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:16px}
 .verdict.good{background:linear-gradient(180deg,#F1FAF5,#fff);border-color:#BFE8D2}
 .verdict.warn{background:linear-gradient(180deg,#FFFAEC,#fff);border-color:#F5DFA0}
@@ -138,26 +80,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
 .verdict.warn .verdict-dot{background:var(--amber)}
 .verdict.bad .verdict-dot{background:var(--red)}
 .verdict-title{font:700 14px 'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:.6px}
-.verdict-sentence{font-size:15px;line-height:1.6;max-width:70ch;margin-bottom:14px}
-.todo-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.todo-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px}
-.todo-list li::before{content:"→";color:var(--blue-deep);font-weight:700;flex:none}
-.simple-toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);cursor:pointer;user-select:none}
-.simple-toggle input{width:auto;accent-color:var(--blue)}
-.jw{white-space:nowrap}
-.jw .mono{color:var(--muted);font-size:11px}
-.glossary{border-collapse:collapse;width:100%;font-size:13px}
-.glossary td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top}
-.glossary td:first-child{font-weight:700;white-space:nowrap;padding-right:16px}
-details.gl summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--blue-deep);list-style:none}
-details.gl summary::-webkit-details-marker{display:none}
-details.gl summary::before{content:"▸ ";display:inline-block}
-details.gl[open] summary::before{content:"▾ "}
-.adv-block{display:none;border-top:1px dashed var(--line);margin-top:16px;padding-top:16px}
-.adv-block.open{display:block}
-.adv-toggle{display:none}
-.adv-toggle.open{display:block}
-.adv-toggle.no-data{display:none!important}
+.verdict-sentence{font-size:15px;line-height:1.6;max-width:74ch}
 .alertcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;background:#fff}
 .alertcard.risk{border-color:#F0C3BB;background:#FDF6F5}
 .alertcard.good{border-color:#BFE8D2;background:#F6FCF9}
@@ -171,810 +94,319 @@ details.gl[open] summary::before{content:"▾ "}
 .alertcard .amove.down{color:var(--red)}
 .alertcard .awhy{font-size:12.5px;color:var(--ink);margin-bottom:4px}
 .alertcard .adoit{font-size:12.5px;color:var(--muted)}
-
-/* ---------- campaign KPI cards + pagination ---------- */
-.viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.viewtoggle button{border:none;border-radius:0;padding:7px 14px;background:#fff;color:var(--muted)}
-.viewtoggle button.on{background:var(--navy);color:#fff}
-.viewtoggle button:hover:not(.on){color:var(--blue)}
-.ckgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
-.ck{border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column;gap:10px}
-.ck:hover{border-color:var(--blue);box-shadow:var(--shadow)}
-.ck-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.ck-name{font-weight:600;font-size:13px;line-height:1.35;word-break:break-word}
-.ck-roas{display:flex;align-items:baseline;gap:8px}
-.ck-roas .num{font-size:27px;font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.ck-roas .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
-.ck-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px 10px;border-top:1px solid var(--line);padding-top:10px}
-.ck-kpis div b{display:block;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums}
-.ck-kpis div span{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
-.ck-foot{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--muted)}
-.pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
-.pager .note{font-variant-numeric:tabular-nums}
-.pager button{padding:6px 12px}
-.pager button:disabled{opacity:.4;cursor:default;border-color:var(--line);color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content}
+.seg button{border:none;border-radius:0;padding:7px 14px}
+.seg button.on{background:var(--blue);color:#fff}
+footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 @media (max-width:640px){main,header,footer{padding-left:14px;padding-right:14px}.tabs{padding:0 14px}.tab{padding:11px 12px 12px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="head-top">
-    <h1>Flipkart Ads <span>Made Simple</span></h1>
-    <div class="head-sub">No ads experience needed. Upload 3 reports, get a plain-English to-do list.</div>
-  </div>
-  <div class="pacer">
-    <div class="pacer-label"><span id="pacerTitle">Month pacing — set a monthly budget in Rules & thresholds to track it</span><span id="pacerRight"></span></div>
-    <div class="pacer-track" id="pacerTrack"></div>
+    <div>
+      <h1>Flipkart Ads <span>Monitor</span></h1>
+      <div class="head-sub">Daily action plan — sudden spikes &amp; falls, Campaign and FSN wise</div>
+    </div>
+    <span class="tag keep" id="connBadge">⚪ Local only (browser storage)</span>
   </div>
 </header>
 
 <nav><div class="tabs">
-  <button class="tab active" data-t="upload">1 · Upload your reports</button>
-  <button class="tab" data-t="actions">2 · What to do this week</button>
-  <button class="tab" data-t="daily">3 · Daily tracking</button>
+  <button class="tab active" data-t="plan">1 · Today's action plan</button>
+  <button class="tab" data-t="upload">2 · Upload &amp; history</button>
+  <button class="tab" data-t="compare">3 · Compare periods</button>
   <button class="tab" data-t="settings">4 · Settings</button>
 </div></nav>
 
 <main>
 
-<!-- ============ UPLOADS ============ -->
-<section class="panel active" id="panel-upload">
-  <div class="card help-card" style="margin-bottom:14px">
-    <div class="help-top">
-      <div class="help-badge">?</div>
-      <div>
-        <h2 style="margin-bottom:2px">New here? Start with this</h2>
-        <div class="hint" style="margin-bottom:0">You only need to do 2 things: download 3 files from Flipkart, then drop them below. Nothing to install, nothing to configure.</div>
-      </div>
-    </div>
-    <ol class="steps">
-      <li><b>Open Flipkart Seller Hub</b> on your computer → go to <b>Advertising</b> → <b>Reports</b>.</li>
-      <li>Download last week's <b>3 reports</b> shown below (they're free, takes a minute).</li>
-      <li>Come back here, pick the week, and drop each file into its matching box.</li>
-    </ol>
-    <div class="note">🔒 Nothing you upload leaves your computer — this tool works entirely inside your browser.</div>
-  </div>
-  <div class="card" style="margin-bottom:14px">
-    <h2>Step 1 — Pick the week, then add your 3 files</h2>
-    <div class="hint">We check what's inside each file automatically — if you drop a file in the wrong box, we'll move it to the right one for you.</div>
-    <div class="row">
-      <div class="field" style="max-width:180px"><label for="weekSel">Which week is this?</label>
-        <select id="weekSel"><option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="5">Week 5</option></select>
-      </div>
-    </div>
-  </div>
-  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
-    <div class="drop" id="dropFsn"><div class="big">📦 Product-level report</div><div class="drop-sub mono">"Consolidated FSN report"</div><div class="st" id="stFsn">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="drop" id="dropDaily"><div class="big">📅 Day-by-day report</div><div class="drop-sub mono">"Consolidated daily report"</div><div class="st" id="stDaily">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="drop" id="dropPlace"><div class="big">📍 Ad-placement report</div><div class="drop-sub mono">"Placement performance report"</div><div class="st" id="stPlace">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-  </div>
-  <div class="toolbar">
-    <button class="primary" id="btnAnalyze">Step 2 — Show me what to do →</button>
-    <span class="note" id="uploadNote"></span>
-  </div>
-  <div class="card">
-    <h2>Your progress this month</h2>
-    <div class="hint">Saved automatically in this browser, so you can come back any time and pick up where you left off.</div>
-    <div id="weekList" class="note">Nothing uploaded yet — add your first week's files above.</div>
-    <div class="toolbar" style="margin-bottom:0"><button id="btnClearMonth">Start over (clear everything)</button></div>
-  </div>
-</section>
-
-<!-- ============ ACTIONS ============ -->
-<section class="panel" id="panel-actions">
-  <div class="toolbar">
-    <h2 style="font-size:18px" id="apTitle">What to do this week</h2>
-    <span class="spacer"></span>
-    <label class="simple-toggle"><input type="checkbox" id="tSimple" checked><span>Simple view (hide detailed tables)</span></label>
-    <button class="primary" id="btnExportActions">⬇ Download as Excel</button>
-  </div>
-  <div id="apEmpty" class="card"><div class="hint" style="margin:0">👋 Go to Step 1, add your files, and press "Show me what to do" — your plan will appear here.</div></div>
-  <div id="apBody" style="display:none">
-    <div class="verdict" id="verdictCard"></div>
-    <div class="grid g4" id="apMetrics"></div>
-    <div class="card section-gap"><h2>Spending pace this month</h2><div class="hint" id="apSummary"></div><div id="apPacing" class="note"></div></div>
-    <div class="card section-gap scroll" id="healthCard">
-      <h2>Is my advertising working?</h2>
-      <div class="hint">A quick check-up across the 6 things that decide whether ads make or lose you money. Green = good, Red = fix this first.</div>
-      <table><thead><tr><th>What we checked</th><th>This week</th><th>Status</th><th>What to do</th></tr></thead>
-      <tbody id="healthBody"></tbody></table>
-      <details class="gl" style="margin-top:14px">
-        <summary>What do these words mean?</summary>
-        <table class="glossary" style="margin-top:10px">
-          <tr><td>ROAS</td><td>Return on ad spend — for every ₹1 you spend on ads, how many ₹ you get back in sales.</td></tr>
-          <tr><td>CPC</td><td>Cost per click — how much you pay Flipkart each time someone clicks your ad.</td></tr>
-          <tr><td>CTR</td><td>Click-through rate — out of everyone who saw your ad, what % clicked it. Low = your thumbnail/title isn't grabbing attention.</td></tr>
-          <tr><td>CVR</td><td>Conversion rate — out of everyone who clicked, what % actually bought. Low = the product page needs work (price, photos, reviews, stock).</td></tr>
-          <tr><td>AOV</td><td>Average order value — the average ₹ amount per sale.</td></tr>
-          <tr><td>FSN</td><td>Flipkart's unique ID number for one specific product listing.</td></tr>
-        </table>
-      </details>
-    </div>
-    <div class="card section-gap scroll adv-toggle no-data" id="wowCard">
-      <h2 id="wowTitle">Compared to last week</h2>
-      <div class="hint">Catches slow problems — like costs quietly creeping up — before they get expensive.</div>
-      <table><thead><tr><th>Metric</th><th>This week</th><th>Last week</th><th>Change</th></tr></thead>
-      <tbody id="wowBody"></tbody></table>
-    </div>
-    <div class="card section-gap adv-toggle" id="campBreakdownCard">
-      <h2>Campaign-by-campaign breakdown</h2>
-      <div class="hint">Every campaign's performance, sorted by how much you spent on it. Click one to see exactly which products inside it need attention.</div>
-      <div class="row" style="margin-bottom:14px;align-items:flex-end">
-        <div class="field" style="max-width:280px;margin-bottom:0"><label for="campSearch">Search campaigns</label>
-          <input type="text" id="campSearch" placeholder="Type to filter…"></div>
-        <div class="field" style="margin-bottom:0;flex:0">
-          <label>View</label>
-          <div class="viewtoggle"><button type="button" id="vCards" class="on">Cards</button><button type="button" id="vTable">Table</button></div>
-        </div>
-        <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="campCount"></span></div>
-      </div>
-      <div class="ckgrid" id="campCards"></div>
-      <div class="scroll" id="campTableWrap" style="display:none">
-        <table><thead><tr><th>Campaign</th><th>Spend ₹</th><th>Revenue ₹</th><th>ROAS</th><th>CPC ₹</th><th>CTR</th><th>CVR</th><th>AOV ₹</th><th>Wasted ₹</th><th>Pause/Cut</th><th>Scale</th><th>Status</th></tr></thead>
-        <tbody id="campKpiBody"></tbody></table>
-      </div>
-      <div class="pager" id="campPager"></div>
-    </div>
-    <div class="card section-gap scroll adv-toggle" id="fsnDetailCard">
-      <h2>Every product, one by one</h2>
-      <div class="hint">The full detailed list behind the to-do list above, sorted by how much money is at stake. "Bid you're paying / Bid you can afford" tells you the highest price-per-click that still keeps this product profitable — use it when you update bids in Flipkart.</div>
-      <div class="row" style="margin-bottom:10px">
-        <div class="field" style="max-width:300px;margin-bottom:0"><label>Filter by campaign (pick one or more)</label>
-          <div class="mselect">
-            <button type="button" id="fCampBtn">All campaigns</button>
-            <div class="mpanel" id="fCampPanel"></div>
-          </div>
-        </div>
-        <div class="field" style="max-width:280px;margin-bottom:0"><label for="fSearch">Search by product ID or name</label>
-          <input type="text" id="fSearch" placeholder="Type to filter…"></div>
-        <div class="field" style="max-width:220px;margin-bottom:0"><label for="fAction">Show me</label>
-          <select id="fAction"><option value="">Needs attention (default)</option><option value="ALL">Everything, including "no change needed"</option><option>PAUSE</option><option>CUT BID</option><option>REDUCE</option><option>SCALE</option><option>FIX CONTENT</option><option>KEEP</option></select></div>
-        <div class="field" style="margin-bottom:0;align-self:flex-end"><label class="mrow" style="padding:8px 0"><input type="checkbox" id="fGroup"><span>Group by campaign</span></label></div>
-        <div class="field" style="margin-bottom:0;align-self:flex-end"><span class="note" id="fCount"></span></div>
-      </div>
-      <table><thead><tr><th>Do this</th><th>Campaign</th><th>Product ID</th><th>Product</th><th>Spend ₹</th><th>Views</th><th>Clicks</th><th>Click rate</th><th>Sold</th><th>Revenue ₹</th><th>₹ back per ₹1</th><th>Bid paying / afford</th><th>Why</th></tr></thead>
-      <tbody id="fsnBody"></tbody></table>
-      <div class="pager" id="fsnPager"></div>
-    </div>
-    <div class="card section-gap scroll adv-toggle" id="placementCard">
-      <h2>Placement actions</h2>
-      <table><thead><tr><th>Action</th><th>Placement</th><th>Spend ₹</th><th>Clicks</th><th>Units</th><th>Revenue ₹</th><th>ROAS</th><th>Recommendation</th></tr></thead>
-      <tbody id="placeBody"></tbody></table>
-      <div class="note" id="placeNote" style="margin-top:8px"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ DAILY TRACKING ============ -->
-<section class="panel" id="panel-daily">
+<!-- ============ ACTION PLAN ============ -->
+<section class="panel active" id="panel-plan">
   <div class="toolbar" style="margin-top:0">
-    <span class="tag keep" id="dtConnBadge">⚪ Local only (browser storage)</span>
+    <div class="field" style="max-width:200px;margin-bottom:0"><label for="planDate">Analyzing date</label><select id="planDate"></select></div>
     <span class="spacer"></span>
-  </div>
-  <div class="card help-card" style="margin-bottom:14px">
-    <div class="help-top">
-      <div class="help-badge">?</div>
-      <div>
-        <h2 style="margin-bottom:2px">Track day-by-day, catch sudden spikes and falls</h2>
-        <div class="hint" style="margin-bottom:0">Add one day's product report at a time (the same "FSN report" from tab 1, but for a single day instead of a whole week). Once you have a few days saved, we compare each Campaign and each Product against its own recent average and flag anything that suddenly jumped or dropped.</div>
-      </div>
-    </div>
-    <div class="note">📅 Saved in this browser so you can build up history over time — see "Backend & live tracking" below for automatic daily capture from your Flipkart scheduled email.</div>
+    <button class="primary" id="btnExportPlan">⬇ Export action plan (Excel)</button>
   </div>
 
+  <div id="planEmpty" class="card"><div class="hint" style="margin:0">👋 Add at least 2 days of data in tab 2 (Upload &amp; history) to see an action plan — ideally 8+ days for the most reliable alerts.</div></div>
+
+  <div id="planBody" style="display:none">
+    <div class="verdict" id="verdictCard"></div>
+    <div class="grid g4" id="planMetrics"></div>
+
+    <div class="card section-gap">
+      <div class="toolbar" style="margin:0 0 6px">
+        <h2 style="margin:0">🚨 Sudden spikes &amp; falls</h2>
+        <span class="spacer"></span>
+        <div class="seg"><button id="segPrev" class="on">Vs. yesterday</button><button id="segTrail">Vs. 7-day average</button></div>
+      </div>
+      <div class="hint" id="modeHint"></div>
+      <div id="alertBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UPLOAD & HISTORY ============ -->
+<section class="panel" id="panel-upload">
   <div class="card" style="margin-bottom:14px">
     <h2>Add a day's report</h2>
+    <div class="hint">Upload the daily FSN-level report for one specific date. Do this once per day (manually, or automatically if you've connected a backend in Settings).</div>
     <div class="row">
-      <div class="field" style="max-width:200px"><label for="dayDate">Which date is this report for?</label><input type="date" id="dayDate"></div>
+      <div class="field" style="max-width:200px"><label for="dayDate">Report date</label><input type="date" id="dayDate"></div>
     </div>
-    <div class="drop" id="dropDay"><div class="big">📦 Product-level report for this date</div><div class="drop-sub mono">"Consolidated FSN report"</div><div class="st" id="stDay">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
-    <div class="toolbar" style="margin-bottom:0">
-      <span class="note" id="dayNote"></span>
-    </div>
+    <div class="drop" id="dropDay"><div class="big">📦 Product-level (FSN) report</div><div class="st" id="stDay">Click or drop .xlsx / .csv</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="toolbar" style="margin-bottom:0"><span class="note" id="dayNote"></span></div>
   </div>
 
-  <div class="card" style="margin-bottom:14px">
+  <div class="card">
     <h2>Days saved</h2>
-    <div class="hint">We need at least a few days of history before we can tell what's "normal" for a campaign or product.</div>
-    <div id="dayList" class="note">No days saved yet — add your first one above.</div>
+    <div class="hint">Source shows whether a day came from manual upload or an automated backend email fetch.</div>
+    <div class="scroll"><table><thead><tr><th>Date</th><th>Spend</th><th>Revenue</th><th>₹ back per ₹1</th><th>Source</th></tr></thead><tbody id="dayBody"></tbody></table></div>
+    <div id="dayEmpty" class="note">No days saved yet — add your first one above.</div>
     <div class="toolbar" style="margin-bottom:0"><button id="btnClearDays">Clear all saved days</button></div>
   </div>
+</section>
 
-  <div class="card" style="margin-bottom:14px">
-    <h2>🚨 Today's spikes & falls</h2>
-    <div class="hint">Comparing the selected date against its trailing 7-day average, per Campaign and per Product.</div>
-    <div class="row">
-      <div class="field" style="max-width:200px"><label for="alertDate">Check this date</label><select id="alertDate"></select></div>
-    </div>
-    <div id="alertBody"><div class="note">Add at least 8 days of data to see spike/fall alerts (7 days of history + the day being checked).</div></div>
-  </div>
-
-  <div class="card section-gap">
+<!-- ============ COMPARE ============ -->
+<section class="panel" id="panel-compare">
+  <div class="card">
     <h2>📊 Compare two periods</h2>
     <div class="hint">Pick two weeks, or two months, and see exactly what changed — overall and campaign by campaign.</div>
     <div class="row" style="align-items:flex-end">
-      <div class="field" style="max-width:140px"><label>Compare by</label>
-        <select id="cmpMode"><option value="week">Week</option><option value="month">Month</option></select></div>
-      <div class="field" style="max-width:180px"><label for="cmpAStart">Period A — from</label><input type="date" id="cmpAStart"></div>
-      <div class="field" style="max-width:180px"><label for="cmpAEnd">Period A — to</label><input type="date" id="cmpAEnd"></div>
-      <div class="field" style="max-width:180px"><label for="cmpBStart">Period B — from</label><input type="date" id="cmpBStart"></div>
-      <div class="field" style="max-width:180px"><label for="cmpBEnd">Period B — to</label><input type="date" id="cmpBEnd"></div>
+      <div class="field" style="max-width:140px"><label>Compare by</label><select id="cmpMode"><option value="week">Week</option><option value="month">Month</option></select></div>
+      <div class="field" style="max-width:170px"><label for="cmpAStart">Period A — from</label><input type="date" id="cmpAStart"></div>
+      <div class="field" style="max-width:170px"><label for="cmpAEnd">Period A — to</label><input type="date" id="cmpAEnd"></div>
+      <div class="field" style="max-width:170px"><label for="cmpBStart">Period B — from</label><input type="date" id="cmpBStart"></div>
+      <div class="field" style="max-width:170px"><label for="cmpBEnd">Period B — to</label><input type="date" id="cmpBEnd"></div>
       <div class="field" style="max-width:140px"><button class="primary" id="btnCompare" style="width:100%">Compare</button></div>
     </div>
     <div id="cmpResult"></div>
-  </div>
-
-  <div class="card section-gap help-card">
-    <h2>⚡ Backend & live tracking (optional, needs setup)</h2>
-    <div class="hint" style="margin-bottom:10px">A browser tab can't read your email automatically. To get Flipkart's daily 10am scheduled report captured for you — with no manual upload, saved centrally, accessible from any device — deploy the companion backend service and connect it below.</div>
-    <ol class="steps">
-      <li><b>Deploy the backend</b> (code + step-by-step instructions provided separately) — it logs into the mailbox that receives Flipkart's scheduled report, downloads the attachment every morning, and stores it in a real database, not just this browser.</li>
-      <li><b>Connect it</b> in <b>Settings → Live tracking backend</b> — paste its URL and API key, then press "Sync days now".</li>
-      <li>Manual upload (above) keeps working as a fallback, for backfilling old dates, or if you never set up a backend at all.</li>
-    </ol>
-    <div class="note" id="dtBackendNote">Not connected yet — go to Settings to connect a backend once you've deployed one.</div>
   </div>
 </section>
 
 <!-- ============ SETTINGS ============ -->
 <section class="panel" id="panel-settings">
-  <div class="card" style="max-width:660px">
-    <h2>The basics</h2>
-    <div class="hint">Just 3 questions — we'll work out the rest automatically. Don't worry about getting these perfect; you can change them any week.</div>
+  <div class="card" style="max-width:660px;margin-bottom:14px">
+    <h2>Alert sensitivity</h2>
+    <div class="hint">How big a change counts as a "spike" or "fall." Lower % = more alerts (more sensitive); higher % = only the biggest moves.</div>
     <div class="row">
-      <div class="field"><label for="pMonth">Which month are you tracking?</label><input type="month" id="pMonth"></div>
-      <div class="field"><label for="pBudget">Your ad budget for the month (₹) — optional</label><input type="number" id="pBudget" min="0" step="500" placeholder="e.g. 120000"></div>
+      <div class="field"><label for="tSpendPct">Spend change to flag (%)</label><input type="number" id="tSpendPct" value="50" min="1"></div>
+      <div class="field"><label for="tRoasPct">₹-back-per-₹1 change to flag (%)</label><input type="number" id="tRoasPct" value="40" min="1"></div>
     </div>
-    <div class="field">
-      <label for="pMargin">What's your typical profit margin on a sale?</label>
-      <div class="row" style="align-items:center;gap:14px">
-        <input type="range" id="pMarginRange" min="10" max="60" step="1" value="33" style="flex:2">
-        <div class="mono" style="flex:0 0 auto;font-size:16px;font-weight:700;min-width:48px" id="pMarginLabel">33%</div>
-      </div>
-      <div class="note" style="margin-top:6px">Example: if a product sells for ₹500 and costs you ₹335 (product + fees + shipping), your margin is 33%. Below this margin, an ad sale actually loses you money — we use it to tell PAUSE-worthy products apart from healthy ones.</div>
+    <div class="row">
+      <div class="field"><label for="tCtrPct">Click rate change to flag (%)</label><input type="number" id="tCtrPct" value="40" min="1"></div>
+      <div class="field"><label for="tCvrPct">Sale rate change to flag (%)</label><input type="number" id="tCvrPct" value="40" min="1"></div>
     </div>
-    <div class="field">
-      <label for="pTarget">How many ₹ back per ₹1 spent do you want from ads?</label>
-      <input type="number" id="pTarget" min="1" step="0.5" value="5" style="max-width:160px">
-      <div class="note" style="margin-top:6px">Most sellers aim for ₹4–6 back per ₹1 spent. Higher = more cautious, lower = more willing to spend for growth.</div>
+    <div class="row">
+      <div class="field"><label for="tMinSpend">Ignore below this daily spend (₹)</label><input type="number" id="tMinSpend" value="100" min="0"></div>
+      <div class="field"><label for="tWindow">Trailing average window (days)</label><input type="number" id="tWindow" value="7" min="2" max="30"></div>
     </div>
-    <div class="note" id="breakevenNote" style="background:var(--blue-soft);border-radius:8px;padding:10px 12px;color:var(--ink)"></div>
   </div>
 
-  <div class="card section-gap" style="max-width:660px">
-    <details class="gl">
-      <summary>Advanced settings (only change these if you know what they do)</summary>
-      <div class="adv-block open" style="margin-top:14px">
-        <div class="row">
-          <div class="field"><label for="pBreakeven">Break-even ₹-back-per-₹1 (auto-set by margin above)</label><input type="number" id="pBreakeven" min="1" step="0.5" value="3"></div>
-          <div class="field"><label for="tScaleMult">Multiply target by this to trigger "spend more"</label><input type="number" id="tScaleMult" value="1.3" step="0.1" min="1"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label for="tMinSpend">Ignore a product below this weekly spend (₹)</label><input type="number" id="tMinSpend" value="150" min="0"></div>
-          <div class="field"><label for="tMinClicks">Minimum clicks before judging its conversion</label><input type="number" id="tMinClicks" value="20" min="1"></div>
-        </div>
-        <div class="row">
-          <div class="field"><label for="tMinViews">Minimum views before judging its click rate</label><input type="number" id="tMinViews" value="1000" min="0"></div>
-          <div class="field"><label for="tLowCtr">Click rate counted as "too low" (%)</label><input type="number" id="tLowCtr" value="1" step="0.1" min="0"></div>
-        </div>
-        <div class="note">How decisions are made, in order:<br>
-          1. <b>Turn off</b> — meaningful spend & clicks but zero sales → price, stock, rating or wrong-keyword problem.<br>
-          2. <b>Spend less</b> — below break-even on meaningful spend → losing money.<br>
-          3. <b>Spend more</b> — well above your target → raise bids/budget to buy more volume.<br>
-          4. <b>Trim a little</b> — profitable but under target → trim bid ~10–15%.<br>
-          5. <b>Fix the listing</b> — lots of views, tiny click rate → thumbnail/title/price is the bottleneck, not the ad.</div>
-      </div>
-    </details>
-  </div>
-
-  <div class="card section-gap help-card" style="max-width:660px">
-    <div class="help-top">
-      <div class="help-badge">⚡</div>
-      <div>
-        <h2 style="margin-bottom:2px">Live tracking backend (optional)</h2>
-        <div class="hint" style="margin-bottom:0">Connect the small backend service that reads Flipkart's scheduled report email automatically. Without this, Daily Tracking still works fully — you just upload each day's file by hand.</div>
-      </div>
-    </div>
+  <div class="card" style="max-width:660px">
+    <h2>⚡ Live backend (optional)</h2>
+    <div class="hint">Connect the backend service that reads Flipkart's 10am scheduled report email automatically. Without this, everything above still works — you just upload each day by hand in tab 2.</div>
     <div class="row">
       <div class="field"><label for="beUrl">Backend URL</label><input type="text" id="beUrl" placeholder="https://your-service.onrender.com"></div>
-      <div class="field"><label for="beKey">API key</label><input type="password" id="beKey" placeholder="Paste the API_KEY you set on the backend"></div>
+      <div class="field"><label for="beKey">API key</label><input type="password" id="beKey" placeholder="Paste your backend's API_KEY"></div>
     </div>
     <div class="toolbar" style="margin:4px 0 0">
       <button id="btnTestBackend">Test connection</button>
       <button id="btnSyncBackend">Sync days now</button>
       <button id="btnPushBackend">Push local days to backend</button>
-      <span class="note" id="beStatus">Not connected — Daily Tracking will use browser storage only.</span>
     </div>
+    <div class="note" id="beStatus" style="margin-top:8px">Not connected.</div>
   </div>
 </section>
 
 </main>
-<footer>Flipkart Ads Optimizer · runs 100% client-side · your reports never leave this device.</footer>
+<footer>Flipkart Ads Monitor · analysis runs in your browser · backend is optional and only handles storage + email fetch.</footer>
 
 <script>
 "use strict";
-/* ================= PURE-LOGIC-START (DOM-free, unit-testable) ================= */
+/* ================= PURE-LOGIC-START (mirrors backend/src/logic.js exactly) ================= */
 const SYN = {
-  campaign:["campaignname","campaign","campaignid"],
-  fsn:["fsn","fsnid","productid","listingid","sku","skuid"],
-  title:["productname","producttitle","title","itemname","product"],
-  views:["views","impressions","adviews"],
-  clicks:["clicks","adclicks"],
-  spend:["adspend","spend","cost","amountspent","totalspend","expenditure"],
-  directunits:["directunits","directunitssold","directsoldunits"],
-  indirectunits:["indirectunits","indirectunitssold"],
+  campaign:["campaignname","campaign","campaignid"], fsn:["fsn","fsnid","productid","listingid","sku","skuid"],
+  title:["productname","producttitle","title","itemname","product"], views:["views","impressions","adviews"],
+  clicks:["clicks","adclicks"], spend:["adspend","spend","cost","amountspent","totalspend","expenditure"],
+  directunits:["directunits","directunitssold","directsoldunits"], indirectunits:["indirectunits","indirectunitssold"],
   units:["units","unitssold","totalunits","totalunitssold","orders","conversions","sales"],
-  directrev:["directrevenue","directsales"],
-  indirectrev:["indirectrevenue","indirectsales"],
-  revenue:["revenue","totalrevenue","totalconvertedrevenue","sales","gmv","totalsales"],
-  date:["date","day","reportdate","impressiondate"],
-  placement:["placement","placementtype","pagetype","slot","position"]
+  directrev:["directrevenue","directsales"], indirectrev:["indirectrevenue","indirectsales"],
+  revenue:["revenue","totalrevenue","totalconvertedrevenue","sales","gmv","totalsales"], date:["date","day","reportdate","impressiondate"]
 };
 const norm = s => String(s??"").toLowerCase().replace(/[^a-z0-9]/g,"");
 const num = n => Number(n)||0;
 
 function mapHeaders(headers){
   const m={};
-  headers.forEach((h,i)=>{
-    const n=norm(h); if(!n) return;
-    for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n===s||n.includes(s))){ m[key]=i; break; } }
-  });
+  headers.forEach((h,i)=>{ const n=norm(h); if(!n) return;
+    for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n===s||n.includes(s))){ m[key]=i; break; } } });
   const nameIdx=headers.findIndex(h=>norm(h).includes("campaignname"));
   if(nameIdx>=0) m.campaign=nameIdx;
   return m;
 }
-
 function findHeaderRow(rows){
-  for(let i=0;i<Math.min(rows.length,15);i++){
-    const ns=rows[i].map(norm);
-    if(ns.some(x=>SYN.fsn.includes(x)||SYN.date.includes(x)||SYN.placement.includes(x)||SYN.spend.some(s=>x.includes(s)))) return i;
-  }
+  for(let i=0;i<Math.min(rows.length,15);i++){ const ns=rows[i].map(norm);
+    if(ns.some(x=>SYN.fsn.includes(x)||SYN.date.includes(x)||SYN.spend.some(s=>x.includes(s)))) return i; }
   return -1;
 }
-
-function rowsFromSheet(rows){ // rows: array of arrays (incl. possible preamble rows)
+function rowsFromSheet(rows){
   const hi=findHeaderRow(rows);
   if(hi<0) return {error:"Could not find a header row — is this the right report?"};
   const map=mapHeaders(rows[hi]);
   const data=rows.slice(hi+1).filter(r=>r.some(c=>c!=="")).map(r=>{
     const g=k=>map[k]!==undefined? r[map[k]] : "";
-    const units = num(g("units")) || (num(g("directunits"))+num(g("indirectunits")));
-    const revenue = num(g("revenue")) || (num(g("directrev"))+num(g("indirectrev")));
-    return { fsn:String(g("fsn")||"").trim(), title:String(g("title")||"").trim(),
-      campaign:String(g("campaign")||"").trim(),
-      date:g("date"), placement:String(g("placement")||"").trim(),
-      views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")),
-      units, revenue, drev:num(g("directrev")), dunits:num(g("directunits")) };
+    const units=num(g("units"))||num(g("directunits"))+num(g("indirectunits"));
+    const revenue=num(g("revenue"))||num(g("directrev"))+num(g("indirectrev"));
+    return {fsn:String(g("fsn")||"").trim(), title:String(g("title")||"").trim(), campaign:String(g("campaign")||"").trim(),
+      views:num(g("views")), clicks:num(g("clicks")), spend:num(g("spend")), units, revenue};
   });
   return {map,data};
 }
-
-function detectReportType(res){
-  const rows=res.data; if(!rows.length) return null;
-  const sample=rows.slice(0,200);
-  const frac=k=>sample.filter(r=>String(r[k]??"").trim()!=="").length/sample.length;
-  const hasFsn = res.map.fsn!==undefined && frac("fsn")>0.6;
-  const uniqPlace = new Set(sample.map(r=>r.placement).filter(Boolean));
-  const hasPlace = res.map.placement!==undefined && frac("placement")>0.6 && uniqPlace.size>0 && uniqPlace.size<=30;
-  const dateOk = v=>{ if(v==null||v==="") return false; if(typeof v==="number") return v>25000&&v<60000; return !isNaN(Date.parse(String(v))); };
-  const hasDate = res.map.date!==undefined && sample.filter(r=>dateOk(r.date)).length/sample.length>0.6;
-  if(hasFsn) return "fsn";
-  if(hasPlace) return "placement";
-  if(hasDate) return "daily";
-  return null;
-}
-
-function agg(rows){ return rows.reduce((a,r)=>({spend:a.spend+r.spend,views:a.views+r.views,clicks:a.clicks+r.clicks,units:a.units+r.units,revenue:a.revenue+r.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0}); }
-
-function classifyFsn(r,T,be,target){
-  const roas = r.spend>0? r.revenue/r.spend : (r.revenue>0? Infinity:0);
-  const ctr = r.views>0? r.clicks/r.views*100 : 0;
-  if(r.spend>=T.minSpend && r.clicks>=T.minClicks && r.units===0)
-    return {a:"PAUSE",cls:"pause",why:`₹${Math.round(r.spend)} spent, ${r.clicks} clicks, zero units. Pause the ad, then check price vs competition, stock, rating and images before relaunching.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas<be)
-    return {a:"CUT BID",cls:"pause",why:`ROAS ${roas.toFixed(1)} is below break-even ${be}. Cut bid 25–30% now; pause if it doesn't recover within a week.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas>=target*T.scaleMult)
-    return {a:"SCALE",cls:"scale",why:`ROAS ${roas.toFixed(1)} beats target ${target}. Raise bid 15–25% and lift the campaign budget cap so it isn't throttled.`,roas,ctr};
-  if(r.spend>=T.minSpend && roas<target)
-    return {a:"REDUCE",cls:"reduce",why:`Profitable (ROAS ${roas.toFixed(1)}) but under target ${target}. Trim bid ~10–15% to improve efficiency.`,roas,ctr};
-  if(r.views>=T.minViews && ctr<T.lowCtr)
-    return {a:"FIX CONTENT",cls:"fix",why:`${r.views.toLocaleString()} views but CTR ${ctr.toFixed(2)}%. The listing, not the ad, is the bottleneck — improve thumbnail, title and price display.`,roas,ctr};
-  return {a:"KEEP",cls:"keep",why:"Within thresholds — no change this week.",roas,ctr};
-}
-
-function consolidateByCampaignFsn(rows){
-  const by={};
-  rows.forEach(r=>{ const k=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
-    by[k]=by[k]||{campaign:r.campaign||"—",fsn:r.fsn,title:r.title,views:0,clicks:0,spend:0,units:0,revenue:0,drev:0,dunits:0};
-    const o=by[k]; o.views+=r.views;o.clicks+=r.clicks;o.spend+=r.spend;o.units+=r.units;o.revenue+=r.revenue;
-    o.drev+=(r.drev||0); o.dunits+=(r.dunits||0); if(!o.title&&r.title)o.title=r.title; });
-  return Object.values(by);
-}
-
-function consolidatePlacements(rows){
-  const by={};
-  rows.forEach(r=>{ const k=r.placement||"Unknown"; by[k]=by[k]||{placement:k,spend:0,clicks:0,units:0,revenue:0};
-    const o=by[k]; o.spend+=r.spend;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue; });
-  const out=Object.values(by).map(p=>Object.assign(p,{roas:p.spend>0?p.revenue/p.spend:0}));
-  out.sort((a,b)=>b.roas-a.roas);
-  return out;
-}
-
-function buildActionPlan(fsnRows, placementRows, T, be, target){
-  const consolidated=consolidateByCampaignFsn(fsnRows).map(r=>Object.assign(r,{c:classifyFsn(r,T,be,target)}));
-  const order={PAUSE:0,"CUT BID":1,"FIX CONTENT":2,REDUCE:3,SCALE:4,KEEP:5};
-  consolidated.sort((a,b)=> order[a.c.a]-order[b.c.a] || b.spend-a.spend);
-  const placeRows=placementRows? consolidatePlacements(placementRows) : [];
-  return {fsnRows:consolidated, placeRows, tot:agg(fsnRows)};
-}
-
-function pacingMessage(spend, weekBudget, fmtFn){
-  if(!weekBudget) return "";
-  const dev=(spend-weekBudget)/weekBudget*100;
-  return Math.abs(dev)<=10? `Pacing on track: ${fmtFn(spend)} spent vs ~${fmtFn(weekBudget)} planned for the week (${dev>=0?"+":""}${dev.toFixed(0)}%).`
-    : dev>0? `Overspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (+${dev.toFixed(0)}%). Lower daily caps on below-target campaigns or you'll exhaust the month early.`
-    : `Underspending: ${fmtFn(spend)} vs ~${fmtFn(weekBudget)} planned (${dev.toFixed(0)}%). If ROAS is healthy, raise bids on SCALE items to use the budget.`;
-}
-
 function computeKpis(tot){
-  return {
-    roas: tot.spend? tot.revenue/tot.spend : 0,
-    cpc:  tot.clicks? tot.spend/tot.clicks : 0,
-    ctr:  tot.views? 100*tot.clicks/tot.views : 0,
-    cvr:  tot.clicks? 100*tot.units/tot.clicks : 0,
-    aov:  tot.units? tot.revenue/tot.units : 0
-  };
+  return { roas: tot.spend? tot.revenue/tot.spend:0, cpc: tot.clicks? tot.spend/tot.clicks:0,
+    ctr: tot.views? 100*tot.clicks/tot.views:0, cvr: tot.clicks? 100*tot.units/tot.clicks:0, aov: tot.units? tot.revenue/tot.units:0 };
 }
-
-// max CPC an FSN can afford while still hitting target ROAS: revenue-per-click ÷ target
-function maxCpcFor(r,target){ return (r.clicks>0&&target>0)? (r.revenue/r.clicks)/target : 0; }
-
-// spend beyond what's justified at break-even, on rows flagged as losing money
-function wastedSpend(classifiedRows,be){
-  return classifiedRows.filter(r=>r.c && (r.c.a==="PAUSE"||r.c.a==="CUT BID"))
-    .reduce((s,r)=>s+Math.max(0, r.spend - r.revenue/Math.max(be,1)), 0);
-}
-
-function roiHealth(kpis, tot, classifiedRows, be, target, T){
-  const waste=wastedSpend(classifiedRows,be);
-  const wastePct=tot.spend? 100*waste/tot.spend : 0;
-  const affordable=target>0? (kpis.aov*kpis.cvr/100)/target : 0;
-  const items=[];
-  const push=(element,value,status,advice)=>items.push({element,value,status,advice});
-  push("ROAS vs target", kpis.roas.toFixed(2)+"× (target "+target+", break-even "+be+")",
-    kpis.roas>=target?"good":kpis.roas>=be?"warn":"bad",
-    kpis.roas>=target?"At/above target — protect winners' budgets, don't over-cut.":kpis.roas>=be?"Profitable but below target — work the CUT/REDUCE list and scale winners.":"Below break-even — ads are losing money; execute the PAUSE/CUT list first.");
-  push("Avg CPC vs affordable CPC", "₹"+kpis.cpc.toFixed(1)+" vs ₹"+affordable.toFixed(1),
-    affordable<=0?"warn":kpis.cpc<=affordable?"good":kpis.cpc<=affordable*1.2?"warn":"bad",
-    kpis.cpc<=affordable?"CPC is within what AOV × CVR can afford at target ROAS.":"CPC exceeds the affordable level ((AOV × CVR) ÷ target). Lower bids, or raise CVR/AOV via better listings and bundles.");
-  push("CTR (ad relevance)", kpis.ctr.toFixed(2)+"%",
-    kpis.ctr>=2*T.lowCtr?"good":kpis.ctr>=T.lowCtr?"warn":"bad",
-    kpis.ctr>=2*T.lowCtr?"Healthy relevance — thumbnails/titles are earning the click.":"Low CTR wastes impressions and hurts auction rank — improve thumbnails, titles and displayed price; check keyword relevance.");
-  push("CVR (listing quality)", kpis.cvr.toFixed(2)+"%",
-    kpis.cvr>=1.75?"good":kpis.cvr>=1?"warn":"bad",
-    kpis.cvr>=1.75?"Clicks are converting — listings are doing their job.":"Ads buy clicks; listings earn sales. Check price vs competition, images, reviews, stock and delivery speed.");
-  push("AOV / ASP", "₹"+Math.round(kpis.aov),
-    kpis.aov>=500?"good":kpis.aov>=300?"warn":"bad",
-    "Low AOV shrinks affordable CPC. Raise AOV with combos/bundles and pushing higher-price variants.");
-  push("Wasted spend", "₹"+Math.round(waste).toLocaleString("en-IN")+" ("+wastePct.toFixed(1)+"% of spend)",
-    wastePct<=5?"good":wastePct<=15?"warn":"bad",
-    wastePct<=5?"Little money leaking to losing FSNs.":"Cutting this is the fastest ROI gain — pause/cut the losing FSNs before scaling anything.");
-  const drev=classifiedRows.reduce((s,r)=>s+(r.drev||0),0);
-  if(drev>0 && tot.revenue>0){
-    const share=100*drev/tot.revenue;
-    push("Direct revenue share", share.toFixed(0)+"%",
-      share>=50?"good":share>=30?"warn":"bad",
-      share>=50?"Revenue is mostly from the advertised FSNs themselves — attribution is solid.":"Heavily indirect revenue is fragile attribution — verify the advertised FSNs themselves sell, not just neighbors.");
-  }
-  return {items, waste, wastePct, affordable};
-}
-
-// friendly, jargon-free labels for the action codes — used everywhere a non-technical
-// person sees a decision, so the technical code is always paired with plain words
-var ACTION_WORDS = {
-  "PAUSE":       {icon:"🛑", word:"Turn off",      short:"Stop this ad"},
-  "CUT BID":     {icon:"⬇️", word:"Spend less",    short:"Lower how much you bid"},
-  "REDUCE":      {icon:"↘️", word:"Trim a little",  short:"Small bid decrease"},
-  "SCALE":       {icon:"📈", word:"Spend more",     short:"This one's working — grow it"},
-  "FIX CONTENT": {icon:"🖼️", word:"Fix the listing", short:"Ad is fine, the product page isn't"},
-  "KEEP":        {icon:"✅", word:"Leave as is",    short:"No change needed"}
-};
-
-// builds a plain-English weekly verdict a shop owner can read without any ad jargon
-function plainEnglishSummary(tot, counts, be, target, wastePct){
-  const roas=tot.spend? tot.revenue/tot.spend : 0;
-  const n=k=>counts[k]||0;
-  const stop=n("PAUSE")+n("CUT BID"), grow=n("SCALE"), fix=n("FIX CONTENT");
-  let verdict, tone;
-  if(tot.spend<=0){ verdict="No ad spend recorded this week — nothing to review yet."; tone="warn"; }
-  else if(roas>=target){ verdict=`Good week — for every ₹1 you spent on ads, you got back ₹${roas.toFixed(2)}. That's above your ₹${target} goal.`; tone="good"; }
-  else if(roas>=be){ verdict=`Okay week — for every ₹1 spent you got back ₹${roas.toFixed(2)}. You're not losing money, but you're below your ₹${target} goal.`; tone="warn"; }
-  else { verdict=`This week your ads lost money — you only got back ₹${roas.toFixed(2)} for every ₹1 spent. Fixing this should be today's priority.`; tone="bad"; }
-  const todo=[];
-  if(stop>0) todo.push(`Turn off or lower the bid on ${stop} product${stop>1?"s":""} — ${stop>1?"they're":"it's"} losing money.`);
-  if(fix>0) todo.push(`Fix the product page (photos, price, stock) for ${fix} listing${fix>1?"s":""} getting lots of views but almost no clicks.`);
-  if(grow>0) todo.push(`Spend more on ${grow} product${grow>1?"s":""} that are already working well.`);
-  if(wastePct>10) todo.push(`₹${wastePct.toFixed(0)} out of every ₹100 you spent went to products that don't sell — stopping those is your fastest win.`);
-  if(!todo.length) todo.push("Nothing urgent this week — check back next week.");
-  return {verdict, tone, todo};
-}
-
-// per-campaign rollup: totals, KPIs, wasted spend and action counts
-function campaignSummaries(classifiedRows, be){
-  const by={};
-  classifiedRows.forEach(r=>{
-    const k=r.campaign||"—";
-    by[k]=by[k]||{campaign:k,spend:0,revenue:0,views:0,clicks:0,units:0,waste:0,counts:{}};
-    const o=by[k];
-    o.spend+=r.spend; o.revenue+=r.revenue; o.views+=r.views; o.clicks+=r.clicks; o.units+=r.units;
-    o.counts[r.c.a]=(o.counts[r.c.a]||0)+1;
-    if(r.c.a==="PAUSE"||r.c.a==="CUT BID") o.waste+=Math.max(0, r.spend - r.revenue/Math.max(be,1));
-  });
-  return Object.values(by)
-    .map(o=>Object.assign(o,{kpis:computeKpis(o)}))
-    .sort((a,b)=>b.spend-a.spend);
-}
-
-function wowCompare(curr, prev){
-  if(!prev || !prev.spend) return null;
-  const a=computeKpis(curr), b=computeKpis(prev);
-  const rows=[
-    ["Spend", curr.spend, prev.spend, "₹"],
-    ["Revenue", curr.revenue, prev.revenue, "₹"],
-    ["ROAS", a.roas, b.roas, "×"],
-    ["CPC", a.cpc, b.cpc, "₹"],
-    ["CTR", a.ctr, b.ctr, "%"],
-    ["CVR", a.cvr, b.cvr, "%"],
-    ["AOV", a.aov, b.aov, "₹"]
-  ].map(([metric,c,p,unit])=>{
-    const delta=p? 100*(c-p)/p : 0;
-    // for CPC, an increase is bad; for everything else, an increase is good
-    const goodDir = metric==="CPC"? delta<=0 : delta>=0;
-    return {metric, curr:c, prev:p, delta, unit, good:goodDir};
-  });
-  return rows;
-}
-/* ---------- daily tracking: spike/fall detection & period comparison ---------- */
-
-// build one day's snapshot: per-campaign and per-FSN aggregates, keyed by name/fsn
 function buildDailySnapshot(fsnRows){
   const byCampaign={}, byFsn={};
   fsnRows.forEach(r=>{
     const c=r.campaign||"—";
     byCampaign[c]=byCampaign[c]||{key:c,spend:0,views:0,clicks:0,units:0,revenue:0};
-    const oc=byCampaign[c]; oc.spend+=r.spend; oc.views+=r.views; oc.clicks+=r.clicks; oc.units+=r.units; oc.revenue+=r.revenue;
+    const oc=byCampaign[c]; oc.spend+=r.spend;oc.views+=r.views;oc.clicks+=r.clicks;oc.units+=r.units;oc.revenue+=r.revenue;
     const fk=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
     byFsn[fk]=byFsn[fk]||{key:fk,campaign:c,fsn:r.fsn,title:r.title,spend:0,views:0,clicks:0,units:0,revenue:0};
-    const of=byFsn[fk]; of.spend+=r.spend; of.views+=r.views; of.clicks+=r.clicks; of.units+=r.units; of.revenue+=r.revenue; if(!of.title&&r.title)of.title=r.title;
+    const of=byFsn[fk]; of.spend+=r.spend;of.views+=r.views;of.clicks+=r.clicks;of.units+=r.units;of.revenue+=r.revenue; if(!of.title&&r.title)of.title=r.title;
   });
   Object.values(byCampaign).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
   Object.values(byFsn).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
-  return {campaigns:byCampaign, fsns:byFsn, tot:agg(fsnRows)};
+  const tot=fsnRows.reduce((a,r)=>({spend:a.spend+r.spend,views:a.views+r.views,clicks:a.clicks+r.clicks,units:a.units+r.units,revenue:a.revenue+r.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0});
+  return {campaigns:byCampaign, fsns:byFsn, tot};
 }
-
-// sorted list of ISO date strings (YYYY-MM-DD) stored in daysMap, ascending
 function sortedDates(daysMap){ return Object.keys(daysMap).sort(); }
-
-// trailing average of a metric for one key (campaign name or campaign|fsn) over up to `window`
-// days strictly before targetDate that have data for that key. Returns null if no prior data.
+function previousDate(dateISO){ const d=new Date(dateISO+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()-1); return d.toISOString().slice(0,10); }
 function trailingAverage(daysMap, targetDate, level, key, window){
   const dates=sortedDates(daysMap).filter(d=>d<targetDate).slice(-window);
   const vals=[];
-  dates.forEach(d=>{
-    const snap=daysMap[d]; if(!snap) return;
-    const bucket= level==="campaign"? snap.campaigns : snap.fsns;
-    const row=bucket && bucket[key];
-    if(row) vals.push(row);
-  });
+  dates.forEach(d=>{ const snap=daysMap[d]; if(!snap) return;
+    const bucket= level==="campaign"? snap.campaigns : snap.fsns; const row=bucket && bucket[key]; if(row) vals.push(row); });
   if(!vals.length) return null;
-  const sum=(f)=>vals.reduce((s,v)=>s+f(v),0);
-  const n=vals.length;
-  return { spend:sum(v=>v.spend)/n, revenue:sum(v=>v.revenue)/n, units:sum(v=>v.units)/n,
-    roas:sum(v=>v.kpis.roas)/n, ctr:sum(v=>v.kpis.ctr)/n, cvr:sum(v=>v.kpis.cvr)/n, days:n };
+  const sum=f=>vals.reduce((s,v)=>s+f(v),0); const n=vals.length;
+  return { spend:sum(v=>v.spend)/n, revenue:sum(v=>v.revenue)/n, units:sum(v=>v.units)/n, roas:sum(v=>v.kpis.roas)/n, ctr:sum(v=>v.kpis.ctr)/n, cvr:sum(v=>v.kpis.cvr)/n, days:n };
 }
-
-// classify one metric's move: returns null if not enough baseline or change below threshold
 function classifyMove(curr, base, thresholdPct){
-  if(base===null || base===undefined || base===0) return null;
-  const pct=100*(curr-base)/base;
-  if(Math.abs(pct)<thresholdPct) return null;
+  if(base===null||base===undefined||base===0) return null;
+  const pct=100*(curr-base)/base; if(Math.abs(pct)<thresholdPct) return null;
   return {pct, dir: pct>0?"up":"down"};
 }
-
-// detect sudden spikes/falls for every campaign and every FSN active on targetDate,
-// comparing each to its own trailing average. Returns two sorted arrays (campaigns, fsns).
-function detectMoves(daysMap, targetDate, opts){
-  const o=Object.assign({window:7, minSpend:100, spendPct:50, roasPct:40, ctrPct:40, cvrPct:40}, opts||{});
-  const snap=daysMap[targetDate];
-  if(!snap) return {campaigns:[], fsns:[], date:targetDate};
-  const evalLevel=(bucket, level)=>{
-    const out=[];
-    Object.values(bucket).forEach(row=>{
-      if(row.spend<o.minSpend && row.revenue<=0) return; // ignore noise-level rows
-      const base=trailingAverage(daysMap, targetDate, level, row.key, o.window);
-      if(!base) return; // no history yet — nothing to compare against
-      const moves=[];
-      const spendMove=classifyMove(row.spend, base.spend, o.spendPct); if(spendMove) moves.push(Object.assign({metric:"spend"},spendMove));
-      const roasMove=classifyMove(row.kpis.roas, base.roas, o.roasPct); if(roasMove) moves.push(Object.assign({metric:"roas"},roasMove));
-      const ctrMove=classifyMove(row.kpis.ctr, base.ctr, o.ctrPct); if(ctrMove) moves.push(Object.assign({metric:"ctr"},ctrMove));
-      const cvrMove=classifyMove(row.kpis.cvr, base.cvr, o.cvrPct); if(cvrMove) moves.push(Object.assign({metric:"cvr"},cvrMove));
-      if(!moves.length) return;
-      out.push(Object.assign({}, row, {base, moves, verdict:moveVerdict(moves)}));
-    });
-    // biggest overall move first
-    out.sort((a,b)=>Math.max(...b.moves.map(m=>Math.abs(m.pct)))-Math.max(...a.moves.map(m=>Math.abs(m.pct))));
-    return out;
-  };
-  return { date:targetDate, campaigns:evalLevel(snap.campaigns,"campaign"), fsns:evalLevel(snap.fsns,"fsn") };
-}
-
-// turns a set of metric moves into a plain-English verdict + suggested action
 function moveVerdict(moves){
   const has=m=>moves.find(x=>x.metric===m);
   const spend=has("spend"), roas=has("roas"), ctr=has("ctr"), cvr=has("cvr");
   if(spend&&spend.dir==="up" && roas&&roas.dir==="down")
-    return {type:"SPIKE_RISK", icon:"🚀⚠️", label:"Spend spike, ROAS falling",
-      why:`Spend jumped ${Math.abs(spend.pct).toFixed(0)}% while returns dropped ${Math.abs(roas.pct).toFixed(0)}%.`,
-      action:"Check for a bid or budget change you didn't intend, or a competitor undercutting price. Consider capping the daily budget until you confirm."};
-  if(roas&&roas.dir==="up" && (spend?spend.dir!=="down":true))
-    return {type:"SPIKE_GOOD", icon:"🚀", label:"Sudden spike — in a good way",
-      why:`Returns are up ${Math.abs(roas.pct).toFixed(0)}% vs the recent average.`,
-      action:"Likely a competitor stockout, a trending moment, or a price/offer working well. Consider raising the budget to capture more of it while it lasts."};
+    return {type:"SPIKE_RISK",icon:"🚀⚠️",label:"Spend spike, ROAS falling",why:`Spend jumped ${Math.abs(spend.pct).toFixed(0)}% while returns dropped ${Math.abs(roas.pct).toFixed(0)}%.`,action:"Check for a bid or budget change you didn't intend, or a competitor undercutting price. Consider capping the daily budget until you confirm."};
+  if(roas&&roas.dir==="up" && (spend? spend.dir!=="down":true))
+    return {type:"SPIKE_GOOD",icon:"🚀",label:"Sudden spike — in a good way",why:`Returns are up ${Math.abs(roas.pct).toFixed(0)}% vs the comparison point.`,action:"Likely a competitor stockout, a trending moment, or a price/offer working well. Consider raising the budget to capture more of it while it lasts."};
   if(roas&&roas.dir==="down")
-    return {type:"FALL", icon:"🔻", label:"Sudden fall",
-      why:`Returns dropped ${Math.abs(roas.pct).toFixed(0)}% vs the recent average.`,
-      action:"Check stock, price changes, new negative reviews, or a competitor's new offer. If it doesn't recover in a day, lower the bid."};
+    return {type:"FALL",icon:"🔻",label:"Sudden fall",why:`Returns dropped ${Math.abs(roas.pct).toFixed(0)}% vs the comparison point.`,action:"Check stock, price changes, new negative reviews, or a competitor's new offer. If it doesn't recover in a day, lower the bid."};
   if(ctr&&ctr.dir==="down")
-    return {type:"FALL", icon:"🔻", label:"Click rate suddenly dropped",
-      why:`Click rate fell ${Math.abs(ctr.pct).toFixed(0)}% vs the recent average.`,
-      action:"Check if the thumbnail, price, or badge (like an 'out of stock' label) changed on the listing."};
+    return {type:"FALL",icon:"🔻",label:"Click rate suddenly dropped",why:`Click rate fell ${Math.abs(ctr.pct).toFixed(0)}% vs the comparison point.`,action:"Check if the thumbnail, price, or a badge (like 'out of stock') changed on the listing."};
   if(cvr&&cvr.dir==="down")
-    return {type:"FALL", icon:"🔻", label:"Fewer clicks turning into sales",
-      why:`Sale rate fell ${Math.abs(cvr.pct).toFixed(0)}% vs the recent average.`,
-      action:"Check stock levels and recent reviews — something on the product page likely changed."};
+    return {type:"FALL",icon:"🔻",label:"Fewer clicks turning into sales",why:`Sale rate fell ${Math.abs(cvr.pct).toFixed(0)}% vs the comparison point.`,action:"Check stock levels and recent reviews — something on the product page likely changed."};
   if(spend&&spend.dir==="up")
-    return {type:"SPIKE_WATCH", icon:"📈", label:"Spend spike",
-      why:`Spend is up ${Math.abs(spend.pct).toFixed(0)}% vs the recent average.`,
-      action:"Not necessarily a problem if sales kept pace — check the revenue and ROAS numbers alongside this."};
-  return {type:"MOVE", icon:"↕️", label:"Notable change",
-    why:"One or more metrics moved sharply vs the recent average.",
-    action:"Review the numbers below to see which metric moved and decide if action is needed."};
+    return {type:"SPIKE_WATCH",icon:"📈",label:"Spend spike",why:`Spend is up ${Math.abs(spend.pct).toFixed(0)}% vs the comparison point.`,action:"Not necessarily a problem if sales kept pace — check the revenue and ROAS numbers alongside this."};
+  return {type:"MOVE",icon:"↕️",label:"Notable change",why:"One or more metrics moved sharply.",action:"Review the numbers to see which metric moved and decide if action is needed."};
 }
-
-// aggregate all days whose ISO date falls within [fromISO, toISO] inclusive
+function evaluateMoves(currentBucket, level, baselineFor, opts){
+  const o=Object.assign({minSpend:100,spendPct:50,roasPct:40,ctrPct:40,cvrPct:40}, opts||{});
+  const out=[];
+  Object.values(currentBucket).forEach(row=>{
+    if(row.spend<o.minSpend && row.revenue<=0) return;
+    const base=baselineFor(row.key); if(!base) return;
+    const moves=[];
+    const sm=classifyMove(row.spend,base.spend,o.spendPct); if(sm) moves.push(Object.assign({metric:"spend"},sm));
+    const rm=classifyMove(row.kpis.roas,base.roas,o.roasPct); if(rm) moves.push(Object.assign({metric:"roas"},rm));
+    const cm=classifyMove(row.kpis.ctr,base.ctr,o.ctrPct); if(cm) moves.push(Object.assign({metric:"ctr"},cm));
+    const vm=classifyMove(row.kpis.cvr,base.cvr,o.cvrPct); if(vm) moves.push(Object.assign({metric:"cvr"},vm));
+    if(!moves.length) return;
+    out.push(Object.assign({}, row, {base, moves, verdict:moveVerdict(moves)}));
+  });
+  out.sort((a,b)=>Math.max(...b.moves.map(m=>Math.abs(m.pct)))-Math.max(...a.moves.map(m=>Math.abs(m.pct))));
+  return out;
+}
+function detectMovesVsTrailing(daysMap, targetDate, opts){
+  const window=(opts&&opts.window)||7;
+  const snap=daysMap[targetDate];
+  if(!snap) return {date:targetDate, mode:"trailing", campaigns:[], fsns:[]};
+  return { date:targetDate, mode:"trailing",
+    campaigns: evaluateMoves(snap.campaigns,"campaign", key=>trailingAverage(daysMap,targetDate,"campaign",key,window), opts),
+    fsns: evaluateMoves(snap.fsns,"fsn", key=>trailingAverage(daysMap,targetDate,"fsn",key,window), opts) };
+}
+function detectMovesVsPreviousDay(daysMap, targetDate, opts){
+  const snap=daysMap[targetDate]; const prevDate=previousDate(targetDate); const prevSnap=daysMap[prevDate];
+  if(!snap||!prevSnap) return {date:targetDate, previousDate:prevDate, mode:"previous_day", campaigns:[], fsns:[], hasPrevious:!!prevSnap};
+  const baseFor=bucket=>key=>{ const row=bucket[key]; return row? {spend:row.spend,revenue:row.revenue,units:row.units,roas:row.kpis.roas,ctr:row.kpis.ctr,cvr:row.kpis.cvr}:null; };
+  return { date:targetDate, previousDate:prevDate, mode:"previous_day", hasPrevious:true,
+    campaigns: evaluateMoves(snap.campaigns,"campaign", baseFor(prevSnap.campaigns), opts),
+    fsns: evaluateMoves(snap.fsns,"fsn", baseFor(prevSnap.fsns), opts) };
+}
 function aggregateDateRange(daysMap, fromISO, toISO){
   const dates=sortedDates(daysMap).filter(d=>d>=fromISO && d<=toISO);
   const campaigns={}, fsns={};
-  dates.forEach(d=>{
-    const snap=daysMap[d]; if(!snap) return;
-    Object.values(snap.campaigns).forEach(r=>{
-      campaigns[r.key]=campaigns[r.key]||{key:r.key,spend:0,views:0,clicks:0,units:0,revenue:0};
-      const o=campaigns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue;
-    });
-    Object.values(snap.fsns).forEach(r=>{
-      fsns[r.key]=fsns[r.key]||{key:r.key,campaign:r.campaign,fsn:r.fsn,title:r.title,spend:0,views:0,clicks:0,units:0,revenue:0};
-      const o=fsns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue;
-    });
+  dates.forEach(d=>{ const snap=daysMap[d]; if(!snap) return;
+    Object.values(snap.campaigns).forEach(r=>{ campaigns[r.key]=campaigns[r.key]||{key:r.key,spend:0,views:0,clicks:0,units:0,revenue:0};
+      const o=campaigns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue; });
+    Object.values(snap.fsns).forEach(r=>{ fsns[r.key]=fsns[r.key]||{key:r.key,campaign:r.campaign,fsn:r.fsn,title:r.title,spend:0,views:0,clicks:0,units:0,revenue:0};
+      const o=fsns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue; });
   });
   Object.values(campaigns).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
   Object.values(fsns).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
   const tot=Object.values(campaigns).reduce((a,c)=>({spend:a.spend+c.spend,views:a.views+c.views,clicks:a.clicks+c.clicks,units:a.units+c.units,revenue:a.revenue+c.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0});
   return {campaigns, fsns, tot, dates, days:dates.length};
 }
-
-// compares two aggregated periods (e.g. week vs week, month vs month) at campaign level
 function comparePeriods(periodA, periodB){
   const kA=computeKpis(periodA.tot), kB=computeKpis(periodB.tot);
-  const metrics=[
-    ["Spend",periodA.tot.spend,periodB.tot.spend,"₹"],
-    ["Revenue",periodA.tot.revenue,periodB.tot.revenue,"₹"],
-    ["ROAS",kA.roas,kB.roas,"×"],
-    ["CPC",kA.cpc,kB.cpc,"₹"],
-    ["CTR",kA.ctr,kB.ctr,"%"],
-    ["CVR",kA.cvr,kB.cvr,"%"],
-    ["Units",periodA.tot.units,periodB.tot.units,"n"]
-  ].map(([metric,a,b,unit])=>{
-    const delta=b? 100*(a-b)/b : (a?100:0);
-    const good = metric==="CPC"? delta<=0 : delta>=0;
-    return {metric, a, b, delta, unit, good};
-  });
-  // campaign-level deltas for whichever campaigns appear in either period
+  const metrics=[["Spend",periodA.tot.spend,periodB.tot.spend,"₹"],["Revenue",periodA.tot.revenue,periodB.tot.revenue,"₹"],
+    ["ROAS",kA.roas,kB.roas,"×"],["CPC",kA.cpc,kB.cpc,"₹"],["CTR",kA.ctr,kB.ctr,"%"],["CVR",kA.cvr,kB.cvr,"%"],["Units",periodA.tot.units,periodB.tot.units,"n"]
+  ].map(([metric,a,b,unit])=>{ const delta=b? 100*(a-b)/b : (a?100:0); const good= metric==="CPC"? delta<=0 : delta>=0; return {metric,a,b,delta,unit,good}; });
   const names=[...new Set([...Object.keys(periodA.campaigns), ...Object.keys(periodB.campaigns)])];
   const campaigns=names.map(name=>{
     const a=periodA.campaigns[name], b=periodB.campaigns[name];
-    const spendA=a?a.spend:0, spendB=b?b.spend:0;
-    const roasA=a?a.kpis.roas:0, roasB=b?b.kpis.roas:0;
-    return {campaign:name, spendA, spendB, roasA, roasB,
-      spendDelta: spendB? 100*(spendA-spendB)/spendB : (spendA?100:0),
-      roasDelta: roasB? 100*(roasA-roasB)/roasB : (roasA?100:0)};
+    const spendA=a?a.spend:0, spendB=b?b.spend:0, roasA=a?a.kpis.roas:0, roasB=b?b.kpis.roas:0;
+    return {campaign:name, spendA, spendB, roasA, roasB, spendDelta: spendB?100*(spendA-spendB)/spendB:(spendA?100:0), roasDelta: roasB?100*(roasA-roasB)/roasB:(roasA?100:0)};
   }).sort((x,y)=>Math.max(x.spendA,x.spendB)-Math.max(y.spendA,y.spendB)).reverse();
   return {metrics, campaigns};
 }
-
+function buildActionPlan(daysMap, targetDate, opts){
+  const snap=daysMap[targetDate];
+  if(!snap) return {date:targetDate, exists:false};
+  const vsPrev=detectMovesVsPreviousDay(daysMap,targetDate,opts);
+  const vsTrail=detectMovesVsTrailing(daysMap,targetDate,opts);
+  const kpis=computeKpis(snap.tot);
+  const totalAlerts=vsPrev.campaigns.length+vsPrev.fsns.length+vsTrail.campaigns.length+vsTrail.fsns.length;
+  return {date:targetDate, exists:true, tot:snap.tot, kpis, vsPreviousDay:vsPrev, vsTrailingAverage:vsTrail, totalAlerts};
+}
 /* ================= PURE-LOGIC-END ================= */
 
-/* ---------- state & persistence ---------- */
-const LS="fk_optimizer_v1", LS_OLD="fk_planner_v1";
-let state={ settings:{month:"",budget:0,target:5,breakeven:3,minSpend:150,minClicks:20,minViews:1000,lowCtr:1,scaleMult:1.3}, weeks:{}, lastActions:null, days:{}, backend:{url:"",key:"",connected:false,lastSync:null} };
+/* ---------- state ---------- */
+const LS="fk_monitor_v1";
+let state={ days:{}, settings:{spendPct:50,roasPct:40,ctrPct:40,cvrPct:40,minSpend:100,window:7}, backend:{url:"",key:"",connected:false,lastSync:null} };
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
-function load(){
-  try{
-    const s=localStorage.getItem(LS);
-    if(s){ state=Object.assign(state,JSON.parse(s)); return; }
-    const old=localStorage.getItem(LS_OLD); // migrate settings from planner version
-    if(old){ const o=JSON.parse(old);
-      if(o.plan){ state.settings.month=o.plan.month||""; state.settings.budget=num(o.plan.budget); state.settings.target=num(o.plan.target)||5; state.settings.breakeven=num(o.plan.breakeven)||3; }
-      if(o.thresholds){ ["minSpend","minClicks","minViews","lowCtr","scaleMult"].forEach(k=>{ if(o.thresholds[k]!=null) state.settings[k]=num(o.thresholds[k]); }); }
-      if(o.weeks) state.weeks=o.weeks;
-    }
-  }catch(e){}
-}
+function load(){ try{ const s=localStorage.getItem(LS); if(s) state=Object.assign(state, JSON.parse(s)); }catch(e){} }
 const fmt=n=>"₹"+Math.round(n).toLocaleString("en-IN");
 const esc=s=>String(s??"").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function todayISO(){ return isoDate(new Date()); }
+function currentOpts(){ const s=state.settings; return {spendPct:num(s.spendPct)||50, roasPct:num(s.roasPct)||40, ctrPct:num(s.ctrPct)||40, cvrPct:num(s.cvrPct)||40, minSpend:num(s.minSpend)||100, window:num(s.window)||7}; }
 
 /* ---------- tabs ---------- */
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
-  t.classList.add("active");
-  document.getElementById("panel-"+t.dataset.t).classList.add("active");
+  t.classList.add("active"); document.getElementById("panel-"+t.dataset.t).classList.add("active");
 }));
 
-/* ---------- settings ---------- */
-const SETTING_IDS={pMonth:"month",pBudget:"budget",pTarget:"target",pBreakeven:"breakeven",tMinSpend:"minSpend",tMinClicks:"minClicks",tMinViews:"minViews",tLowCtr:"lowCtr",tScaleMult:"scaleMult"};
-Object.keys(SETTING_IDS).forEach(id=>{
-  document.getElementById(id).addEventListener("change",e=>{
-    const k=SETTING_IDS[id];
-    state.settings[k]=(id==="pMonth")? e.target.value : Number(e.target.value);
-    save(); renderPacer();
-  });
-});
-function daysInMonth(){ const m=state.settings.month; if(!m) return 30;
-  const [y,mo]=m.split("-").map(Number); return new Date(y,mo,0).getDate(); }
-
-/* ---------- margin slider → auto break-even ROAS ---------- */
-function updateMarginDerived(){
-  const margin=Number(document.getElementById("pMarginRange").value);
-  document.getElementById("pMarginLabel").textContent=margin+"%";
-  const be=Math.round((100/margin)*10)/10; // 1 / margin, one decimal
-  state.settings.breakeven=be;
-  document.getElementById("pBreakeven").value=be;
-  const target=num(state.settings.target)||5;
-  document.getElementById("breakevenNote").innerHTML=
-    `With a ${margin}% margin, you break even at <b>₹${be} back per ₹1 spent</b>. `+
-    `Below that, an ad "sale" is actually a loss — those are the first ones we'll tell you to turn off. `+
-    `Your goal of ₹${target} back per ₹1 gives you real profit above break-even.`;
-  save();
-}
-document.getElementById("pMarginRange").addEventListener("input",updateMarginDerived);
-document.getElementById("pTarget").addEventListener("input",updateMarginDerived);
-
-/* ---------- pacing strip ---------- */
-function renderPacer(){
-  const track=document.getElementById("pacerTrack"); track.innerHTML="";
-  const budget=num(state.settings.budget), weeks=Math.ceil(daysInMonth()/7);
-  const weekBudget=budget? budget/weeks : 0;
-  let spentTotal=0;
-  for(let w=1;w<=weeks;w++){
-    const wk=state.weeks[w];
-    let spent=0;
-    if(wk&&wk.dailyAgg) spent=wk.dailyAgg.spend;
-    else if(wk&&wk.fsnAgg) spent=wk.fsnAgg.spend;
-    spentTotal+=spent;
-    const div=document.createElement("div"); div.className="pacer-week";
-    const pct=weekBudget? Math.min(100,spent/weekBudget*100) : 0;
-    div.innerHTML=`<div class="pacer-fill ${spent>weekBudget&&weekBudget?'over':''}" style="width:${pct}%"></div><span>W${w}${spent?` ${fmt(spent)}`:""}</span>`;
-    track.appendChild(div);
-  }
-  document.getElementById("pacerTitle").textContent = budget
-    ? `Month pacing — each block = 1 week (~${fmt(weekBudget)}/week planned)`
-    : "Month pacing — set a monthly budget in Rules & thresholds to track it";
-  document.getElementById("pacerRight").textContent = budget? `${fmt(spentTotal)} spent of ${fmt(budget)}` : "";
-}
-
-/* ---------- file reading (DOM/XLSX wrapper around rowsFromSheet) ---------- */
+/* ---------- file parsing (shared) ---------- */
 function sheetToRows(file, cb){
   const r=new FileReader();
   r.onload=e=>{
@@ -990,488 +422,10 @@ function sheetToRows(file, cb){
   r.readAsArrayBuffer(file);
 }
 
-/* ---------- upload slots with auto-detection ---------- */
-const SLOTS = {
-  fsn:      {drop:"dropFsn",   st:"stFsn",   aggKey:"fsnAgg",   label:"Consolidated FSN report", n:1},
-  daily:    {drop:"dropDaily", st:"stDaily", aggKey:"dailyAgg", label:"Consolidated daily report", n:2},
-  placement:{drop:"dropPlace", st:"stPlace", aggKey:"placeAgg", label:"Placement performance report", n:3}
-};
-function storeReport(key,res,fileName){
-  const S=SLOTS[key], el=document.getElementById(S.drop), st=document.getElementById(S.st);
-  const w=Number(document.getElementById("weekSel").value);
-  state.weeks[w]=state.weeks[w]||{};
-  state.weeks[w][key]=res.data;
-  state.weeks[w][S.aggKey]=agg(res.data);
-  state.weeks[w].fileNames=state.weeks[w].fileNames||{}; state.weeks[w].fileNames[key]=fileName;
-  st.textContent=`✓ ${fileName} — ${res.data.length.toLocaleString()} rows`;
-  el.classList.add("loaded"); save(); renderWeekList(); renderPacer();
-}
-function wireDrop(key){
-  const S=SLOTS[key], el=document.getElementById(S.drop), input=el.querySelector("input"), st=document.getElementById(S.st);
-  const handle=file=>{
-    st.textContent="Reading "+file.name+"…";
-    sheetToRows(file,(res,err)=>{
-      if(err){ st.textContent=err; el.classList.remove("loaded"); return; }
-      const detected=detectReportType(res);
-      const note=document.getElementById("uploadNote");
-      if(detected && detected!==key){
-        storeReport(detected,res,file.name);
-        const D=SLOTS[detected];
-        st.innerHTML=`<span style="color:var(--red)">✗ That looks like the ${D.label}</span> — loaded into slot ${D.n} for you.`;
-        el.classList.remove("loaded");
-        note.textContent=`Auto-detected "${file.name}" as ${D.label} and placed it in slot ${D.n}. Drop the ${S.label} here.`;
-        setTimeout(()=>{ if(note.textContent.startsWith("Auto-detected")) note.textContent=""; },8000);
-        return;
-      }
-      if(!detected){
-        storeReport(key,res,file.name);
-        st.innerHTML=`✓ ${file.name} — ${res.data.length.toLocaleString()} rows <span style="color:#8a6200">(couldn't verify report type — check it's the ${S.label})</span>`;
-        return;
-      }
-      storeReport(key,res,file.name);
-    });
-  };
-  el.addEventListener("click",()=>input.click());
-  input.addEventListener("change",()=>{ if(input.files[0]) handle(input.files[0]); input.value=""; });
-  el.addEventListener("dragover",e=>{e.preventDefault();el.classList.add("over");});
-  el.addEventListener("dragleave",()=>el.classList.remove("over"));
-  el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
-}
-wireDrop("fsn"); wireDrop("daily"); wireDrop("placement");
-
-document.getElementById("weekSel").addEventListener("change",()=>{
-  ["dropFsn","dropDaily","dropPlace"].forEach(id=>document.getElementById(id).classList.remove("loaded"));
-  const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w]||{};
-  const set=(id,k)=>{ const f=wk.fileNames?.[k]; const el=document.getElementById(id);
-    el.textContent=f? "✓ "+f : "Click or drop file";
-    if(f) document.getElementById(SLOTS[k].drop).classList.add("loaded"); };
-  set("stFsn","fsn"); set("stDaily","daily"); set("stPlace","placement");
-});
-function renderWeekList(){
-  const el=document.getElementById("weekList");
-  const parts=Object.keys(state.weeks).sort().map(w=>{
-    const wk=state.weeks[w], f=wk.fileNames||{};
-    const s=wk.dailyAgg||wk.fsnAgg;
-    return `<b>Week ${w}</b>: ${["fsn","daily","placement"].filter(k=>f[k]).length}/3 reports${s?` · spend ${fmt(s.spend)} · revenue ${fmt(s.revenue)} · ROAS ${(s.revenue/Math.max(1,s.spend)).toFixed(1)}`:""}`;
-  });
-  el.innerHTML=parts.length? parts.join("<br>") : "No weeks uploaded yet.";
-}
-document.getElementById("btnClearMonth").addEventListener("click",()=>{
-  if(!confirm("Delete all stored weekly data? Settings are kept.")) return;
-  state.weeks={}; state.lastActions=null; save(); renderWeekList(); renderPacer();
-  document.getElementById("apBody").style.display="none"; document.getElementById("apEmpty").style.display="block";
-  document.getElementById("weekSel").dispatchEvent(new Event("change"));
-});
-
-/* ---------- generate action plan ---------- */
-/* ---------- simple view toggle ---------- */
-function applySimpleView(){
-  const simple=document.getElementById("tSimple").checked;
-  document.querySelectorAll(".adv-toggle").forEach(el=>el.classList.toggle("open", !simple));
-  state.simpleView=simple; save();
-}
-document.getElementById("tSimple").addEventListener("change",applySimpleView);
-
-document.getElementById("btnAnalyze").addEventListener("click",()=>{
-  const w=Number(document.getElementById("weekSel").value), wk=state.weeks[w];
-  if(!wk || !wk.fsn){ document.getElementById("uploadNote").textContent="Upload at least the FSN report for this week first."; return; }
-  document.getElementById("uploadNote").textContent="";
-  const S=state.settings;
-  const T={minSpend:num(S.minSpend),minClicks:num(S.minClicks),minViews:num(S.minViews),lowCtr:num(S.lowCtr),scaleMult:num(S.scaleMult)||1.3};
-  const be=num(S.breakeven)||3, target=num(S.target)||5;
-  const plan=buildActionPlan(wk.fsn, wk.placement, T, be, target);
-  const budget=num(S.budget), weeks=Math.ceil(daysInMonth()/7), weekBudget=budget?budget/weeks:0;
-  const spend=wk.dailyAgg? wk.dailyAgg.spend : plan.tot.spend;
-  const kpis=computeKpis(plan.tot);
-  const health=roiHealth(kpis, plan.tot, plan.fsnRows, be, target, T);
-  const prevWk=state.weeks[w-1];
-  const wow=prevWk&&prevWk.fsnAgg? wowCompare(plan.tot, prevWk.fsnAgg) : null;
-  const campSums=campaignSummaries(plan.fsnRows, be);
-  state.lastActions=Object.assign(plan,{week:w, generated:new Date().toISOString(), spend, pacing:pacingMessage(spend,weekBudget,fmt), be, target, kpis, health, wow, campSums, prevWeek:w-1});
-  save(); renderActions();
-  document.querySelector('[data-t="actions"]').click();
-});
-
-/* ---------- render action plan ---------- */
-function renderActions(){
-  const A=state.lastActions; if(!A) return;
-  fsnPage=1; campPage=1;
-  document.getElementById("apEmpty").style.display="none";
-  document.getElementById("apBody").style.display="block";
-  document.getElementById("apTitle").textContent=`Week ${A.week} — your to-do list`;
-  const roas=A.tot.revenue/Math.max(1,A.tot.spend);
-  const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
-  const K=A.kpis||computeKpis(A.tot);
-  // plain-English verdict card — the first thing a non-technical seller reads
-  const wastePct=A.health? A.health.wastePct : 0;
-  const ps=plainEnglishSummary(A.tot, counts, A.be, A.target, wastePct);
-  const vc=document.getElementById("verdictCard");
-  vc.className="verdict "+ps.tone;
-  vc.innerHTML=
-    `<div class="verdict-head"><span class="verdict-dot"></span><span class="verdict-title">${ps.tone==="good"?"Good week":ps.tone==="warn"?"Room to improve":"Needs attention"}</span></div>`+
-    `<div class="verdict-sentence">${ps.verdict}</div>`+
-    `<ul class="todo-list">${ps.todo.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
-  document.getElementById("apMetrics").innerHTML=[
-    ["You spent",fmt(A.tot.spend)],["You made back",fmt(A.tot.revenue)],
-    ["₹ back per ₹1 spent",roas.toFixed(2)],["Avg. cost per click","₹"+K.cpc.toFixed(1)],
-    ["% of clicks → sales",K.cvr.toFixed(2)+"%"],["Money wasted",A.health?fmt(A.health.waste):"—"]
-  ].map(([l,v])=>`<div class="metric"><div class="lbl">${l}</div><div class="num">${v}</div></div>`).join("");
-  document.getElementById("apSummary").innerHTML=
-    `You looked at ${A.fsnRows.length.toLocaleString()} product listings this week. `+
-    `<b>${(counts.PAUSE||0)+(counts["CUT BID"]||0)}</b> are losing money, <b>${counts.SCALE||0}</b> are doing well enough to spend more on, and <b>${counts["FIX CONTENT"]||0}</b> need their product page improved.`;
-  document.getElementById("apPacing").textContent=A.pacing;
-  // ROI health table
-  const hb=document.getElementById("healthBody"); hb.innerHTML="";
-  const STATUS={good:["scale","GOOD"],warn:["reduce","WATCH"],bad:["pause","FIX"]};
-  (A.health?A.health.items:[]).forEach(it=>{
-    const [cls,lbl]=STATUS[it.status];
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td style="font-weight:600">${esc(it.element)}</td><td class="mono">${esc(it.value)}</td>`+
-      `<td><span class="tag ${cls}">${lbl}</span></td><td style="font-size:12.5px;min-width:280px">${esc(it.advice)}</td>`;
-    hb.appendChild(tr);
-  });
-  // week-over-week
-  const wc=document.getElementById("wowCard");
-  if(A.wow){
-    wc.classList.remove("no-data");
-    document.getElementById("wowTitle").textContent=`Week-over-week trend — W${A.week} vs W${A.prevWeek}`;
-    const wb=document.getElementById("wowBody"); wb.innerHTML="";
-    A.wow.forEach(r=>{
-      const fmtV=v=> r.unit==="₹"? "₹"+Math.round(v).toLocaleString("en-IN") : r.unit==="×"? v.toFixed(2)+"×" : v.toFixed(2)+"%";
-      const cls=Math.abs(r.delta)<2? "keep" : r.good? "scale":"pause";
-      const arrow=r.delta>0?"▲":r.delta<0?"▼":"–";
-      const tr=document.createElement("tr");
-      tr.innerHTML=`<td style="font-weight:600">${r.metric}</td><td class="mono">${fmtV(r.curr)}</td><td class="mono">${fmtV(r.prev)}</td>`+
-        `<td><span class="tag ${cls}">${arrow} ${Math.abs(r.delta).toFixed(1)}%</span></td>`;
-      wb.appendChild(tr);
-    });
-  } else { wc.classList.add("no-data"); }
-  campPage=1; renderCampKpis();
-  const camps=[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort();
-  fCampSel=new Set([...fCampSel].filter(c=>camps.includes(c)));
-  buildCampPanel(camps);
-  renderFsnTable();
-  renderPlacementTable();
-  applySimpleView();
-}
-
-/* campaign multi-select with search */
-let fCampSel=new Set(), fCampAll=[], fCampQuery="", fsnPage=1;
-
-/* ---------- pagination helper ---------- */
-function renderPager(elId, page, totalItems, perPage, label, onGo){
-  const el=document.getElementById(elId); if(!el) return 1;
-  const pages=Math.max(1, Math.ceil(totalItems/perPage));
-  const p=Math.min(Math.max(1,page), pages);
-  el.innerHTML="";
-  if(totalItems<=perPage){ el.innerHTML = totalItems? `<span class="note">${totalItems.toLocaleString()} ${label}</span>`:""; return p; }
-  const mk=(txt,dis,go)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=txt; b.disabled=dis;
-    if(!dis) b.addEventListener("click",()=>onGo(go)); return b; };
-  el.appendChild(mk("‹ Prev", p<=1, p-1));
-  const info=document.createElement("span"); info.className="note";
-  info.textContent=`Page ${p} of ${pages} · ${totalItems.toLocaleString()} ${label}`;
-  el.appendChild(info);
-  el.appendChild(mk("Next ›", p>=pages, p+1));
-  return p;
-}
-
-/* ---------- campaign KPIs: cards / table with pagination ---------- */
-let campPage=1, campView="cards";
-const CAMP_PER={cards:9, table:10};
-function campKpiData(){
-  const A=state.lastActions; if(!A) return [];
-  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
-  const q=document.getElementById("campSearch").value.trim().toLowerCase();
-  return q? sums.filter(s=>s.campaign.toLowerCase().includes(q)) : sums;
-}
-function selectCampaign(name){
-  const A=state.lastActions; if(!A) return;
-  fCampSel=new Set([name]); fsnPage=1;
-  buildCampPanel(fCampAll.length?fCampAll:[...new Set(A.fsnRows.map(r=>r.campaign||"—"))].sort());
-  renderFsnTable();
-  const target=document.getElementById("fsnBody").closest(".card");
-  if(target) target.scrollIntoView({behavior:"smooth"});
-}
-function campStatus(s,A){ return s.kpis.roas>=A.target?["scale","DOING WELL"]:s.kpis.roas>=A.be?["reduce","OKAY"]:["pause","LOSING MONEY"]; }
-function renderCampKpis(){
-  const A=state.lastActions; if(!A) return;
-  const data=campKpiData();
-  const per=CAMP_PER[campView];
-  campPage=renderPager("campPager", campPage, data.length, per, "campaigns", pg=>{ campPage=pg; renderCampKpis(); });
-  const slice=data.slice((campPage-1)*per, campPage*per);
-  document.getElementById("campCount").textContent=data.length? "" : "No campaigns match.";
-  const cardsEl=document.getElementById("campCards"), tblWrap=document.getElementById("campTableWrap");
-  cardsEl.style.display=campView==="cards"?"grid":"none";
-  tblWrap.style.display=campView==="table"?"block":"none";
-  if(campView==="cards"){
-    cardsEl.innerHTML="";
-    slice.forEach(s=>{
-      const [cls,lbl]=campStatus(s,A);
-      const card=document.createElement("div"); card.className="ck"; card.title="Click to see this campaign's product-by-product plan";
-      card.innerHTML=
-        `<div class="ck-top"><div class="ck-name">${esc(s.campaign)}</div><span class="tag ${cls}">${lbl}</span></div>`+
-        `<div class="ck-roas"><span class="num">₹${s.kpis.roas.toFixed(2)}</span><span class="lbl">back per ₹1 · goal ₹${A.target}</span></div>`+
-        `<div class="ck-kpis">`+
-          `<div><span>Spend</span><b>₹${Math.round(s.spend).toLocaleString("en-IN")}</b></div>`+
-          `<div><span>Revenue</span><b>₹${Math.round(s.revenue).toLocaleString("en-IN")}</b></div>`+
-          `<div><span>Wasted</span><b style="${s.waste>0?'color:var(--red)':''}">₹${Math.round(s.waste).toLocaleString("en-IN")}</b></div>`+
-          `<div><span>Cost/click</span><b>₹${s.kpis.cpc.toFixed(1)}</b></div>`+
-          `<div><span>Click rate</span><b>${s.kpis.ctr.toFixed(2)}%</b></div>`+
-          `<div><span>→ sale rate</span><b>${s.kpis.cvr.toFixed(2)}%</b></div>`+
-        `</div>`+
-        `<div class="ck-foot">`+
-          `${((s.counts.PAUSE||0)+(s.counts["CUT BID"]||0))?`<span class="tag pause">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)} to fix</span>`:""}`+
-          `${(s.counts.SCALE||0)?`<span class="tag scale">${s.counts.SCALE} to grow</span>`:""}`+
-          `${(s.counts["FIX CONTENT"]||0)?`<span class="tag fix">${s.counts["FIX CONTENT"]} listing fix</span>`:""}`+
-          `<span style="margin-left:auto">${s.units} sold · avg ₹${Math.round(s.kpis.aov)}</span>`+
-        `</div>`;
-      card.addEventListener("click",()=>selectCampaign(s.campaign));
-      cardsEl.appendChild(card);
-    });
-    if(!slice.length) cardsEl.innerHTML=`<div class="note" style="padding:8px">No campaigns match the search.</div>`;
-  } else {
-    const cb=document.getElementById("campKpiBody"); cb.innerHTML="";
-    slice.forEach(s=>{
-      const [cls,lbl]=campStatus(s,A);
-      const tr=document.createElement("tr");
-      tr.style.cursor="pointer"; tr.title="Click to see this campaign's product-by-product plan";
-      tr.innerHTML=`<td style="max-width:220px;font-weight:600;font-size:12.5px">${esc(s.campaign)}</td>`+
-        `<td class="mono">${Math.round(s.spend).toLocaleString()}</td><td class="mono">${Math.round(s.revenue).toLocaleString()}</td>`+
-        `<td class="mono">${s.kpis.roas.toFixed(2)}</td><td class="mono">${s.kpis.cpc.toFixed(1)}</td>`+
-        `<td class="mono">${s.kpis.ctr.toFixed(2)}%</td><td class="mono">${s.kpis.cvr.toFixed(2)}%</td>`+
-        `<td class="mono">${Math.round(s.kpis.aov)}</td><td class="mono">${Math.round(s.waste).toLocaleString()}</td>`+
-        `<td class="mono">${(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0)}</td><td class="mono">${s.counts.SCALE||0}</td>`+
-        `<td><span class="tag ${cls}">${lbl}</span></td>`;
-      tr.addEventListener("click",()=>selectCampaign(s.campaign));
-      cb.appendChild(tr);
-    });
-    if(!slice.length) cb.innerHTML=`<tr><td colspan="12" class="note">No campaigns match the search.</td></tr>`;
-  }
-}
-document.getElementById("campSearch").addEventListener("input",()=>{ campPage=1; renderCampKpis(); });
-document.getElementById("vCards").addEventListener("click",()=>{ campView="cards"; campPage=1;
-  document.getElementById("vCards").classList.add("on"); document.getElementById("vTable").classList.remove("on"); renderCampKpis(); });
-document.getElementById("vTable").addEventListener("click",()=>{ campView="table"; campPage=1;
-  document.getElementById("vTable").classList.add("on"); document.getElementById("vCards").classList.remove("on"); renderCampKpis(); });
-function buildCampPanel(camps){
-  fCampAll=camps;
-  const panel=document.getElementById("fCampPanel");
-  panel.innerHTML=
-    `<div style="padding:4px 6px 8px"><input type="text" id="mSearch" placeholder="Search campaigns…" value="${esc(fCampQuery)}" autocomplete="off"></div>`+
-    `<div class="mtools"><button type="button" id="mAll">Select all shown</button><button type="button" id="mNone">Clear</button><span class="note" id="mCount" style="align-self:center;margin-left:auto"></span></div>`+
-    `<div id="mRows"></div>`;
-  const rowsBox=panel.querySelector("#mRows");
-  const shownList=()=>{ const q=fCampQuery.trim().toLowerCase(); return q? fCampAll.filter(c=>c.toLowerCase().includes(q)) : fCampAll; };
-  const updateMCount=()=>{ panel.querySelector("#mCount").textContent=`${fCampSel.size} selected · ${shownList().length} shown`; };
-  const renderRows=()=>{
-    const shown=shownList();
-    rowsBox.innerHTML="";
-    const ordered=[...shown].sort((a,b)=>(fCampSel.has(b)?1:0)-(fCampSel.has(a)?1:0));
-    ordered.slice(0,250).forEach(c=>{
-      const row=document.createElement("label"); row.className="mrow";
-      row.innerHTML=`<input type="checkbox" ${fCampSel.has(c)?"checked":""}><span style="overflow:hidden;text-overflow:ellipsis">${esc(c)}</span>`;
-      row.querySelector("input").addEventListener("change",e=>{
-        e.target.checked? fCampSel.add(c):fCampSel.delete(c);
-        updateCampBtn(); updateMCount(); fsnPage=1; renderFsnTable();
-      });
-      rowsBox.appendChild(row);
-    });
-    if(shown.length>250){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px"; d.textContent=`Showing 250 of ${shown.length} — refine the search.`; rowsBox.appendChild(d); }
-    if(!shown.length){ const d=document.createElement("div"); d.className="note"; d.style.padding="6px 9px"; d.textContent="No campaigns match."; rowsBox.appendChild(d); }
-    updateMCount();
-  };
-  const search=panel.querySelector("#mSearch");
-  search.addEventListener("input",()=>{ fCampQuery=search.value; renderRows(); });
-  search.addEventListener("click",e=>e.stopPropagation());
-  panel.querySelector("#mAll").addEventListener("click",()=>{ shownList().forEach(c=>fCampSel.add(c)); renderRows(); updateCampBtn(); fsnPage=1; renderFsnTable(); panel.classList.add("open"); });
-  panel.querySelector("#mNone").addEventListener("click",()=>{ fCampSel.clear(); renderRows(); updateCampBtn(); fsnPage=1; renderFsnTable(); panel.classList.add("open"); });
-  renderRows(); updateCampBtn();
-}
-function updateCampBtn(){
-  const b=document.getElementById("fCampBtn"), total=fCampAll.length;
-  b.textContent=(fCampSel.size===0||fCampSel.size===total)? `All campaigns (${total})`
-    : fCampSel.size===1? [...fCampSel][0]
-    : `${fCampSel.size} campaigns selected`;
-}
-document.addEventListener("click",e=>{
-  const panel=document.getElementById("fCampPanel"), btn=document.getElementById("fCampBtn");
-  if(!panel||!btn) return;
-  if(btn.contains(e.target)) panel.classList.toggle("open");
-  else if(!panel.contains(e.target)) panel.classList.remove("open");
-});
-
-function renderFsnTable(){
-  const A=state.lastActions; if(!A) return;
-  const fb=document.getElementById("fsnBody"); fb.innerHTML="";
-  const q=document.getElementById("fSearch").value.trim().toLowerCase();
-  const af=document.getElementById("fAction").value;
-  let rows=A.fsnRows.filter(r=> af==="ALL"? true : (af? r.c.a===af : r.c.a!=="KEEP"));
-  if(fCampSel.size) rows=rows.filter(r=>fCampSel.has(r.campaign||"—"));
-  if(q) rows=rows.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
-  const grouped=document.getElementById("fGroup").checked;
-  const PER=grouped?500:40; // grouped view shows more per page since header rows break it up visually
-  fsnPage=renderPager("fsnPager", fsnPage, rows.length, PER, "FSN rows", pg=>{ fsnPage=pg; renderFsnTable(); });
-  document.getElementById("fCount").textContent=rows.length.toLocaleString()+" row(s)";
-  const shown=rows.slice((fsnPage-1)*PER, fsnPage*PER);
-  if(grouped){
-    // order by campaign (by spend desc), keep action priority inside each campaign
-    const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
-    const rank={}; sums.forEach((s,i)=>rank[s.campaign]=i);
-    shown.sort((a,b)=>(rank[a.campaign||"—"]??999)-(rank[b.campaign||"—"]??999));
-    let last=null;
-    shown.forEach(r=>{
-      const cName=r.campaign||"—";
-      if(cName!==last){
-        last=cName;
-        const s=sums.find(x=>x.campaign===cName);
-        const hr=document.createElement("tr");
-        hr.innerHTML=`<td colspan="13" style="background:var(--blue-soft);font-weight:700;font-size:12.5px;padding:9px 10px">`+
-          `${esc(cName)} <span class="note" style="font-weight:500">— spend ₹${Math.round(s?s.spend:0).toLocaleString()} · ROAS ${s?s.kpis.roas.toFixed(2):"0"} · CPC ₹${s?s.kpis.cpc.toFixed(1):"0"} · CTR ${s?s.kpis.ctr.toFixed(2):"0"}% · CVR ${s?s.kpis.cvr.toFixed(2):"0"}% · wasted ₹${Math.round(s?s.waste:0).toLocaleString()}</span></td>`;
-        fb.appendChild(hr);
-      }
-      fb.appendChild(fsnRowEl(r,A));
-    });
-  } else {
-    shown.forEach(r=>fb.appendChild(fsnRowEl(r,A)));
-  }
-  if(!rows.length){
-    let base=A.fsnRows;
-    if(fCampSel.size) base=base.filter(r=>fCampSel.has(r.campaign||"—"));
-    if(q) base=base.filter(r=>(r.fsn||"").toLowerCase().includes(q)||(r.title||"").toLowerCase().includes(q));
-    const keepN=base.filter(r=>r.c.a==="KEEP").length;
-    let msg;
-    if(base.length===0 && fCampSel.size) msg=`The selected campaign(s) have no rows in this week's FSN report — the campaign may have had no ad activity this week, or it appears under a different name/ID. Try "All campaigns" and search for it.`;
-    else if(keepN>0) msg=`All ${keepN.toLocaleString()} row(s) matching your filters are classified KEEP (within thresholds — e.g. spend below ₹${state.settings.minSpend}, healthy ROAS). Switch the Action filter to "All rows (incl. KEEP)" to see them.`;
-    else msg=`No rows match the current filters.`;
-    fb.innerHTML=`<tr><td colspan="13" class="note">${msg}</td></tr>`;
-  }
-}
-function fsnRowEl(r,A){
-  const cpc=r.clicks? r.spend/r.clicks:0, maxc=maxCpcFor(r,A.target);
-  const cpcCls=maxc>0&&cpc>maxc? "color:var(--red);font-weight:600":"";
-  const aw=ACTION_WORDS[r.c.a]||{icon:"",word:r.c.a};
-  const tr=document.createElement("tr");
-  tr.innerHTML=`<td><span class="tag ${r.c.cls}" title="${esc(r.c.a)}">${aw.icon} ${esc(aw.word)}</span></td>`+
-    `<td style="max-width:170px;font-size:12.5px">${esc(r.campaign||"—")}</td>`+
-    `<td class="mono">${esc(r.fsn)}</td>`+
-    `<td style="max-width:240px">${esc((r.title||"").slice(0,70))}</td>`+
-    `<td class="mono">${Math.round(r.spend).toLocaleString()}</td><td class="mono">${r.views.toLocaleString()}</td>`+
-    `<td class="mono">${r.clicks.toLocaleString()}</td><td class="mono">${r.c.ctr.toFixed(2)}%</td>`+
-    `<td class="mono">${r.units}</td><td class="mono">${Math.round(r.revenue).toLocaleString()}</td>`+
-    `<td class="mono">₹${r.c.roas===Infinity?"∞":r.c.roas.toFixed(1)}</td>`+
-    `<td class="mono" style="${cpcCls}">₹${cpc?cpc.toFixed(1):"—"} / ₹${maxc?maxc.toFixed(1):"—"}</td>`+
-    `<td style="min-width:260px;font-size:12.5px">${r.c.why}</td>`;
-  return tr;
-}
-["fSearch","fAction","fGroup"].forEach(id=>{
-  const el=document.getElementById(id);
-  el.addEventListener(el.type==="text"?"input":"change",()=>{ fsnPage=1; renderFsnTable(); });
-});
-
-function renderPlacementTable(){
-  const A=state.lastActions; if(!A) return;
-  const pb=document.getElementById("placeBody"); pb.innerHTML="";
-  if(A.placeRows.length){
-    const best=A.placeRows[0], worst=A.placeRows[A.placeRows.length-1];
-    A.placeRows.forEach(p=>{
-      const rec=p===best? "Best ROAS — raise placement bid multiplier / budget share here."
-        : p.roas<A.be? "Below break-even — reduce this placement's bid multiplier 20–30%."
-        : "Hold — monitor next week.";
-      const cls=p===best? "scale" : p.roas<A.be? "pause" : "keep";
-      const tr=document.createElement("tr");
-      tr.innerHTML=`<td><span class="tag ${cls}">${p===best?"SCALE":p.roas<A.be?"REDUCE":"KEEP"}</span></td><td>${esc(p.placement)}</td>`+
-        `<td class="mono">${Math.round(p.spend).toLocaleString()}</td><td class="mono">${p.clicks.toLocaleString()}</td>`+
-        `<td class="mono">${p.units}</td><td class="mono">${Math.round(p.revenue).toLocaleString()}</td>`+
-        `<td class="mono">${p.roas.toFixed(1)}</td><td style="font-size:12.5px">${rec}</td>`;
-      pb.appendChild(tr);
-    });
-    document.getElementById("placeNote").textContent = best!==worst? `Shift budget: "${worst.placement}" (ROAS ${worst.roas.toFixed(1)}) → "${best.placement}" (ROAS ${best.roas.toFixed(1)}).` : "";
-  } else {
-    pb.innerHTML=`<tr><td colspan="8" class="note">Upload the placement performance report to get placement-level recommendations.</td></tr>`;
-    document.getElementById("placeNote").textContent="";
-  }
-}
-
-/* ---------- Excel export ---------- */
-document.getElementById("btnExportActions").addEventListener("click",()=>{
-  const A=state.lastActions; if(!A){ alert("Generate an action plan first (tab 1)."); return; }
-  const wb=XLSX.utils.book_new();
-  const roas=A.tot.revenue/Math.max(1,A.tot.spend);
-  const counts=A.fsnRows.reduce((m,r)=>(m[r.c.a]=(m[r.c.a]||0)+1,m),{});
-  const sum=[
-    {Metric:"Week",Value:A.week},{Metric:"Generated",Value:A.generated.slice(0,10)},
-    {Metric:"Ad spend (₹)",Value:Math.round(A.tot.spend)},{Metric:"Ad revenue (₹)",Value:Math.round(A.tot.revenue)},
-    {Metric:"ROAS",Value:Number(roas.toFixed(2))},{Metric:"Units",Value:A.tot.units},
-    {Metric:"Views",Value:A.tot.views},{Metric:"Clicks",Value:A.tot.clicks},
-    {Metric:"FSNs to pause / cut",Value:(counts.PAUSE||0)+(counts["CUT BID"]||0)},
-    {Metric:"FSNs to scale",Value:counts.SCALE||0},{Metric:"Listings to fix",Value:counts["FIX CONTENT"]||0},
-    {Metric:"Pacing",Value:A.pacing||"Set a monthly budget in Rules & thresholds for pacing checks."}];
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sum),"Summary");
-  // ROI health sheet
-  if(A.health){
-    const hs=A.health.items.map(it=>({Element:it.element,"This week":it.value,Status:it.status.toUpperCase(),"What to do":it.advice}));
-    const wsH=XLSX.utils.json_to_sheet(hs); wsH["!cols"]=[{wch:28},{wch:30},{wch:8},{wch:90}];
-    XLSX.utils.book_append_sheet(wb,wsH,"ROI Health");
-  }
-  // week-over-week sheet
-  if(A.wow){
-    const ws2=XLSX.utils.json_to_sheet(A.wow.map(r=>({Metric:r.metric,
-      ["Week "+A.week]:Number(r.curr.toFixed(2)),["Week "+A.prevWeek]:Number(r.prev.toFixed(2)),
-      "Change %":Number(r.delta.toFixed(1)),Direction:Math.abs(r.delta)<2?"flat":(r.good?"improving":"worsening")})));
-    XLSX.utils.book_append_sheet(wb,ws2,"Week over Week");
-  }
-  const sums=A.campSums||campaignSummaries(A.fsnRows,A.be);
-  const cs=sums.map(s=>({Campaign:s.campaign,"Spend (₹)":Math.round(s.spend),"Revenue (₹)":Math.round(s.revenue),
-    ROAS:Number(s.kpis.roas.toFixed(2)),"CPC (₹)":Number(s.kpis.cpc.toFixed(2)),
-    "CTR %":Number(s.kpis.ctr.toFixed(2)),"CVR %":Number(s.kpis.cvr.toFixed(2)),"AOV (₹)":Math.round(s.kpis.aov),
-    "Wasted spend (₹)":Math.round(s.waste),Views:s.views,Clicks:s.clicks,Units:s.units,
-    "To pause/cut":(s.counts.PAUSE||0)+(s.counts["CUT BID"]||0),"To scale":s.counts.SCALE||0,
-    Status:s.kpis.roas>=A.target?"ON TARGET":s.kpis.roas>=A.be?"PROFITABLE":"LOSING"}));
-  const wsC=XLSX.utils.json_to_sheet(cs); wsC["!cols"]=[{wch:34},{wch:11},{wch:12},{wch:7},{wch:8},{wch:7},{wch:7},{wch:8},{wch:14},{wch:10},{wch:9},{wch:7},{wch:12},{wch:9},{wch:11}];
-  XLSX.utils.book_append_sheet(wb,wsC,"Campaign Summary");
-  // grouped campaign-wise action plan: campaign header row, then its FSN actions
-  const gRows=[];
-  sums.forEach(s=>{
-    gRows.push({Action:"CAMPAIGN",Campaign:s.campaign,FSN:"",Product:`ROAS ${s.kpis.roas.toFixed(2)} | CPC ₹${s.kpis.cpc.toFixed(1)} | CTR ${s.kpis.ctr.toFixed(2)}% | CVR ${s.kpis.cvr.toFixed(2)}% | wasted ₹${Math.round(s.waste)}`,
-      "Spend (₹)":Math.round(s.spend),Views:s.views,Clicks:s.clicks,"CTR %":Number(s.kpis.ctr.toFixed(2)),Units:s.units,"Revenue (₹)":Math.round(s.revenue),ROAS:Number(s.kpis.roas.toFixed(2)),"CPC (₹)":Number(s.kpis.cpc.toFixed(2)),"Max CPC for target (₹)":"","What to do":s.kpis.roas>=A.target?"On target — protect budget.":s.kpis.roas>=A.be?"Profitable but under target — act on its CUT/REDUCE list.":"Losing money — act on PAUSE/CUT list below first."});
-    A.fsnRows.filter(r=>(r.campaign||"—")===s.campaign && r.c.a!=="KEEP").forEach(r=>{
-      gRows.push({Action:r.c.a,Campaign:"",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
-        "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
-        ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),
-        "CPC (₹)":r.clicks?Number((r.spend/r.clicks).toFixed(2)):"",
-        "Max CPC for target (₹)":Number(maxCpcFor(r,A.target).toFixed(2))||"",
-        "What to do":r.c.why});
-    });
-    gRows.push({});
-  });
-  const wsG=XLSX.utils.json_to_sheet(gRows); wsG["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:60},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:8},{wch:12},{wch:70}];
-  XLSX.utils.book_append_sheet(wb,wsG,"Campaign Action Plan");
-  const fr=A.fsnRows.map(r=>({Action:r.c.a,Campaign:r.campaign||"—",FSN:r.fsn,Product:r.title,"Spend (₹)":Math.round(r.spend),Views:r.views,Clicks:r.clicks,
-    "CTR %":Number(r.c.ctr.toFixed(2)),Units:r.units,"Revenue (₹)":Math.round(r.revenue),
-    ROAS:r.c.roas===Infinity?"":Number(r.c.roas.toFixed(2)),
-    "CPC (₹)":r.clicks?Number((r.spend/r.clicks).toFixed(2)):"",
-    "Max CPC for target (₹)":Number(maxCpcFor(r,A.target).toFixed(2))||"",
-    "What to do":r.c.why}));
-  const ws=XLSX.utils.json_to_sheet(fr); ws["!cols"]=[{wch:12},{wch:30},{wch:24},{wch:50},{wch:10},{wch:9},{wch:8},{wch:7},{wch:6},{wch:11},{wch:7},{wch:8},{wch:12},{wch:70}];
-  XLSX.utils.book_append_sheet(wb,ws,"FSN Actions");
-  if(A.placeRows.length){
-    const pr=A.placeRows.map(p=>({Placement:p.placement,"Spend (₹)":Math.round(p.spend),Clicks:p.clicks,Units:p.units,
-      "Revenue (₹)":Math.round(p.revenue),ROAS:Number(p.roas.toFixed(2))}));
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(pr),"Placement Actions");
-  }
-  XLSX.writeFile(wb,`Action_Plan_Week${A.week}_${state.settings.month||""}.xlsx`);
-});
-
-/* ---------- init ---------- */
-load();
-/* ================= DAILY TRACKING TAB ================= */
-function isoDate(d){ return d.toISOString().slice(0,10); }
-function todayISO(){ return isoDate(new Date()); }
-
-// upload a single day's FSN report -> build a snapshot -> store under state.days[date]
+/* ---------- upload a day ---------- */
 (function wireDayUpload(){
   const dateInput=document.getElementById("dayDate");
-  if(!dateInput.value) dateInput.value=todayISO();
+  dateInput.value=todayISO();
   const el=document.getElementById("dropDay"), input=el.querySelector("input"), st=document.getElementById("stDay");
   const handle=file=>{
     const d=dateInput.value;
@@ -1479,16 +433,10 @@ function todayISO(){ return isoDate(new Date()); }
     st.textContent="Reading "+file.name+"…";
     sheetToRows(file,(res,err)=>{
       if(err){ st.textContent=err; el.classList.remove("loaded"); return; }
-      const detected=detectReportType(res);
-      if(detected && detected!=="fsn"){
-        st.innerHTML=`<span style="color:var(--red)">✗ That doesn't look like the product-level (FSN) report.</span> Daily tracking needs the FSN report specifically.`;
-        el.classList.remove("loaded");
-        return;
-      }
-      state.days[d]=Object.assign(buildDailySnapshot(res.data), {fileName:file.name, savedAt:new Date().toISOString()});
+      state.days[d]=Object.assign(buildDailySnapshot(res.data), {source:"manual", fileName:file.name, savedAt:new Date().toISOString()});
       st.textContent=`✓ ${file.name} — saved for ${d} (${res.data.length.toLocaleString()} rows)`;
       el.classList.add("loaded");
-      save(); renderDayList(); renderAlertDateOptions(); renderAlerts();
+      save(); renderDayTable(); renderPlanDateOptions(); renderPlan();
       pushOneDayToBackend(d);
     });
   };
@@ -1499,95 +447,152 @@ function todayISO(){ return isoDate(new Date()); }
   el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
   dateInput.addEventListener("change",()=>{
     const d=state.days[dateInput.value];
-    st.textContent = d? `✓ ${d.fileName||"saved"} — already have data for this date (uploading again will replace it)` : "Click or drop file";
+    st.textContent = d? `✓ ${d.fileName||d.source} — already have data for this date (uploading replaces it)` : "Click or drop .xlsx / .csv";
     el.classList.toggle("loaded", !!d);
   });
 })();
 
-function renderDayList(){
-  const el=document.getElementById("dayList");
+function renderDayTable(){
+  const body=document.getElementById("dayBody"), empty=document.getElementById("dayEmpty");
   const dates=sortedDates(state.days);
-  if(!dates.length){ el.textContent="No days saved yet — add your first one above."; return; }
-  const rows=dates.slice(-14).reverse().map(d=>{
-    const s=state.days[d];
-    const k=computeKpis(s.tot);
-    return `<b>${d}</b> — spend ₹${Math.round(s.tot.spend).toLocaleString("en-IN")} · revenue ₹${Math.round(s.tot.revenue).toLocaleString("en-IN")} · ₹${k.roas.toFixed(2)} back per ₹1`;
-  });
-  el.innerHTML = (dates.length>14? `Showing the 14 most recent of ${dates.length} saved days.<br>`:"") + rows.join("<br>");
+  empty.style.display = dates.length? "none":"block";
+  body.innerHTML = dates.slice().reverse().map(d=>{
+    const s=state.days[d], k=computeKpis(s.tot);
+    return `<tr><td class="mono">${d}</td><td class="mono">${fmt(s.tot.spend)}</td><td class="mono">${fmt(s.tot.revenue)}</td><td class="mono">₹${k.roas.toFixed(2)}</td><td>${s.source==="email"?"📧 auto":"✋ manual"}</td></tr>`;
+  }).join("");
 }
 document.getElementById("btnClearDays").addEventListener("click",()=>{
   if(!confirm("Delete all saved daily reports? This can't be undone.")) return;
-  state.days={}; save(); renderDayList(); renderAlertDateOptions(); renderAlerts();
+  state.days={}; save(); renderDayTable(); renderPlanDateOptions(); renderPlan();
   document.getElementById("dropDay").classList.remove("loaded");
-  document.getElementById("stDay").textContent="Click or drop file";
+  document.getElementById("stDay").textContent="Click or drop .xlsx / .csv";
 });
 
-function renderAlertDateOptions(){
-  const sel=document.getElementById("alertDate");
+/* ---------- action plan ---------- */
+function renderPlanDateOptions(){
+  const sel=document.getElementById("planDate");
   const dates=sortedDates(state.days);
   const prev=sel.value;
   sel.innerHTML=dates.map(d=>`<option value="${d}">${d}</option>`).join("");
   if(dates.includes(prev)) sel.value=prev; else if(dates.length) sel.value=dates[dates.length-1];
 }
-document.getElementById("alertDate").addEventListener("change",renderAlerts);
+document.getElementById("planDate").addEventListener("change",renderPlan);
+let planMode="prev"; // "prev" | "trail"
+document.getElementById("segPrev").addEventListener("click",()=>{ planMode="prev"; document.getElementById("segPrev").classList.add("on"); document.getElementById("segTrail").classList.remove("on"); renderAlertSection(); });
+document.getElementById("segTrail").addEventListener("click",()=>{ planMode="trail"; document.getElementById("segTrail").classList.add("on"); document.getElementById("segPrev").classList.remove("on"); renderAlertSection(); });
 
-function alertCard(item, level){
+let lastPlan=null;
+function renderPlan(){
+  const dates=sortedDates(state.days);
+  const date=document.getElementById("planDate").value;
+  const empty=document.getElementById("planEmpty"), body=document.getElementById("planBody");
+  if(dates.length<2 || !date){ empty.style.display="block"; body.style.display="none"; return; }
+  empty.style.display="none"; body.style.display="block";
+
+  lastPlan=buildActionPlan(state.days, date, currentOpts());
+  const k=lastPlan.kpis, roas=k.roas;
+  const totalAlerts=lastPlan.totalAlerts;
+
+  // verdict
+  const vc=document.getElementById("verdictCard");
+  let tone="good", verdict=`Steady day — ₹${roas.toFixed(2)} back for every ₹1 spent, and nothing unusual jumped out.`;
+  if(totalAlerts>0){
+    const worstList=[...lastPlan.vsPreviousDay.campaigns, ...lastPlan.vsTrailingAverage.campaigns];
+    const hasRisk=worstList.some(c=>c.verdict.type==="SPIKE_RISK"||c.verdict.type==="FALL");
+    tone=hasRisk?"bad":"warn";
+    verdict = hasRisk
+      ? `${totalAlerts} unusual move${totalAlerts>1?"s":""} found for ${date} — some need attention today. See below.`
+      : `${totalAlerts} notable move${totalAlerts>1?"s":""} found for ${date}, mostly positive. Worth a look below.`;
+  }
+  vc.className="verdict "+tone;
+  vc.innerHTML=`<div class="verdict-head"><span class="verdict-dot"></span><span class="verdict-title">${tone==="good"?"All clear":tone==="warn"?"Worth a look":"Needs attention"}</span></div><div class="verdict-sentence">${esc(verdict)}</div>`;
+
+  document.getElementById("planMetrics").innerHTML=[
+    ["Spend",fmt(lastPlan.tot.spend)], ["Revenue",fmt(lastPlan.tot.revenue)],
+    ["₹ back per ₹1",roas.toFixed(2)], ["Alerts today",totalAlerts]
+  ].map(([l,v])=>`<div class="metric"><div class="lbl">${l}</div><div class="num">${v}</div></div>`).join("");
+
+  renderAlertSection();
+}
+
+function alertCard(item){
   const v=item.verdict;
-  const cls = v.type==="SPIKE_RISK"?"risk" : v.type==="SPIKE_GOOD"?"good" : v.type==="FALL"?"risk" : "watch";
-  const name = level==="campaign"? item.key : `${item.title||item.fsn} `+`<span class="mono" style="color:var(--muted)">(${item.fsn}, ${item.campaign})</span>`;
+  const cls = (v.type==="SPIKE_RISK"||v.type==="FALL")?"risk" : v.type==="SPIKE_GOOD"?"good" : "watch";
+  const name = item.campaign!==undefined && item.fsn!==undefined
+    ? `${item.title||item.fsn} <span class="mono" style="color:var(--muted)">(${item.fsn}, ${item.campaign})</span>`
+    : item.key;
   const moveChips=item.moves.map(m=>{
     const label={spend:"Spend",roas:"₹ back per ₹1",ctr:"Click rate",cvr:"Sale rate"}[m.metric]||m.metric;
     return `<span class="amove ${m.dir}">${label} ${m.dir==="up"?"▲":"▼"} ${Math.abs(m.pct).toFixed(0)}%</span>`;
   }).join("");
   return `<div class="alertcard ${cls}"><div class="aic">${v.icon}</div><div class="abody">`+
-    `<div class="atitle">${name} — ${esc(v.label)}</div>`+
-    `<div class="amoves">${moveChips}</div>`+
-    `<div class="awhy">${esc(v.why)}</div>`+
-    `<div class="adoit"><b>Do this:</b> ${esc(v.action)}</div>`+
-    `</div></div>`;
+    `<div class="atitle">${name} — ${esc(v.label)}</div><div class="amoves">${moveChips}</div>`+
+    `<div class="awhy">${esc(v.why)}</div><div class="adoit"><b>Do this:</b> ${esc(v.action)}</div></div></div>`;
 }
-function renderAlerts(){
-  const body=document.getElementById("alertBody");
-  const date=document.getElementById("alertDate").value;
-  const dates=sortedDates(state.days);
-  if(!date || dates.length<2){ body.innerHTML=`<div class="note">Add at least 8 days of data to see spike/fall alerts (7 days of history + the day being checked).</div>`; return; }
-  const priorDays=dates.filter(d=>d<date).length;
-  if(priorDays<3){ body.innerHTML=`<div class="note">Only ${priorDays} day(s) of history before ${date} — add a few more days for reliable alerts. We'll still show what we can once you have at least 3.</div>`; return; }
-  const moves=detectMoves(state.days, date, {});
-  const total=moves.campaigns.length+moves.fsns.length;
-  if(!total){ body.innerHTML=`<div class="note">✅ Nothing unusual on ${date} — every campaign and product is close to its recent average.</div>`; return; }
-  let html=`<div class="note" style="margin-bottom:10px">${total} unusual move${total>1?"s":""} found on ${date}.</div>`;
-  if(moves.campaigns.length){ html+=`<h3 style="font-size:13px;margin-bottom:8px">By campaign</h3>`+moves.campaigns.map(c=>alertCard(c,"campaign")).join(""); }
-  if(moves.fsns.length){ html+=`<h3 style="font-size:13px;margin:14px 0 8px">By product</h3>`+moves.fsns.slice(0,50).map(f=>alertCard(f,"fsn")).join("");
-    if(moves.fsns.length>50) html+=`<div class="note">Showing the 50 biggest product-level moves of ${moves.fsns.length} total.</div>`; }
+function renderAlertSection(){
+  if(!lastPlan || !lastPlan.exists) return;
+  const hintEl=document.getElementById("modeHint"), body=document.getElementById("alertBody");
+  let camps, fsns, hint;
+  if(planMode==="prev"){
+    const vp=lastPlan.vsPreviousDay;
+    camps=vp.campaigns; fsns=vp.fsns;
+    hint = vp.hasPrevious? `Comparing ${vp.date} directly against ${vp.previousDate}.` : `No data for the day before ${vp.date} yet — add it in tab 2 to enable this comparison.`;
+  } else {
+    const vt=lastPlan.vsTrailingAverage;
+    camps=vt.campaigns; fsns=vt.fsns;
+    hint=`Comparing ${vt.date} against its trailing ${currentOpts().window}-day average (smooths out day-to-day noise).`;
+  }
+  hintEl.textContent=hint;
+  const total=camps.length+fsns.length;
+  if(!total){ body.innerHTML=`<div class="note">✅ Nothing unusual by this comparison — every campaign and product is close to normal.</div>`; return; }
+  let html=`<div class="note" style="margin-bottom:10px">${total} unusual move${total>1?"s":""} found.</div>`;
+  if(camps.length) html+=`<h3 style="font-size:13px;margin-bottom:8px">By campaign</h3>`+camps.map(alertCard).join("");
+  if(fsns.length){ html+=`<h3 style="font-size:13px;margin:14px 0 8px">By product (FSN)</h3>`+fsns.slice(0,50).map(alertCard).join("");
+    if(fsns.length>50) html+=`<div class="note">Showing the 50 biggest product-level moves of ${fsns.length} total.</div>`; }
   body.innerHTML=html;
 }
 
-/* ---------- week/month comparison ---------- */
-function isoWeekStart(d){ const dt=new Date(d); const day=dt.getDay()||7; if(day!==1) dt.setDate(dt.getDate()-day+1); return dt; }
-function defaultCompareRanges(){
-  const dates=sortedDates(state.days);
-  if(dates.length<2) return null;
-  const last=new Date(dates[dates.length-1]);
-  const aEnd=isoDate(last), aStart=isoDate(new Date(last.getTime()-6*86400000));
-  const bEndD=new Date(last.getTime()-7*86400000), bStartD=new Date(last.getTime()-13*86400000);
-  return {aStart, aEnd, bStart:isoDate(bStartD), bEnd:isoDate(bEndD)};
-}
+/* ---------- Excel export of the current action plan ---------- */
+document.getElementById("btnExportPlan").addEventListener("click",()=>{
+  if(!lastPlan || !lastPlan.exists){ alert("Generate an action plan first — pick a date with data."); return; }
+  const wb=XLSX.utils.book_new();
+  const sum=[
+    {Metric:"Date",Value:lastPlan.date}, {Metric:"Spend (₹)",Value:Math.round(lastPlan.tot.spend)},
+    {Metric:"Revenue (₹)",Value:Math.round(lastPlan.tot.revenue)}, {Metric:"ROAS",Value:Number(lastPlan.kpis.roas.toFixed(2))},
+    {Metric:"Total alerts",Value:lastPlan.totalAlerts}
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sum), "Summary");
+  const mkSheet=(rows)=>rows.map(r=>({
+    Level: r.campaign!==undefined&&r.fsn!==undefined? "FSN":"Campaign",
+    Campaign:r.campaign||r.key, FSN:r.fsn||"", Product:r.title||"",
+    "Verdict":r.verdict.label, "Spend (₹)":Math.round(r.spend), "Revenue (₹)":Math.round(r.revenue),
+    "Moves": r.moves.map(m=>`${m.metric} ${m.dir} ${Math.abs(m.pct).toFixed(0)}%`).join("; "),
+    "Why": r.verdict.why, "Action": r.verdict.action
+  }));
+  const vp=lastPlan.vsPreviousDay, vt=lastPlan.vsTrailingAverage;
+  if(vp.campaigns.length+vp.fsns.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mkSheet([...vp.campaigns,...vp.fsns])), "Vs Previous Day");
+  if(vt.campaigns.length+vt.fsns.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mkSheet([...vt.campaigns,...vt.fsns])), "Vs Trailing Average");
+  XLSX.writeFile(wb, `Action_Plan_${lastPlan.date}.xlsx`);
+});
+
+/* ---------- compare periods ---------- */
 function initCompareInputs(){
-  const r=defaultCompareRanges(); if(!r) return;
-  document.getElementById("cmpAStart").value=r.aStart; document.getElementById("cmpAEnd").value=r.aEnd;
-  document.getElementById("cmpBStart").value=r.bStart; document.getElementById("cmpBEnd").value=r.bEnd;
+  const dates=sortedDates(state.days); if(dates.length<2) return;
+  const last=new Date(dates[dates.length-1]);
+  document.getElementById("cmpAEnd").value=isoDate(last);
+  document.getElementById("cmpAStart").value=isoDate(new Date(last.getTime()-6*86400000));
+  document.getElementById("cmpBEnd").value=isoDate(new Date(last.getTime()-7*86400000));
+  document.getElementById("cmpBStart").value=isoDate(new Date(last.getTime()-13*86400000));
 }
 document.getElementById("cmpMode").addEventListener("change",()=>{
-  const mode=document.getElementById("cmpMode").value;
-  if(mode==="month"){
-    const dates=sortedDates(state.days); if(!dates.length) return;
-    const last=new Date(dates[dates.length-1]);
-    const aStart=new Date(last.getFullYear(),last.getMonth(),1), aEnd=last;
+  const dates=sortedDates(state.days); if(!dates.length) return;
+  const last=new Date(dates[dates.length-1]);
+  if(document.getElementById("cmpMode").value==="month"){
+    const aStart=new Date(last.getFullYear(),last.getMonth(),1);
     const bEnd=new Date(last.getFullYear(),last.getMonth(),0), bStart=new Date(bEnd.getFullYear(),bEnd.getMonth(),1);
-    document.getElementById("cmpAStart").value=isoDate(aStart); document.getElementById("cmpAEnd").value=isoDate(aEnd);
+    document.getElementById("cmpAStart").value=isoDate(aStart); document.getElementById("cmpAEnd").value=isoDate(last);
     document.getElementById("cmpBStart").value=isoDate(bStart); document.getElementById("cmpBEnd").value=isoDate(bEnd);
-  } else { initCompareInputs(); }
+  } else initCompareInputs();
 });
 document.getElementById("btnCompare").addEventListener("click",()=>{
   const aS=document.getElementById("cmpAStart").value, aE=document.getElementById("cmpAEnd").value;
@@ -1595,50 +600,36 @@ document.getElementById("btnCompare").addEventListener("click",()=>{
   const res=document.getElementById("cmpResult");
   if(!aS||!aE||!bS||!bE){ res.innerHTML=`<div class="note">Pick both date ranges first.</div>`; return; }
   const pA=aggregateDateRange(state.days,aS,aE), pB=aggregateDateRange(state.days,bS,bE);
-  if(!pA.days && !pB.days){ res.innerHTML=`<div class="note">No saved days fall inside either range — add more daily reports first.</div>`; return; }
+  if(!pA.days && !pB.days){ res.innerHTML=`<div class="note">No saved days fall inside either range.</div>`; return; }
   const cmp=comparePeriods(pA,pB);
   const fmtV=(v,unit)=> unit==="₹"?"₹"+Math.round(v).toLocaleString("en-IN"): unit==="×"? v.toFixed(2): unit==="n"? Math.round(v).toLocaleString("en-IN"): v.toFixed(2)+"%";
-  let html=`<div class="row" style="margin:14px 0 6px">`+
-    cmp.metrics.map(m=>{
-      const cls=Math.abs(m.delta)<2?"keep":m.good?"scale":"pause";
-      const arrow=m.delta>0?"▲":m.delta<0?"▼":"–";
-      return `<div class="metric" style="flex:1;min-width:120px"><div class="lbl">${m.metric}</div><div class="num" style="font-size:18px">${fmtV(m.a,m.unit)}</div>`+
-        `<div class="sub">was ${fmtV(m.b,m.unit)} <span class="tag ${cls}" style="margin-left:4px">${arrow} ${Math.abs(m.delta).toFixed(0)}%</span></div></div>`;
-    }).join("")+`</div>`;
-  html+=`<div class="note" style="margin:10px 0">Period A: ${pA.days} day(s) saved between ${aS} and ${aE}. Period B: ${pB.days} day(s) saved between ${bS} and ${bE}.</div>`;
+  let html=`<div class="row" style="margin:14px 0 6px">`+cmp.metrics.map(m=>{
+    const cls=Math.abs(m.delta)<2?"keep":m.good?"scale":"pause"; const arrow=m.delta>0?"▲":m.delta<0?"▼":"–";
+    return `<div class="metric" style="flex:1;min-width:120px"><div class="lbl">${m.metric}</div><div class="num" style="font-size:18px">${fmtV(m.a,m.unit)}</div><div class="note">was ${fmtV(m.b,m.unit)} <span class="tag ${cls}" style="margin-left:4px">${arrow} ${Math.abs(m.delta).toFixed(0)}%</span></div></div>`;
+  }).join("")+`</div><div class="note" style="margin:10px 0">Period A: ${pA.days} day(s) (${aS} to ${aE}). Period B: ${pB.days} day(s) (${bS} to ${bE}).</div>`;
   if(cmp.campaigns.length){
-    html+=`<div class="scroll"><table><thead><tr><th>Campaign</th><th>Spend A</th><th>Spend B</th><th>Spend change</th><th>₹ back per ₹1 A</th><th>₹ back per ₹1 B</th><th>Change</th></tr></thead><tbody>`+
-      cmp.campaigns.slice(0,100).map(c=>`<tr><td style="font-weight:600;font-size:12.5px">${esc(c.campaign)}</td>`+
-        `<td class="mono">₹${Math.round(c.spendA).toLocaleString()}</td><td class="mono">₹${Math.round(c.spendB).toLocaleString()}</td>`+
-        `<td class="mono">${c.spendDelta>=0?"+":""}${c.spendDelta.toFixed(0)}%</td>`+
-        `<td class="mono">₹${c.roasA.toFixed(2)}</td><td class="mono">₹${c.roasB.toFixed(2)}</td>`+
-        `<td class="mono">${c.roasDelta>=0?"+":""}${c.roasDelta.toFixed(0)}%</td></tr>`).join("")+
-      `</tbody></table></div>`;
+    html+=`<div class="scroll"><table><thead><tr><th>Campaign</th><th>Spend A</th><th>Spend B</th><th>Spend change</th><th>₹/₹1 A</th><th>₹/₹1 B</th><th>Change</th></tr></thead><tbody>`+
+      cmp.campaigns.slice(0,100).map(c=>`<tr><td style="font-weight:600;font-size:12.5px">${esc(c.campaign)}</td><td class="mono">₹${Math.round(c.spendA).toLocaleString()}</td><td class="mono">₹${Math.round(c.spendB).toLocaleString()}</td><td class="mono">${c.spendDelta>=0?"+":""}${c.spendDelta.toFixed(0)}%</td><td class="mono">₹${c.roasA.toFixed(2)}</td><td class="mono">₹${c.roasB.toFixed(2)}</td><td class="mono">${c.roasDelta>=0?"+":""}${c.roasDelta.toFixed(0)}%</td></tr>`).join("")+`</tbody></table></div>`;
   }
   res.innerHTML=html;
 });
 
-/* ================= BACKEND CONNECTION (optional) ================= */
+/* ---------- settings ---------- */
+const SETTING_IDS={tSpendPct:"spendPct",tRoasPct:"roasPct",tCtrPct:"ctrPct",tCvrPct:"cvrPct",tMinSpend:"minSpend",tWindow:"window"};
+Object.keys(SETTING_IDS).forEach(id=>document.getElementById(id).addEventListener("change",e=>{
+  state.settings[SETTING_IDS[id]]=Number(e.target.value); save(); renderPlan();
+}));
+
+/* ---------- backend connection ---------- */
 function backendConfigured(){ return !!(state.backend.url && state.backend.key); }
 function backendHeaders(){ return {"x-api-key": state.backend.key}; }
-function beUrl(path){ return state.backend.url.replace(/\/+$/,"") + path; }
-
+function beUrl(path){ return state.backend.url.replace(/\/+$/,"")+path; }
 function updateConnBadge(){
-  const badge=document.getElementById("dtConnBadge");
-  const note=document.getElementById("dtBackendNote");
-  if(!badge) return;
-  if(!backendConfigured()){
-    badge.className="tag keep"; badge.textContent="⚪ Local only (browser storage)";
-    if(note) note.textContent="Not connected yet — go to Settings to connect a backend once you've deployed one.";
-  } else if(state.backend.connected){
-    badge.className="tag scale"; badge.textContent="🟢 Live — connected to backend";
-    if(note) note.textContent=`Connected to ${state.backend.url}. Last synced: ${state.backend.lastSync? new Date(state.backend.lastSync).toLocaleString():"never — press Sync days now in Settings"}.`;
-  } else {
-    badge.className="tag pause"; badge.textContent="🔴 Backend configured but unreachable";
-    if(note) note.textContent="Backend URL/key are set but the last connection attempt failed — check Settings.";
-  }
+  const badge=document.getElementById("connBadge");
+  if(!backendConfigured()){ badge.className="tag keep"; badge.textContent="⚪ Local only (browser storage)"; }
+  else if(state.backend.connected){ badge.className="tag scale"; badge.textContent="🟢 Live — connected to backend"; }
+  else { badge.className="tag pause"; badge.textContent="🔴 Backend configured but unreachable"; }
 }
-
 async function testBackendConnection(){
   const status=document.getElementById("beStatus");
   const url=document.getElementById("beUrl").value.trim(), key=document.getElementById("beKey").value.trim();
@@ -1648,21 +639,15 @@ async function testBackendConnection(){
   try{
     const h=await fetch(beUrl("/api/health"));
     if(!h.ok) throw new Error("Server unreachable (HTTP "+h.status+")");
-    // /api/health has no auth by design (liveness ping); verify the API key
-    // separately against a protected endpoint so a wrong key is actually caught.
     const r=await fetch(beUrl("/api/days"), {headers: backendHeaders()});
     if(r.status===401) throw new Error("API key rejected — check it matches the backend's API_KEY");
     if(!r.ok) throw new Error("HTTP "+r.status);
     state.backend.connected=true; save();
     status.textContent="✅ Connected — backend is reachable and the key works.";
-  }catch(e){
-    state.backend.connected=false; save();
-    status.textContent="❌ Could not connect ("+e.message+"). Check the URL and API key.";
-  }
+  }catch(e){ state.backend.connected=false; save(); status.textContent="❌ Could not connect ("+e.message+")."; }
   updateConnBadge();
 }
 document.getElementById("btnTestBackend").addEventListener("click",testBackendConnection);
-
 async function syncFromBackend(){
   const status=document.getElementById("beStatus");
   if(!backendConfigured()){ status.textContent="Set a backend URL and API key first."; return; }
@@ -1671,19 +656,13 @@ async function syncFromBackend(){
     const r=await fetch(beUrl("/api/days"), {headers: backendHeaders()});
     if(!r.ok) throw new Error("HTTP "+r.status);
     const j=await r.json();
-    // merge: backend data is authoritative for dates it has (it's the shared source of truth)
     Object.assign(state.days, j.days||{});
     state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save();
     status.textContent=`✅ Synced — ${(j.dates||[]).length} day(s) pulled from backend.`;
-    renderDayList(); renderAlertDateOptions(); renderAlerts(); updateConnBadge();
-  }catch(e){
-    state.backend.connected=false; save();
-    status.textContent="❌ Sync failed ("+e.message+").";
-    updateConnBadge();
-  }
+    renderDayTable(); renderPlanDateOptions(); renderPlan(); updateConnBadge();
+  }catch(e){ state.backend.connected=false; save(); status.textContent="❌ Sync failed ("+e.message+")."; updateConnBadge(); }
 }
 document.getElementById("btnSyncBackend").addEventListener("click",syncFromBackend);
-
 async function pushLocalDaysToBackend(){
   const status=document.getElementById("beStatus");
   if(!backendConfigured()){ status.textContent="Set a backend URL and API key first."; return; }
@@ -1693,56 +672,31 @@ async function pushLocalDaysToBackend(){
   let ok=0, failed=0;
   for(const d of dates){
     try{
-      const r=await fetch(beUrl("/api/days/"+d+"/snapshot"), {
-        method:"POST", headers: Object.assign({"Content-Type":"application/json"}, backendHeaders()),
-        body: JSON.stringify({snapshot: state.days[d], source:"manual-push"})
-      });
+      const r=await fetch(beUrl("/api/days/"+d+"/snapshot"), {method:"POST", headers:Object.assign({"Content-Type":"application/json"},backendHeaders()), body:JSON.stringify({snapshot:state.days[d], source:"manual-push"})});
       if(r.ok) ok++; else failed++;
     }catch(e){ failed++; }
   }
-  status.textContent=`Pushed ${ok} day(s)` + (failed? `, ${failed} failed (older backend versions may need the /snapshot endpoint — see backend README).`:".");
+  status.textContent=`Pushed ${ok} day(s)`+(failed?`, ${failed} failed.`:".");
   if(ok){ state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save(); updateConnBadge(); }
 }
 document.getElementById("btnPushBackend").addEventListener("click",pushLocalDaysToBackend);
-
-// when a manual day-upload happens and a backend is connected, also push that day up
-// (fire-and-forget: local save already succeeded, this is best-effort sync)
 async function pushOneDayToBackend(date){
   if(!backendConfigured()) return;
   try{
-    await fetch(beUrl("/api/days/"+date+"/snapshot"), {
-      method:"POST", headers: Object.assign({"Content-Type":"application/json"}, backendHeaders()),
-      body: JSON.stringify({snapshot: state.days[date], source:"manual"})
-    });
+    await fetch(beUrl("/api/days/"+date+"/snapshot"), {method:"POST", headers:Object.assign({"Content-Type":"application/json"},backendHeaders()), body:JSON.stringify({snapshot:state.days[date], source:"manual"})});
     state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save(); updateConnBadge();
-  }catch(e){ /* silent — local copy is already safe; user can retry via "Push local days to backend" */ }
+  }catch(e){ /* silent — local copy already safe */ }
 }
-/* ================= END BACKEND CONNECTION ================= */
 
-/* ================= END DAILY TRACKING TAB ================= */
-
+/* ---------- init ---------- */
+load();
 (function init(){
-  const S=state.settings;
-  if(!S.month){ const d=new Date(); S.month=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
-  document.getElementById("pMonth").value=S.month;
-  document.getElementById("pBudget").value=S.budget||"";
-  document.getElementById("pTarget").value=S.target;
-  document.getElementById("pBreakeven").value=S.breakeven;
-  document.getElementById("tMinSpend").value=S.minSpend;
-  document.getElementById("tMinClicks").value=S.minClicks;
-  document.getElementById("tMinViews").value=S.minViews;
-  document.getElementById("tLowCtr").value=S.lowCtr;
-  document.getElementById("tScaleMult").value=S.scaleMult;
-  const marginGuess=Math.max(10,Math.min(60,Math.round(100/(num(S.breakeven)||3))));
-  document.getElementById("pMarginRange").value=marginGuess;
-  updateMarginDerived();
-  renderWeekList(); renderPacer();
-  document.getElementById("weekSel").dispatchEvent(new Event("change"));
-  if(state.lastActions) renderActions();
-  renderDayList(); renderAlertDateOptions(); renderAlerts(); initCompareInputs();
-  document.getElementById("beUrl").value=state.backend.url||"";
-  document.getElementById("beKey").value=state.backend.key||"";
-  updateConnBadge();
+  const s=state.settings;
+  document.getElementById("tSpendPct").value=s.spendPct; document.getElementById("tRoasPct").value=s.roasPct;
+  document.getElementById("tCtrPct").value=s.ctrPct; document.getElementById("tCvrPct").value=s.cvrPct;
+  document.getElementById("tMinSpend").value=s.minSpend; document.getElementById("tWindow").value=s.window;
+  document.getElementById("beUrl").value=state.backend.url||""; document.getElementById("beKey").value=state.backend.key||"";
+  renderDayTable(); renderPlanDateOptions(); renderPlan(); initCompareInputs(); updateConnBadge();
   if(backendConfigured()) testBackendConnection().then(()=>{ if(state.backend.connected) syncFromBackend(); });
 })();
 </script>
