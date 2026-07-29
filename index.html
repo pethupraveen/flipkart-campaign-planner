@@ -241,8 +241,33 @@ const num = n => Number(n)||0;
 
 function mapHeaders(headers){
   const m={};
-  headers.forEach((h,i)=>{ const n=norm(h); if(!n) return;
-    for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n===s||n.includes(s))){ m[key]=i; break; } } });
+  const claimed=new Set();
+  // Direct/indirect units & revenue need order-independent detection: real
+  // Flipkart reports name these "Direct Units Sold" in one report type and
+  // "Units Sold (Direct)" in another — check for the presence of both
+  // tokens instead of assuming a fixed word order.
+  headers.forEach((h,i)=>{
+    if(claimed.has(i)) return;
+    const n=norm(h); if(!n) return;
+    const hasUnit=n.includes("unit"), hasRev=n.includes("revenue")||n.includes("sales")||n.includes("gmv");
+    const hasDirect=n.includes("direct"), hasIndirect=n.includes("indirect");
+    if(hasUnit&&hasIndirect){ if(m.indirectunits===undefined){ m.indirectunits=i; claimed.add(i); return; } }
+    if(hasUnit&&hasDirect&&!hasIndirect){ if(m.directunits===undefined){ m.directunits=i; claimed.add(i); return; } }
+    if(hasRev&&hasIndirect){ if(m.indirectrev===undefined){ m.indirectrev=i; claimed.add(i); return; } }
+    if(hasRev&&hasDirect&&!hasIndirect){ if(m.directrev===undefined){ m.directrev=i; claimed.add(i); return; } }
+  });
+  // Exact match takes priority over substring, so e.g. "Average CPC (Cost Per
+  // Click)" — which contains "cost" — can't steal "spend" from "Ad Spend".
+  headers.forEach((h,i)=>{
+    if(claimed.has(i)) return;
+    const n=norm(h); if(!n) return;
+    for(const key in SYN){ if(m[key]===undefined && SYN[key].includes(n)){ m[key]=i; claimed.add(i); break; } }
+  });
+  headers.forEach((h,i)=>{
+    if(claimed.has(i)) return;
+    const n=norm(h); if(!n) return;
+    for(const key in SYN){ if(m[key]===undefined && SYN[key].some(s=>n.includes(s))){ m[key]=i; claimed.add(i); break; } }
+  });
   const nameIdx=headers.findIndex(h=>norm(h).includes("campaignname"));
   if(nameIdx>=0) m.campaign=nameIdx;
   return m;
