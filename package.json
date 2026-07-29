@@ -1,0 +1,24 @@
+{
+  "name": "flipkart-ads-monitor-backend",
+  "version": "1.0.0",
+  "description": "Reads Flipkart's daily 10am scheduled report email, stores it, detects spikes/falls day-over-day, serves an action plan API.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "fetch-now": "node src/fetchOnce.js",
+    "test": "node src/logic.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "imapflow": "^1.0.163",
+    "mailparser": "^3.7.1",
+    "multer": "^2.0.0",
+    "node-cron": "^3.0.3",
+    "xlsx": "^0.18.5"
+  },
+  "engines": { "node": ">=18" }
+}
