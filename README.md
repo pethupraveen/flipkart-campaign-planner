@@ -28,3 +28,25 @@ All thresholds (min spend, clicks, views, CTR, scale multiplier, target/break-ev
 - Break-even ROAS ≈ 1 ÷ profit margin (33% margin → 3.0).
 - CVR basis: units ÷ clicks. Same FSN in different campaigns is analyzed per campaign.
 - localStorage is per-browser/per-device; export Excel for permanent records.
+
+## Daily Tracking (tab 3)
+
+Upload one day's FSN report at a time (instead of a full week) to build
+day-by-day history. Once you have ~8+ days saved, the tool automatically:
+
+- Flags **sudden spikes and falls** per Campaign and per FSN — comparing each
+  day to its own trailing 7-day average across spend, ROAS, click rate, and
+  sale rate — with a plain-English reason and suggested action for each
+- Lets you **compare any two periods** (week vs week, or month vs month)
+  overall and campaign-by-campaign
+
+This runs entirely in your browser, same as the rest of the tool — you upload
+the file, it's analyzed locally, nothing leaves your device.
+
+### Automatic daily capture (optional, needs a backend)
+
+A browser tab can't read your email on a schedule. If you want Flipkart's
+10am scheduled report captured automatically — no manual upload, and data
+saved centrally instead of per-browser — see the companion `flipkart-backend`
+project: a small service that watches your report inbox, saves each day to a
+real database, and exposes the same spike/fall detection over an API.

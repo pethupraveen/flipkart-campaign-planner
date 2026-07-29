@@ -158,6 +158,19 @@ details.gl[open] summary::before{content:"▾ "}
 .adv-toggle{display:none}
 .adv-toggle.open{display:block}
 .adv-toggle.no-data{display:none!important}
+.alertcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;background:#fff}
+.alertcard.risk{border-color:#F0C3BB;background:#FDF6F5}
+.alertcard.good{border-color:#BFE8D2;background:#F6FCF9}
+.alertcard.watch{border-color:#F5DFA0;background:#FFFCF3}
+.alertcard .aic{font-size:22px;flex:none;line-height:1}
+.alertcard .abody{flex:1;min-width:0}
+.alertcard .atitle{font-weight:700;font-size:13.5px;margin-bottom:2px}
+.alertcard .amoves{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.alertcard .amove{font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:2px 7px;border-radius:5px;background:#EEF1F6}
+.alertcard .amove.up{color:var(--green)}
+.alertcard .amove.down{color:var(--red)}
+.alertcard .awhy{font-size:12.5px;color:var(--ink);margin-bottom:4px}
+.alertcard .adoit{font-size:12.5px;color:var(--muted)}
 
 /* ---------- campaign KPI cards + pagination ---------- */
 .viewtoggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -200,7 +213,8 @@ details.gl[open] summary::before{content:"▾ "}
 <nav><div class="tabs">
   <button class="tab active" data-t="upload">1 · Upload your reports</button>
   <button class="tab" data-t="actions">2 · What to do this week</button>
-  <button class="tab" data-t="settings">3 · Settings</button>
+  <button class="tab" data-t="daily">3 · Daily tracking</button>
+  <button class="tab" data-t="settings">4 · Settings</button>
 </div></nav>
 
 <main>
@@ -333,6 +347,77 @@ details.gl[open] summary::before{content:"▾ "}
   </div>
 </section>
 
+<!-- ============ DAILY TRACKING ============ -->
+<section class="panel" id="panel-daily">
+  <div class="toolbar" style="margin-top:0">
+    <span class="tag keep" id="dtConnBadge">⚪ Local only (browser storage)</span>
+    <span class="spacer"></span>
+  </div>
+  <div class="card help-card" style="margin-bottom:14px">
+    <div class="help-top">
+      <div class="help-badge">?</div>
+      <div>
+        <h2 style="margin-bottom:2px">Track day-by-day, catch sudden spikes and falls</h2>
+        <div class="hint" style="margin-bottom:0">Add one day's product report at a time (the same "FSN report" from tab 1, but for a single day instead of a whole week). Once you have a few days saved, we compare each Campaign and each Product against its own recent average and flag anything that suddenly jumped or dropped.</div>
+      </div>
+    </div>
+    <div class="note">📅 Saved in this browser so you can build up history over time — see "Backend & live tracking" below for automatic daily capture from your Flipkart scheduled email.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h2>Add a day's report</h2>
+    <div class="row">
+      <div class="field" style="max-width:200px"><label for="dayDate">Which date is this report for?</label><input type="date" id="dayDate"></div>
+    </div>
+    <div class="drop" id="dropDay"><div class="big">📦 Product-level report for this date</div><div class="drop-sub mono">"Consolidated FSN report"</div><div class="st" id="stDay">Click or drop file</div><input type="file" hidden accept=".xlsx,.xls,.csv"></div>
+    <div class="toolbar" style="margin-bottom:0">
+      <span class="note" id="dayNote"></span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h2>Days saved</h2>
+    <div class="hint">We need at least a few days of history before we can tell what's "normal" for a campaign or product.</div>
+    <div id="dayList" class="note">No days saved yet — add your first one above.</div>
+    <div class="toolbar" style="margin-bottom:0"><button id="btnClearDays">Clear all saved days</button></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h2>🚨 Today's spikes & falls</h2>
+    <div class="hint">Comparing the selected date against its trailing 7-day average, per Campaign and per Product.</div>
+    <div class="row">
+      <div class="field" style="max-width:200px"><label for="alertDate">Check this date</label><select id="alertDate"></select></div>
+    </div>
+    <div id="alertBody"><div class="note">Add at least 8 days of data to see spike/fall alerts (7 days of history + the day being checked).</div></div>
+  </div>
+
+  <div class="card section-gap">
+    <h2>📊 Compare two periods</h2>
+    <div class="hint">Pick two weeks, or two months, and see exactly what changed — overall and campaign by campaign.</div>
+    <div class="row" style="align-items:flex-end">
+      <div class="field" style="max-width:140px"><label>Compare by</label>
+        <select id="cmpMode"><option value="week">Week</option><option value="month">Month</option></select></div>
+      <div class="field" style="max-width:180px"><label for="cmpAStart">Period A — from</label><input type="date" id="cmpAStart"></div>
+      <div class="field" style="max-width:180px"><label for="cmpAEnd">Period A — to</label><input type="date" id="cmpAEnd"></div>
+      <div class="field" style="max-width:180px"><label for="cmpBStart">Period B — from</label><input type="date" id="cmpBStart"></div>
+      <div class="field" style="max-width:180px"><label for="cmpBEnd">Period B — to</label><input type="date" id="cmpBEnd"></div>
+      <div class="field" style="max-width:140px"><button class="primary" id="btnCompare" style="width:100%">Compare</button></div>
+    </div>
+    <div id="cmpResult"></div>
+  </div>
+
+  <div class="card section-gap help-card">
+    <h2>⚡ Backend & live tracking (optional, needs setup)</h2>
+    <div class="hint" style="margin-bottom:10px">A browser tab can't read your email automatically. To get Flipkart's daily 10am scheduled report captured for you — with no manual upload, saved centrally, accessible from any device — deploy the companion backend service and connect it below.</div>
+    <ol class="steps">
+      <li><b>Deploy the backend</b> (code + step-by-step instructions provided separately) — it logs into the mailbox that receives Flipkart's scheduled report, downloads the attachment every morning, and stores it in a real database, not just this browser.</li>
+      <li><b>Connect it</b> in <b>Settings → Live tracking backend</b> — paste its URL and API key, then press "Sync days now".</li>
+      <li>Manual upload (above) keeps working as a fallback, for backfilling old dates, or if you never set up a backend at all.</li>
+    </ol>
+    <div class="note" id="dtBackendNote">Not connected yet — go to Settings to connect a backend once you've deployed one.</div>
+  </div>
+</section>
+
 <!-- ============ SETTINGS ============ -->
 <section class="panel" id="panel-settings">
   <div class="card" style="max-width:660px">
@@ -382,6 +467,26 @@ details.gl[open] summary::before{content:"▾ "}
           5. <b>Fix the listing</b> — lots of views, tiny click rate → thumbnail/title/price is the bottleneck, not the ad.</div>
       </div>
     </details>
+  </div>
+
+  <div class="card section-gap help-card" style="max-width:660px">
+    <div class="help-top">
+      <div class="help-badge">⚡</div>
+      <div>
+        <h2 style="margin-bottom:2px">Live tracking backend (optional)</h2>
+        <div class="hint" style="margin-bottom:0">Connect the small backend service that reads Flipkart's scheduled report email automatically. Without this, Daily Tracking still works fully — you just upload each day's file by hand.</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="beUrl">Backend URL</label><input type="text" id="beUrl" placeholder="https://your-service.onrender.com"></div>
+      <div class="field"><label for="beKey">API key</label><input type="password" id="beKey" placeholder="Paste the API_KEY you set on the backend"></div>
+    </div>
+    <div class="toolbar" style="margin:4px 0 0">
+      <button id="btnTestBackend">Test connection</button>
+      <button id="btnSyncBackend">Sync days now</button>
+      <button id="btnPushBackend">Push local days to backend</button>
+      <span class="note" id="beStatus">Not connected — Daily Tracking will use browser storage only.</span>
+    </div>
   </div>
 </section>
 
@@ -631,11 +736,168 @@ function wowCompare(curr, prev){
   });
   return rows;
 }
+/* ---------- daily tracking: spike/fall detection & period comparison ---------- */
+
+// build one day's snapshot: per-campaign and per-FSN aggregates, keyed by name/fsn
+function buildDailySnapshot(fsnRows){
+  const byCampaign={}, byFsn={};
+  fsnRows.forEach(r=>{
+    const c=r.campaign||"—";
+    byCampaign[c]=byCampaign[c]||{key:c,spend:0,views:0,clicks:0,units:0,revenue:0};
+    const oc=byCampaign[c]; oc.spend+=r.spend; oc.views+=r.views; oc.clicks+=r.clicks; oc.units+=r.units; oc.revenue+=r.revenue;
+    const fk=(r.campaign||"—")+"|"+(r.fsn||r.title||"?");
+    byFsn[fk]=byFsn[fk]||{key:fk,campaign:c,fsn:r.fsn,title:r.title,spend:0,views:0,clicks:0,units:0,revenue:0};
+    const of=byFsn[fk]; of.spend+=r.spend; of.views+=r.views; of.clicks+=r.clicks; of.units+=r.units; of.revenue+=r.revenue; if(!of.title&&r.title)of.title=r.title;
+  });
+  Object.values(byCampaign).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
+  Object.values(byFsn).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
+  return {campaigns:byCampaign, fsns:byFsn, tot:agg(fsnRows)};
+}
+
+// sorted list of ISO date strings (YYYY-MM-DD) stored in daysMap, ascending
+function sortedDates(daysMap){ return Object.keys(daysMap).sort(); }
+
+// trailing average of a metric for one key (campaign name or campaign|fsn) over up to `window`
+// days strictly before targetDate that have data for that key. Returns null if no prior data.
+function trailingAverage(daysMap, targetDate, level, key, window){
+  const dates=sortedDates(daysMap).filter(d=>d<targetDate).slice(-window);
+  const vals=[];
+  dates.forEach(d=>{
+    const snap=daysMap[d]; if(!snap) return;
+    const bucket= level==="campaign"? snap.campaigns : snap.fsns;
+    const row=bucket && bucket[key];
+    if(row) vals.push(row);
+  });
+  if(!vals.length) return null;
+  const sum=(f)=>vals.reduce((s,v)=>s+f(v),0);
+  const n=vals.length;
+  return { spend:sum(v=>v.spend)/n, revenue:sum(v=>v.revenue)/n, units:sum(v=>v.units)/n,
+    roas:sum(v=>v.kpis.roas)/n, ctr:sum(v=>v.kpis.ctr)/n, cvr:sum(v=>v.kpis.cvr)/n, days:n };
+}
+
+// classify one metric's move: returns null if not enough baseline or change below threshold
+function classifyMove(curr, base, thresholdPct){
+  if(base===null || base===undefined || base===0) return null;
+  const pct=100*(curr-base)/base;
+  if(Math.abs(pct)<thresholdPct) return null;
+  return {pct, dir: pct>0?"up":"down"};
+}
+
+// detect sudden spikes/falls for every campaign and every FSN active on targetDate,
+// comparing each to its own trailing average. Returns two sorted arrays (campaigns, fsns).
+function detectMoves(daysMap, targetDate, opts){
+  const o=Object.assign({window:7, minSpend:100, spendPct:50, roasPct:40, ctrPct:40, cvrPct:40}, opts||{});
+  const snap=daysMap[targetDate];
+  if(!snap) return {campaigns:[], fsns:[], date:targetDate};
+  const evalLevel=(bucket, level)=>{
+    const out=[];
+    Object.values(bucket).forEach(row=>{
+      if(row.spend<o.minSpend && row.revenue<=0) return; // ignore noise-level rows
+      const base=trailingAverage(daysMap, targetDate, level, row.key, o.window);
+      if(!base) return; // no history yet — nothing to compare against
+      const moves=[];
+      const spendMove=classifyMove(row.spend, base.spend, o.spendPct); if(spendMove) moves.push(Object.assign({metric:"spend"},spendMove));
+      const roasMove=classifyMove(row.kpis.roas, base.roas, o.roasPct); if(roasMove) moves.push(Object.assign({metric:"roas"},roasMove));
+      const ctrMove=classifyMove(row.kpis.ctr, base.ctr, o.ctrPct); if(ctrMove) moves.push(Object.assign({metric:"ctr"},ctrMove));
+      const cvrMove=classifyMove(row.kpis.cvr, base.cvr, o.cvrPct); if(cvrMove) moves.push(Object.assign({metric:"cvr"},cvrMove));
+      if(!moves.length) return;
+      out.push(Object.assign({}, row, {base, moves, verdict:moveVerdict(moves)}));
+    });
+    // biggest overall move first
+    out.sort((a,b)=>Math.max(...b.moves.map(m=>Math.abs(m.pct)))-Math.max(...a.moves.map(m=>Math.abs(m.pct))));
+    return out;
+  };
+  return { date:targetDate, campaigns:evalLevel(snap.campaigns,"campaign"), fsns:evalLevel(snap.fsns,"fsn") };
+}
+
+// turns a set of metric moves into a plain-English verdict + suggested action
+function moveVerdict(moves){
+  const has=m=>moves.find(x=>x.metric===m);
+  const spend=has("spend"), roas=has("roas"), ctr=has("ctr"), cvr=has("cvr");
+  if(spend&&spend.dir==="up" && roas&&roas.dir==="down")
+    return {type:"SPIKE_RISK", icon:"🚀⚠️", label:"Spend spike, ROAS falling",
+      why:`Spend jumped ${Math.abs(spend.pct).toFixed(0)}% while returns dropped ${Math.abs(roas.pct).toFixed(0)}%.`,
+      action:"Check for a bid or budget change you didn't intend, or a competitor undercutting price. Consider capping the daily budget until you confirm."};
+  if(roas&&roas.dir==="up" && (spend?spend.dir!=="down":true))
+    return {type:"SPIKE_GOOD", icon:"🚀", label:"Sudden spike — in a good way",
+      why:`Returns are up ${Math.abs(roas.pct).toFixed(0)}% vs the recent average.`,
+      action:"Likely a competitor stockout, a trending moment, or a price/offer working well. Consider raising the budget to capture more of it while it lasts."};
+  if(roas&&roas.dir==="down")
+    return {type:"FALL", icon:"🔻", label:"Sudden fall",
+      why:`Returns dropped ${Math.abs(roas.pct).toFixed(0)}% vs the recent average.`,
+      action:"Check stock, price changes, new negative reviews, or a competitor's new offer. If it doesn't recover in a day, lower the bid."};
+  if(ctr&&ctr.dir==="down")
+    return {type:"FALL", icon:"🔻", label:"Click rate suddenly dropped",
+      why:`Click rate fell ${Math.abs(ctr.pct).toFixed(0)}% vs the recent average.`,
+      action:"Check if the thumbnail, price, or badge (like an 'out of stock' label) changed on the listing."};
+  if(cvr&&cvr.dir==="down")
+    return {type:"FALL", icon:"🔻", label:"Fewer clicks turning into sales",
+      why:`Sale rate fell ${Math.abs(cvr.pct).toFixed(0)}% vs the recent average.`,
+      action:"Check stock levels and recent reviews — something on the product page likely changed."};
+  if(spend&&spend.dir==="up")
+    return {type:"SPIKE_WATCH", icon:"📈", label:"Spend spike",
+      why:`Spend is up ${Math.abs(spend.pct).toFixed(0)}% vs the recent average.`,
+      action:"Not necessarily a problem if sales kept pace — check the revenue and ROAS numbers alongside this."};
+  return {type:"MOVE", icon:"↕️", label:"Notable change",
+    why:"One or more metrics moved sharply vs the recent average.",
+    action:"Review the numbers below to see which metric moved and decide if action is needed."};
+}
+
+// aggregate all days whose ISO date falls within [fromISO, toISO] inclusive
+function aggregateDateRange(daysMap, fromISO, toISO){
+  const dates=sortedDates(daysMap).filter(d=>d>=fromISO && d<=toISO);
+  const campaigns={}, fsns={};
+  dates.forEach(d=>{
+    const snap=daysMap[d]; if(!snap) return;
+    Object.values(snap.campaigns).forEach(r=>{
+      campaigns[r.key]=campaigns[r.key]||{key:r.key,spend:0,views:0,clicks:0,units:0,revenue:0};
+      const o=campaigns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue;
+    });
+    Object.values(snap.fsns).forEach(r=>{
+      fsns[r.key]=fsns[r.key]||{key:r.key,campaign:r.campaign,fsn:r.fsn,title:r.title,spend:0,views:0,clicks:0,units:0,revenue:0};
+      const o=fsns[r.key]; o.spend+=r.spend;o.views+=r.views;o.clicks+=r.clicks;o.units+=r.units;o.revenue+=r.revenue;
+    });
+  });
+  Object.values(campaigns).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
+  Object.values(fsns).forEach(o=>Object.assign(o,{kpis:computeKpis(o)}));
+  const tot=Object.values(campaigns).reduce((a,c)=>({spend:a.spend+c.spend,views:a.views+c.views,clicks:a.clicks+c.clicks,units:a.units+c.units,revenue:a.revenue+c.revenue}),{spend:0,views:0,clicks:0,units:0,revenue:0});
+  return {campaigns, fsns, tot, dates, days:dates.length};
+}
+
+// compares two aggregated periods (e.g. week vs week, month vs month) at campaign level
+function comparePeriods(periodA, periodB){
+  const kA=computeKpis(periodA.tot), kB=computeKpis(periodB.tot);
+  const metrics=[
+    ["Spend",periodA.tot.spend,periodB.tot.spend,"₹"],
+    ["Revenue",periodA.tot.revenue,periodB.tot.revenue,"₹"],
+    ["ROAS",kA.roas,kB.roas,"×"],
+    ["CPC",kA.cpc,kB.cpc,"₹"],
+    ["CTR",kA.ctr,kB.ctr,"%"],
+    ["CVR",kA.cvr,kB.cvr,"%"],
+    ["Units",periodA.tot.units,periodB.tot.units,"n"]
+  ].map(([metric,a,b,unit])=>{
+    const delta=b? 100*(a-b)/b : (a?100:0);
+    const good = metric==="CPC"? delta<=0 : delta>=0;
+    return {metric, a, b, delta, unit, good};
+  });
+  // campaign-level deltas for whichever campaigns appear in either period
+  const names=[...new Set([...Object.keys(periodA.campaigns), ...Object.keys(periodB.campaigns)])];
+  const campaigns=names.map(name=>{
+    const a=periodA.campaigns[name], b=periodB.campaigns[name];
+    const spendA=a?a.spend:0, spendB=b?b.spend:0;
+    const roasA=a?a.kpis.roas:0, roasB=b?b.kpis.roas:0;
+    return {campaign:name, spendA, spendB, roasA, roasB,
+      spendDelta: spendB? 100*(spendA-spendB)/spendB : (spendA?100:0),
+      roasDelta: roasB? 100*(roasA-roasB)/roasB : (roasA?100:0)};
+  }).sort((x,y)=>Math.max(x.spendA,x.spendB)-Math.max(y.spendA,y.spendB)).reverse();
+  return {metrics, campaigns};
+}
+
 /* ================= PURE-LOGIC-END ================= */
 
 /* ---------- state & persistence ---------- */
 const LS="fk_optimizer_v1", LS_OLD="fk_planner_v1";
-let state={ settings:{month:"",budget:0,target:5,breakeven:3,minSpend:150,minClicks:20,minViews:1000,lowCtr:1,scaleMult:1.3}, weeks:{}, lastActions:null };
+let state={ settings:{month:"",budget:0,target:5,breakeven:3,minSpend:150,minClicks:20,minViews:1000,lowCtr:1,scaleMult:1.3}, weeks:{}, lastActions:null, days:{}, backend:{url:"",key:"",connected:false,lastSync:null} };
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
 function load(){
   try{
@@ -1202,6 +1464,263 @@ document.getElementById("btnExportActions").addEventListener("click",()=>{
 
 /* ---------- init ---------- */
 load();
+/* ================= DAILY TRACKING TAB ================= */
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function todayISO(){ return isoDate(new Date()); }
+
+// upload a single day's FSN report -> build a snapshot -> store under state.days[date]
+(function wireDayUpload(){
+  const dateInput=document.getElementById("dayDate");
+  if(!dateInput.value) dateInput.value=todayISO();
+  const el=document.getElementById("dropDay"), input=el.querySelector("input"), st=document.getElementById("stDay");
+  const handle=file=>{
+    const d=dateInput.value;
+    if(!d){ document.getElementById("dayNote").textContent="Pick a date first."; return; }
+    st.textContent="Reading "+file.name+"…";
+    sheetToRows(file,(res,err)=>{
+      if(err){ st.textContent=err; el.classList.remove("loaded"); return; }
+      const detected=detectReportType(res);
+      if(detected && detected!=="fsn"){
+        st.innerHTML=`<span style="color:var(--red)">✗ That doesn't look like the product-level (FSN) report.</span> Daily tracking needs the FSN report specifically.`;
+        el.classList.remove("loaded");
+        return;
+      }
+      state.days[d]=Object.assign(buildDailySnapshot(res.data), {fileName:file.name, savedAt:new Date().toISOString()});
+      st.textContent=`✓ ${file.name} — saved for ${d} (${res.data.length.toLocaleString()} rows)`;
+      el.classList.add("loaded");
+      save(); renderDayList(); renderAlertDateOptions(); renderAlerts();
+      pushOneDayToBackend(d);
+    });
+  };
+  el.addEventListener("click",()=>input.click());
+  input.addEventListener("change",()=>{ if(input.files[0]) handle(input.files[0]); input.value=""; });
+  el.addEventListener("dragover",e=>{e.preventDefault();el.classList.add("over");});
+  el.addEventListener("dragleave",()=>el.classList.remove("over"));
+  el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over"); if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);});
+  dateInput.addEventListener("change",()=>{
+    const d=state.days[dateInput.value];
+    st.textContent = d? `✓ ${d.fileName||"saved"} — already have data for this date (uploading again will replace it)` : "Click or drop file";
+    el.classList.toggle("loaded", !!d);
+  });
+})();
+
+function renderDayList(){
+  const el=document.getElementById("dayList");
+  const dates=sortedDates(state.days);
+  if(!dates.length){ el.textContent="No days saved yet — add your first one above."; return; }
+  const rows=dates.slice(-14).reverse().map(d=>{
+    const s=state.days[d];
+    const k=computeKpis(s.tot);
+    return `<b>${d}</b> — spend ₹${Math.round(s.tot.spend).toLocaleString("en-IN")} · revenue ₹${Math.round(s.tot.revenue).toLocaleString("en-IN")} · ₹${k.roas.toFixed(2)} back per ₹1`;
+  });
+  el.innerHTML = (dates.length>14? `Showing the 14 most recent of ${dates.length} saved days.<br>`:"") + rows.join("<br>");
+}
+document.getElementById("btnClearDays").addEventListener("click",()=>{
+  if(!confirm("Delete all saved daily reports? This can't be undone.")) return;
+  state.days={}; save(); renderDayList(); renderAlertDateOptions(); renderAlerts();
+  document.getElementById("dropDay").classList.remove("loaded");
+  document.getElementById("stDay").textContent="Click or drop file";
+});
+
+function renderAlertDateOptions(){
+  const sel=document.getElementById("alertDate");
+  const dates=sortedDates(state.days);
+  const prev=sel.value;
+  sel.innerHTML=dates.map(d=>`<option value="${d}">${d}</option>`).join("");
+  if(dates.includes(prev)) sel.value=prev; else if(dates.length) sel.value=dates[dates.length-1];
+}
+document.getElementById("alertDate").addEventListener("change",renderAlerts);
+
+function alertCard(item, level){
+  const v=item.verdict;
+  const cls = v.type==="SPIKE_RISK"?"risk" : v.type==="SPIKE_GOOD"?"good" : v.type==="FALL"?"risk" : "watch";
+  const name = level==="campaign"? item.key : `${item.title||item.fsn} `+`<span class="mono" style="color:var(--muted)">(${item.fsn}, ${item.campaign})</span>`;
+  const moveChips=item.moves.map(m=>{
+    const label={spend:"Spend",roas:"₹ back per ₹1",ctr:"Click rate",cvr:"Sale rate"}[m.metric]||m.metric;
+    return `<span class="amove ${m.dir}">${label} ${m.dir==="up"?"▲":"▼"} ${Math.abs(m.pct).toFixed(0)}%</span>`;
+  }).join("");
+  return `<div class="alertcard ${cls}"><div class="aic">${v.icon}</div><div class="abody">`+
+    `<div class="atitle">${name} — ${esc(v.label)}</div>`+
+    `<div class="amoves">${moveChips}</div>`+
+    `<div class="awhy">${esc(v.why)}</div>`+
+    `<div class="adoit"><b>Do this:</b> ${esc(v.action)}</div>`+
+    `</div></div>`;
+}
+function renderAlerts(){
+  const body=document.getElementById("alertBody");
+  const date=document.getElementById("alertDate").value;
+  const dates=sortedDates(state.days);
+  if(!date || dates.length<2){ body.innerHTML=`<div class="note">Add at least 8 days of data to see spike/fall alerts (7 days of history + the day being checked).</div>`; return; }
+  const priorDays=dates.filter(d=>d<date).length;
+  if(priorDays<3){ body.innerHTML=`<div class="note">Only ${priorDays} day(s) of history before ${date} — add a few more days for reliable alerts. We'll still show what we can once you have at least 3.</div>`; return; }
+  const moves=detectMoves(state.days, date, {});
+  const total=moves.campaigns.length+moves.fsns.length;
+  if(!total){ body.innerHTML=`<div class="note">✅ Nothing unusual on ${date} — every campaign and product is close to its recent average.</div>`; return; }
+  let html=`<div class="note" style="margin-bottom:10px">${total} unusual move${total>1?"s":""} found on ${date}.</div>`;
+  if(moves.campaigns.length){ html+=`<h3 style="font-size:13px;margin-bottom:8px">By campaign</h3>`+moves.campaigns.map(c=>alertCard(c,"campaign")).join(""); }
+  if(moves.fsns.length){ html+=`<h3 style="font-size:13px;margin:14px 0 8px">By product</h3>`+moves.fsns.slice(0,50).map(f=>alertCard(f,"fsn")).join("");
+    if(moves.fsns.length>50) html+=`<div class="note">Showing the 50 biggest product-level moves of ${moves.fsns.length} total.</div>`; }
+  body.innerHTML=html;
+}
+
+/* ---------- week/month comparison ---------- */
+function isoWeekStart(d){ const dt=new Date(d); const day=dt.getDay()||7; if(day!==1) dt.setDate(dt.getDate()-day+1); return dt; }
+function defaultCompareRanges(){
+  const dates=sortedDates(state.days);
+  if(dates.length<2) return null;
+  const last=new Date(dates[dates.length-1]);
+  const aEnd=isoDate(last), aStart=isoDate(new Date(last.getTime()-6*86400000));
+  const bEndD=new Date(last.getTime()-7*86400000), bStartD=new Date(last.getTime()-13*86400000);
+  return {aStart, aEnd, bStart:isoDate(bStartD), bEnd:isoDate(bEndD)};
+}
+function initCompareInputs(){
+  const r=defaultCompareRanges(); if(!r) return;
+  document.getElementById("cmpAStart").value=r.aStart; document.getElementById("cmpAEnd").value=r.aEnd;
+  document.getElementById("cmpBStart").value=r.bStart; document.getElementById("cmpBEnd").value=r.bEnd;
+}
+document.getElementById("cmpMode").addEventListener("change",()=>{
+  const mode=document.getElementById("cmpMode").value;
+  if(mode==="month"){
+    const dates=sortedDates(state.days); if(!dates.length) return;
+    const last=new Date(dates[dates.length-1]);
+    const aStart=new Date(last.getFullYear(),last.getMonth(),1), aEnd=last;
+    const bEnd=new Date(last.getFullYear(),last.getMonth(),0), bStart=new Date(bEnd.getFullYear(),bEnd.getMonth(),1);
+    document.getElementById("cmpAStart").value=isoDate(aStart); document.getElementById("cmpAEnd").value=isoDate(aEnd);
+    document.getElementById("cmpBStart").value=isoDate(bStart); document.getElementById("cmpBEnd").value=isoDate(bEnd);
+  } else { initCompareInputs(); }
+});
+document.getElementById("btnCompare").addEventListener("click",()=>{
+  const aS=document.getElementById("cmpAStart").value, aE=document.getElementById("cmpAEnd").value;
+  const bS=document.getElementById("cmpBStart").value, bE=document.getElementById("cmpBEnd").value;
+  const res=document.getElementById("cmpResult");
+  if(!aS||!aE||!bS||!bE){ res.innerHTML=`<div class="note">Pick both date ranges first.</div>`; return; }
+  const pA=aggregateDateRange(state.days,aS,aE), pB=aggregateDateRange(state.days,bS,bE);
+  if(!pA.days && !pB.days){ res.innerHTML=`<div class="note">No saved days fall inside either range — add more daily reports first.</div>`; return; }
+  const cmp=comparePeriods(pA,pB);
+  const fmtV=(v,unit)=> unit==="₹"?"₹"+Math.round(v).toLocaleString("en-IN"): unit==="×"? v.toFixed(2): unit==="n"? Math.round(v).toLocaleString("en-IN"): v.toFixed(2)+"%";
+  let html=`<div class="row" style="margin:14px 0 6px">`+
+    cmp.metrics.map(m=>{
+      const cls=Math.abs(m.delta)<2?"keep":m.good?"scale":"pause";
+      const arrow=m.delta>0?"▲":m.delta<0?"▼":"–";
+      return `<div class="metric" style="flex:1;min-width:120px"><div class="lbl">${m.metric}</div><div class="num" style="font-size:18px">${fmtV(m.a,m.unit)}</div>`+
+        `<div class="sub">was ${fmtV(m.b,m.unit)} <span class="tag ${cls}" style="margin-left:4px">${arrow} ${Math.abs(m.delta).toFixed(0)}%</span></div></div>`;
+    }).join("")+`</div>`;
+  html+=`<div class="note" style="margin:10px 0">Period A: ${pA.days} day(s) saved between ${aS} and ${aE}. Period B: ${pB.days} day(s) saved between ${bS} and ${bE}.</div>`;
+  if(cmp.campaigns.length){
+    html+=`<div class="scroll"><table><thead><tr><th>Campaign</th><th>Spend A</th><th>Spend B</th><th>Spend change</th><th>₹ back per ₹1 A</th><th>₹ back per ₹1 B</th><th>Change</th></tr></thead><tbody>`+
+      cmp.campaigns.slice(0,100).map(c=>`<tr><td style="font-weight:600;font-size:12.5px">${esc(c.campaign)}</td>`+
+        `<td class="mono">₹${Math.round(c.spendA).toLocaleString()}</td><td class="mono">₹${Math.round(c.spendB).toLocaleString()}</td>`+
+        `<td class="mono">${c.spendDelta>=0?"+":""}${c.spendDelta.toFixed(0)}%</td>`+
+        `<td class="mono">₹${c.roasA.toFixed(2)}</td><td class="mono">₹${c.roasB.toFixed(2)}</td>`+
+        `<td class="mono">${c.roasDelta>=0?"+":""}${c.roasDelta.toFixed(0)}%</td></tr>`).join("")+
+      `</tbody></table></div>`;
+  }
+  res.innerHTML=html;
+});
+
+/* ================= BACKEND CONNECTION (optional) ================= */
+function backendConfigured(){ return !!(state.backend.url && state.backend.key); }
+function backendHeaders(){ return {"x-api-key": state.backend.key}; }
+function beUrl(path){ return state.backend.url.replace(/\/+$/,"") + path; }
+
+function updateConnBadge(){
+  const badge=document.getElementById("dtConnBadge");
+  const note=document.getElementById("dtBackendNote");
+  if(!badge) return;
+  if(!backendConfigured()){
+    badge.className="tag keep"; badge.textContent="⚪ Local only (browser storage)";
+    if(note) note.textContent="Not connected yet — go to Settings to connect a backend once you've deployed one.";
+  } else if(state.backend.connected){
+    badge.className="tag scale"; badge.textContent="🟢 Live — connected to backend";
+    if(note) note.textContent=`Connected to ${state.backend.url}. Last synced: ${state.backend.lastSync? new Date(state.backend.lastSync).toLocaleString():"never — press Sync days now in Settings"}.`;
+  } else {
+    badge.className="tag pause"; badge.textContent="🔴 Backend configured but unreachable";
+    if(note) note.textContent="Backend URL/key are set but the last connection attempt failed — check Settings.";
+  }
+}
+
+async function testBackendConnection(){
+  const status=document.getElementById("beStatus");
+  const url=document.getElementById("beUrl").value.trim(), key=document.getElementById("beKey").value.trim();
+  state.backend.url=url; state.backend.key=key; save();
+  if(!url){ status.textContent="Enter a backend URL first."; return; }
+  status.textContent="Testing…";
+  try{
+    const h=await fetch(beUrl("/api/health"));
+    if(!h.ok) throw new Error("Server unreachable (HTTP "+h.status+")");
+    // /api/health has no auth by design (liveness ping); verify the API key
+    // separately against a protected endpoint so a wrong key is actually caught.
+    const r=await fetch(beUrl("/api/days"), {headers: backendHeaders()});
+    if(r.status===401) throw new Error("API key rejected — check it matches the backend's API_KEY");
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    state.backend.connected=true; save();
+    status.textContent="✅ Connected — backend is reachable and the key works.";
+  }catch(e){
+    state.backend.connected=false; save();
+    status.textContent="❌ Could not connect ("+e.message+"). Check the URL and API key.";
+  }
+  updateConnBadge();
+}
+document.getElementById("btnTestBackend").addEventListener("click",testBackendConnection);
+
+async function syncFromBackend(){
+  const status=document.getElementById("beStatus");
+  if(!backendConfigured()){ status.textContent="Set a backend URL and API key first."; return; }
+  status.textContent="Syncing…";
+  try{
+    const r=await fetch(beUrl("/api/days"), {headers: backendHeaders()});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const j=await r.json();
+    // merge: backend data is authoritative for dates it has (it's the shared source of truth)
+    Object.assign(state.days, j.days||{});
+    state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save();
+    status.textContent=`✅ Synced — ${(j.dates||[]).length} day(s) pulled from backend.`;
+    renderDayList(); renderAlertDateOptions(); renderAlerts(); updateConnBadge();
+  }catch(e){
+    state.backend.connected=false; save();
+    status.textContent="❌ Sync failed ("+e.message+").";
+    updateConnBadge();
+  }
+}
+document.getElementById("btnSyncBackend").addEventListener("click",syncFromBackend);
+
+async function pushLocalDaysToBackend(){
+  const status=document.getElementById("beStatus");
+  if(!backendConfigured()){ status.textContent="Set a backend URL and API key first."; return; }
+  const dates=sortedDates(state.days);
+  if(!dates.length){ status.textContent="No local days to push."; return; }
+  status.textContent=`Pushing ${dates.length} day(s)…`;
+  let ok=0, failed=0;
+  for(const d of dates){
+    try{
+      const r=await fetch(beUrl("/api/days/"+d+"/snapshot"), {
+        method:"POST", headers: Object.assign({"Content-Type":"application/json"}, backendHeaders()),
+        body: JSON.stringify({snapshot: state.days[d], source:"manual-push"})
+      });
+      if(r.ok) ok++; else failed++;
+    }catch(e){ failed++; }
+  }
+  status.textContent=`Pushed ${ok} day(s)` + (failed? `, ${failed} failed (older backend versions may need the /snapshot endpoint — see backend README).`:".");
+  if(ok){ state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save(); updateConnBadge(); }
+}
+document.getElementById("btnPushBackend").addEventListener("click",pushLocalDaysToBackend);
+
+// when a manual day-upload happens and a backend is connected, also push that day up
+// (fire-and-forget: local save already succeeded, this is best-effort sync)
+async function pushOneDayToBackend(date){
+  if(!backendConfigured()) return;
+  try{
+    await fetch(beUrl("/api/days/"+date+"/snapshot"), {
+      method:"POST", headers: Object.assign({"Content-Type":"application/json"}, backendHeaders()),
+      body: JSON.stringify({snapshot: state.days[date], source:"manual"})
+    });
+    state.backend.connected=true; state.backend.lastSync=new Date().toISOString(); save(); updateConnBadge();
+  }catch(e){ /* silent — local copy is already safe; user can retry via "Push local days to backend" */ }
+}
+/* ================= END BACKEND CONNECTION ================= */
+
+/* ================= END DAILY TRACKING TAB ================= */
+
 (function init(){
   const S=state.settings;
   if(!S.month){ const d=new Date(); S.month=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
@@ -1220,6 +1739,11 @@ load();
   renderWeekList(); renderPacer();
   document.getElementById("weekSel").dispatchEvent(new Event("change"));
   if(state.lastActions) renderActions();
+  renderDayList(); renderAlertDateOptions(); renderAlerts(); initCompareInputs();
+  document.getElementById("beUrl").value=state.backend.url||"";
+  document.getElementById("beKey").value=state.backend.key||"";
+  updateConnBadge();
+  if(backendConfigured()) testBackendConnection().then(()=>{ if(state.backend.connected) syncFromBackend(); });
 })();
 </script>
 </body>
