@@ -173,14 +173,24 @@ footer{max-width:1180px;margin:0 auto;padding:0 28px 34px;font-size:11.5px;color
 <section class="panel" id="panel-compare">
   <div class="card">
     <h2>📊 Compare two periods</h2>
-    <div class="hint">Pick two weeks, or two months, and see exactly what changed — overall and campaign by campaign.</div>
-    <div class="row" style="align-items:flex-end">
-      <div class="field" style="max-width:140px"><label>Compare by</label><select id="cmpMode"><option value="week">Week</option><option value="month">Month</option></select></div>
-      <div class="field" style="max-width:170px"><label for="cmpAStart">Period A — from</label><input type="date" id="cmpAStart"></div>
-      <div class="field" style="max-width:170px"><label for="cmpAEnd">Period A — to</label><input type="date" id="cmpAEnd"></div>
-      <div class="field" style="max-width:170px"><label for="cmpBStart">Period B — from</label><input type="date" id="cmpBStart"></div>
-      <div class="field" style="max-width:170px"><label for="cmpBEnd">Period B — to</label><input type="date" id="cmpBEnd"></div>
-      <div class="field" style="max-width:140px"><button class="primary" id="btnCompare" style="width:100%">Compare</button></div>
+    <div class="hint">One-click presets for the comparisons you need most, or pick any two custom date ranges below.</div>
+    <div class="toolbar" style="margin-top:0">
+      <button class="primary" id="btnQuickDay">📅 Yesterday vs. Today</button>
+      <button class="primary" id="btnQuickWeek">🗓️ Last week vs. This week</button>
+      <button class="primary" id="btnQuickMonth">📆 Last month vs. This month</button>
+    </div>
+    <div class="note" id="quickNote" style="margin-bottom:6px"></div>
+
+    <div class="section-gap" style="border-top:1px dashed var(--line);padding-top:16px">
+      <div class="hint" style="margin-bottom:10px">Or choose a custom range:</div>
+      <div class="row" style="align-items:flex-end">
+        <div class="field" style="max-width:140px"><label>Compare by</label><select id="cmpMode"><option value="week">Week</option><option value="month">Month</option></select></div>
+        <div class="field" style="max-width:170px"><label for="cmpAStart">Period A — from</label><input type="date" id="cmpAStart"></div>
+        <div class="field" style="max-width:170px"><label for="cmpAEnd">Period A — to</label><input type="date" id="cmpAEnd"></div>
+        <div class="field" style="max-width:170px"><label for="cmpBStart">Period B — from</label><input type="date" id="cmpBStart"></div>
+        <div class="field" style="max-width:170px"><label for="cmpBEnd">Period B — to</label><input type="date" id="cmpBEnd"></div>
+        <div class="field" style="max-width:140px"><button id="btnCompare" style="width:100%">Compare</button></div>
+      </div>
     </div>
     <div id="cmpResult"></div>
   </div>
@@ -619,16 +629,18 @@ document.getElementById("cmpMode").addEventListener("change",()=>{
     document.getElementById("cmpBStart").value=isoDate(bStart); document.getElementById("cmpBEnd").value=isoDate(bEnd);
   } else initCompareInputs();
 });
-document.getElementById("btnCompare").addEventListener("click",()=>{
-  const aS=document.getElementById("cmpAStart").value, aE=document.getElementById("cmpAEnd").value;
-  const bS=document.getElementById("cmpBStart").value, bE=document.getElementById("cmpBEnd").value;
+
+function runCompare(aS,aE,bS,bE,label){
   const res=document.getElementById("cmpResult");
+  document.getElementById("cmpAStart").value=aS; document.getElementById("cmpAEnd").value=aE;
+  document.getElementById("cmpBStart").value=bS; document.getElementById("cmpBEnd").value=bE;
   if(!aS||!aE||!bS||!bE){ res.innerHTML=`<div class="note">Pick both date ranges first.</div>`; return; }
   const pA=aggregateDateRange(state.days,aS,aE), pB=aggregateDateRange(state.days,bS,bE);
-  if(!pA.days && !pB.days){ res.innerHTML=`<div class="note">No saved days fall inside either range.</div>`; return; }
+  if(!pA.days && !pB.days){ res.innerHTML=`<div class="note">No saved days fall inside either range — add more daily reports first.</div>`; return; }
   const cmp=comparePeriods(pA,pB);
   const fmtV=(v,unit)=> unit==="₹"?"₹"+Math.round(v).toLocaleString("en-IN"): unit==="×"? v.toFixed(2): unit==="n"? Math.round(v).toLocaleString("en-IN"): v.toFixed(2)+"%";
-  let html=`<div class="row" style="margin:14px 0 6px">`+cmp.metrics.map(m=>{
+  let html= (label? `<h3 style="font-size:14px;margin:14px 0 4px">${esc(label)}</h3>`:"")+
+    `<div class="row" style="margin:6px 0 6px">`+cmp.metrics.map(m=>{
     const cls=Math.abs(m.delta)<2?"keep":m.good?"scale":"pause"; const arrow=m.delta>0?"▲":m.delta<0?"▼":"–";
     return `<div class="metric" style="flex:1;min-width:120px"><div class="lbl">${m.metric}</div><div class="num" style="font-size:18px">${fmtV(m.a,m.unit)}</div><div class="note">was ${fmtV(m.b,m.unit)} <span class="tag ${cls}" style="margin-left:4px">${arrow} ${Math.abs(m.delta).toFixed(0)}%</span></div></div>`;
   }).join("")+`</div><div class="note" style="margin:10px 0">Period A: ${pA.days} day(s) (${aS} to ${aE}). Period B: ${pB.days} day(s) (${bS} to ${bE}).</div>`;
@@ -637,6 +649,43 @@ document.getElementById("btnCompare").addEventListener("click",()=>{
       cmp.campaigns.slice(0,100).map(c=>`<tr><td style="font-weight:600;font-size:12.5px">${esc(c.campaign)}</td><td class="mono">₹${Math.round(c.spendA).toLocaleString()}</td><td class="mono">₹${Math.round(c.spendB).toLocaleString()}</td><td class="mono">${c.spendDelta>=0?"+":""}${c.spendDelta.toFixed(0)}%</td><td class="mono">₹${c.roasA.toFixed(2)}</td><td class="mono">₹${c.roasB.toFixed(2)}</td><td class="mono">${c.roasDelta>=0?"+":""}${c.roasDelta.toFixed(0)}%</td></tr>`).join("")+`</tbody></table></div>`;
   }
   res.innerHTML=html;
+}
+
+document.getElementById("btnCompare").addEventListener("click",()=>{
+  runCompare(document.getElementById("cmpAStart").value, document.getElementById("cmpAEnd").value,
+             document.getElementById("cmpBStart").value, document.getElementById("cmpBEnd").value, null);
+});
+
+// quick presets — all anchored to the most recent saved date, not the real
+// calendar date, since your saved data may lag a day or two behind today.
+function requireDays(min){
+  const dates=sortedDates(state.days);
+  const note=document.getElementById("quickNote");
+  if(dates.length<min){ note.textContent=`Need at least ${min} saved day(s) for this comparison — you have ${dates.length}. Add more in tab 2.`; return null; }
+  note.textContent="";
+  return dates;
+}
+document.getElementById("btnQuickDay").addEventListener("click",()=>{
+  const dates=requireDays(2); if(!dates) return;
+  const today=dates[dates.length-1], yesterday=previousDate(today);
+  if(!state.days[yesterday]){ document.getElementById("quickNote").textContent=`No saved data for ${yesterday} (the day before your most recent day, ${today}) — add it to enable this comparison.`; return; }
+  runCompare(today, today, yesterday, yesterday, `Yesterday (${yesterday}) vs. Today (${today})`);
+});
+document.getElementById("btnQuickWeek").addEventListener("click",()=>{
+  const dates=requireDays(2); if(!dates) return;
+  const last=new Date(dates[dates.length-1]);
+  const aEnd=isoDate(last), aStart=isoDate(new Date(last.getTime()-6*86400000));
+  const bEnd=isoDate(new Date(last.getTime()-7*86400000)), bStart=isoDate(new Date(last.getTime()-13*86400000));
+  document.getElementById("cmpMode").value="week";
+  runCompare(aStart, aEnd, bStart, bEnd, `Last week (${bStart} to ${bEnd}) vs. This week (${aStart} to ${aEnd})`);
+});
+document.getElementById("btnQuickMonth").addEventListener("click",()=>{
+  const dates=requireDays(2); if(!dates) return;
+  const last=new Date(dates[dates.length-1]);
+  const aStart=new Date(last.getFullYear(),last.getMonth(),1);
+  const bEnd=new Date(last.getFullYear(),last.getMonth(),0), bStart=new Date(bEnd.getFullYear(),bEnd.getMonth(),1);
+  document.getElementById("cmpMode").value="month";
+  runCompare(isoDate(aStart), isoDate(last), isoDate(bStart), isoDate(bEnd), `Last month vs. This month (so far)`);
 });
 
 /* ---------- settings ---------- */
